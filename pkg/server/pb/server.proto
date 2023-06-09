@@ -1,0 +1,69 @@
+// SPDX-FileCopyrightText: © 2023 OneEyeFPV oneeyefpv@gmail.com
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: FS-0.9-or-later
+
+syntax = "proto3";
+
+import  "google/protobuf/struct.proto";
+
+package JoystickControl;
+
+option go_package = "github.com/kaack/elrs-joystick-control/pkg/server/pb";
+
+message Empty {}
+
+message ValidationError {
+  string message = 1;
+  string location = 2;
+  repeated ValidationError causes = 3;
+}
+
+message GetSerialPortsRes {
+  repeated SerialPort ports = 1;
+}
+
+message SerialPort {
+  string port = 1;
+  string product = 2;
+}
+
+message ValidationErrors {
+  repeated ValidationError errors = 1;
+}
+
+message GetRawInputDevicesRes {
+  repeated RawInputDevice rawInputDevices = 1;
+}
+
+message RawInputDevice {
+  string id = 1;
+  string name = 2;
+  int32 axes = 3;
+  int32 buttons = 4;
+  int32 hats = 5;
+}
+
+message GetConfigRes {
+  google.protobuf.Struct config = 1;
+}
+
+message SetConfigReq {
+  google.protobuf.Struct config = 1;
+}
+
+message ValidateConfigRes {
+  repeated string errors = 1;
+  repeated string warnings = 2;
+}
+
+service JoystickControl {
+  rpc getRawInputDevices(Empty) returns (GetRawInputDevicesRes) {};
+  rpc getSerialPorts(Empty) returns (GetSerialPortsRes) {};
+
+  rpc getConfig(Empty) returns (GetConfigRes) {}
+  rpc setConfig(SetConfigReq) returns (Empty) {}
+  rpc validateConfig(Empty) returns (ValidateConfigRes) {};
+
+  rpc startMixer(Empty) returns (Empty) {}
+  rpc stopMixer(Empty) returns (Empty) {}
+}
