@@ -8,7 +8,7 @@ You can use any device that identifies as a gamepad when connected to a computer
 
 <div align="center"><b>THIS APPLICATION IS EXPERIMENTAL (WORK IN PROGRESS)</b></div>
 
-## How It Works
+# How It Works
 
 The application reads the raw inputs from one or more USB gamepad devices. It takes these
 inputs and sends them to an RC Transmitter (TX) module. The TX then sends the control signals over air to the drone.
@@ -16,20 +16,21 @@ inputs and sends them to an RC Transmitter (TX) module. The TX then sends the co
 Both the USB control devices and the RC Transmitter module must be connected to the same computer where the
 application is running on.
 
-# How the application talks to the Transmitter (TX)
+# How the application talks to the ELRS Transmitter 
 
-Express LRS (ELRS) TX modules have an I/O pin that is used for receiving radio inputs.
+ELRS TX modules have an I/O pin that is used for receiving radio inputs.
 
 The transmitter module does not really care who is sending data on that pin. It could be an actual device like a
 Radio Master TX16S, or it could be this application.
 
 So, this application uses a serial port to send data to the ELRS TX, and in doing so, pretends to be an RC radio.
 
-## How to connect the application to the Transmitter (TX)
+# Connecting to the ERLS Transmitter 
 
 There are a couple of ways to do this. 
 
-### 1. Connect using an FTDI Adapter (USB-to-Serial Adapter)
+## 1) Connecting with an FTDI Adapter
+
 
 Most computers do not have physical serial ports anymore.
 But, you can use a device called an FTDI adapter to emulate a serial port.
@@ -53,7 +54,7 @@ See images below:
 Do not connect any external power source (such as a LiPo Battery) to the ELRS TX.
 You can potentially destroy your motherboard if the ELRS TX is not designed properly.
 
-#### Configuring the FTDI Adapter
+## Configuring the FTDI Adapter
 
 The ELRS transmitter I/O pin works as an inverted half-duplex UART. 
 
@@ -71,9 +72,9 @@ See image below
 ![FT Prog](/images/ft-prog.png)
 
 
-### 2. Connect using the ELRS Transmitter (TX) Module's USB Port
+## 2) Connecting with USB cable
 
-The second and more convenient method for connecting to the transmitter is to use a USB cable.
+The second and more convenient method is to use a USB cable.
 
 Some ELRS transmitters have a USB port that is used for flashing firmware. 
 This same USB port can be reconfigured to work as the CRSF serial port. 
@@ -99,6 +100,8 @@ See image below:
 ![ELRS Backpack Settings](/images/elrs-config-backpack.png)
 
 **NOTE**: You may also need to put your ELRS TX in "Firmware Upgrade" mode for this approach to work.
+
+
 
 
 # How to use the application
@@ -134,7 +137,7 @@ The following RPC services are available:
   * **getRawInputDevices** - Returns a list of raw input devices connected (joysticks, gamepads, etc)
   * **getSerialPorts** - Returns a list of available serial ports 
 
-# Configuration file format
+# Config: File format
 The configuration is basically a JSON file that specifies the following information:
   * The (COM) serial port used by the ELRS transmitter (`external_rf_port_name`)
   * The raw input devices (gamepads, joysticks, etc) (`raw_input_devices_map`)
@@ -142,7 +145,7 @@ The configuration is basically a JSON file that specifies the following informat
   * The mapping between RC channels and mixer outputs (`channels_inputs_map`)
 
 
-# Configuring external RF
+# Config: External RF
 
 In order for the application to communicate with an ELRS transmitter module, it needs to know which serial COM port
 to use. You can specify the COM port name like this:
@@ -158,7 +161,7 @@ to use. You can specify the COM port name like this:
 You can get a list of all available serial ports by calling the gRPC service `getSerialPorts`.
 
 
-# Configuring raw input devices
+# Config: Raw Input Devices
 
 The `raw_input_devices_map` JSON object tells the application which devices will be used by the input mixer.
 
@@ -184,7 +187,7 @@ You can get a list of attached devices by calling the gRPC service `getRawInputD
 
 
 
-# Configuring the input mixer
+# Config: Mixer
 
 The `inputs_mixer_map` JSON object tells the application how to configure the inputs mixer.
 
@@ -200,7 +203,7 @@ e.g.
 }
 ```
 
-## Configuring mixer to read raw axes and buttons
+## Config: Mixer: Read raw axes and buttons values
 
 Here is an example of reading a button, and an axis from the `left` joystick. 
 
@@ -234,7 +237,7 @@ Notice we are specifying 3 values.
   * **input_type** - This can be either `axis` or `button`
   * **input_number** - This is the index number for the specified axis, or button of the raw input device.
 
-## Configuring mixer to scale raw input axes 
+## Config: Mixer: Scaling raw input axis values
 
 Typically, the axis values coming from raw input devices are in a range from -32768 to 32768.
 These values cannot be used directly for an RC channel. To use them, we need to scale them to the range
@@ -276,7 +279,7 @@ Below is an example for scaling an axis to use as the "pitch" (elevator)
 }
 ```
 
-## Configuring mixer to map raw input button values
+## Config: Mixer: Mapping raw input button values
 
 Joystick buttons usually have raw values 0 and 1 depending on whether the button is pressed or not.
 These values cannot be assigned directly to RC channels. Instead, they have to be mapped.
@@ -320,7 +323,7 @@ In this example, the `prearm` input will change between 0 and 1984 when the lTri
 ```
 
 
-## Configuring mixer to use momentary buttons as sticky switches
+## Config: Mixer: Using momentary buttons as sticky switches
 
 Most joysticks only have momentary buttons, axes, and sliders (which are also axes). These are not useful for
 functionality that requires two or three position switches. One such example is arming a drone.
@@ -392,7 +395,7 @@ In the example below, we are using two individual momentary buttons to emulate a
 ```
 
 
-## Configuring mixer to do more custom operations
+## Config: Mixer: Extra custom operations
 
 The previous examples you have seen how use the `raw`, `map`, `switch`, `case`, and `read` mixer constructs.
 
@@ -411,7 +414,7 @@ Below is a list of additional mixer constructs you can use for more complex scen
 Take a look at the [schema.json](/pkg/config/schema.json) file for the full definition of all these constructs.
 
 
-# Configuring RC Channels
+# Config: RC Channels
 Once you have created the `inputs_mixer_map`, you can then use the `channels_inputs_map` JSON object to assign 
 specific inputs to RC channels. e.g.
 
@@ -440,7 +443,7 @@ I have only tested this application in Windows so far, so that's what I can vouc
 that it uses cross-platform libraries. So in theory, you should be able to compile it and run it in a Linux machine 
 as well.
 
-# How to build the application on Windows
+# Compiling on Windows
 
 
   * Install GoLang SDK
@@ -467,8 +470,32 @@ as well.
 
 
 * Run the Go Build Command from the root of the repo 
-  * `go build -tags static -o elrs_joystick_control.exe cmd\joycontrol\main.go` 
+  * `go build -tags static -o elrs_joystick_control.exe cmd\elrs-joystick-control\main.go` 
 
 
+# Compiling on Linux (x86_64)
 
 
+  * Install GoLang SDK
+    ```bash
+    curl -sflO https://dl.google.com/go/go1.20.5.linux-amd64.tar.gz
+
+    mkdir -p $HOME/go-sdk
+    tar -xzvf go1.20.5.linux-amd64.tar.gz -C $HOME/go-sdk
+
+    mkdir -p $HOME/go
+
+    export PATH=$HOME/go-sdk/go/bin:$PATH
+    export GOROOT=$HOME/go-sdk/go
+    export GOPATH=$HOME/go
+    ```
+      
+  * Install SDL2
+    ```bash
+    sudo apt-get install libsdl2-2.0-0 libsdl2-dev
+    ```
+   
+* Run the Go Build Command from the root of the repo 
+  ```bash
+  go build -tags static -o elrs_joystick_control cmd\elrs-joystick-control\main.go
+  ``` 

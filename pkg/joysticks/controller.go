@@ -34,7 +34,7 @@ func (c *Controller) RawInputDevice(id string) (*RawInputDevice, bool) {
 }
 
 func (c *Controller) Init() (err error) {
-	if err = sdl.Init(sdl.INIT_EVERYTHING); err != nil {
+	if err = sdl.Init(sdl.INIT_GAMECONTROLLER); err != nil {
 		return err
 	}
 	c.RawInputDevices = EnumerateDevices()
