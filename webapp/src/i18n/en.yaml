@@ -1,0 +1,163 @@
+# SPDX-FileCopyrightText: © 2023 OneEyeFPV oneeyefpv@gmail.com
+# SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-License-Identifier: FS-0.9-or-later
+
+strings:
+  app-title: |
+    ExpressLRS Joystick Control
+  gamepad-viewer-axes: |
+    Axes
+  gamepad-viewer-buttons: |
+    Buttons
+  gamepad-card-axes-label: |
+    axes
+  gamepad-card-buttons-label: |
+    buttons(s)
+  format-dshot-desc: |
+    DSHOT (11 bit Unsigned Int)
+  format-raw-desc: |
+    RAW (16 bit Signed Int)
+  format-crsf-desc: |
+    CRSF (TBS Units)
+  format-pwm-desc: |
+    PWM (1000 - 2000 μs)
+  main-menu-home: |
+    Home
+  main-menu-tx: |
+    RF Transmitters
+  main-menu-config: |
+    Inputs Config
+  main-menu-gamepads: |
+    Gamepads
+  main-menu-settings: |
+    Settings
+  main-menu-about: |
+    About
+  about-page-frontend-version: |
+    Frontend version
+  about-page-backend-version: |
+    Backend version
+  about-page-made-by: |
+    Designed, and developed by
+  about-page-donate: |    
+    Show your support by donating to my daily drinks 🧋 fund through PayPal.
+  about-page-thanks: |
+    Special thanks to the <a href="https://www.expresslrs.org/" target="_blank" >ExpressLRS</a> dev community members
+    who helped answer questions, and troubleshoot issues during the development of this application.
+  axes-viewer-help: |
+    Axis values used by this application are in RAW format,
+    exactly as the gamepad outputs them. When an axis is centered, 
+    the RAW value is `0`. The minimum, and maximum RAW axis values 
+    are `-32768` and `32767` respectively.
+        
+      
+    The application only converts these RAW values to CRSF format
+    at the very end, before writing them to an ExpressLRS RF transmitter.
+      
+      
+    The other formats are provided here so you can visualize how the RAW values
+    would be interpreted by a flight controller or RF receiver with PWM output.
+  buttons-viewer-help: |
+    Button values used by this application in RAW format,
+    exactly as the gamepad outputs them. When a button is active, 
+    the RAW value is `1`, otherwise it's `0` when inactive.
+      
+      
+    However, for convenience the **Button** nodes in the **Inputs Config** 
+    page are configured to output RAW value `32767` when a 
+    button is active, and `0` when it's inactive.
+    (You can change these defaults in the node settings)
+      
+      
+    The application only converts these RAW values to CRSF format
+    at the very end, before writing them to the RF transmitter.
+
+  channels-viewer-help: |
+    Channel values used by ExpressLRS RF transmitters are always in CRSF format.
+      
+      
+    The RAW format is the internal representation used by this application.
+      
+      
+    The other formats are provided here so you can visualize how the CRSF values
+    would be interpreted by a flight controller or RF receiver with PWM output.
+  rf-link-dialog-title: |
+    Start / Stop RF Link
+  rf-link-dialog-help: |
+    Use this dialog to start or stop the radio frequency link
+  rf-link-tx-title: |
+    Transmitter port
+  rf-link-tx-help: |
+    This is the serial port name for the RF transmitter device.
+  rf-link-baud-rate-title: |
+    Baud rate
+  rf-link-baud-rate-help: |
+    This is the communication speed between the application and the RF transmitter device. 
+    It is measured in **Bauds**. 
+      
+      
+    For high CRSF packet refresh rates , e.g. `F1000 Hz`, you will need to use **Baud** rate of 
+    at least `400000`. Check the documentation of the chipset used in 
+    your RF transmitter (or FTDI adapter) to see what baud rates are supported. 
+      
+      
+    Alternatively, you can start with the lowest baud rate, and sequentially try higher baud 
+    rates until you find the highest one that works. 
+      
+      
+    You can use the link statistics to see if the link is working correctly. The the number of
+    sent and received packets should increase steadily without significant number of errors.
+  port-state-title: |
+    Port state
+  port-state-help: |
+    This is the current state of the RF device serial port. This is only monitored while the RF link is active.
+      
+      
+    If it's **Disconnected**, it means that the link is active, but there is no RF device connected on the given port.
+      
+      
+    If it's **Connected**, it means that that the link is active, and there is an RF device connected on the given port.
+  sent-packets-title: |
+    Sent packets count
+  sent-packets-help: |
+    This is the total number of packets sent to the RF transmitter.
+  received-packets-title: |
+    Received packets count
+  received-packets-help: |
+    This is the total number of packets received from the RF transmitter.
+  error-packets-title: |
+    Error packets count
+  error-packets-help: |
+    This is the number of packets received from the RF transmitter that resulted in error during processing.
+  error-msg-transmitters-not-loaded: |
+    Could not load transmitters list. Please verify server URL in settings.
+  error-msg-gamepads-not-loaded: |
+    Could not load gamepads list. Please verify server URL in settings.
+  error-msg-telemetry-not-started: |
+    Could not start telemetry stream. Please verify server URL in settings.
+  error-msg-channels-stream-closed: |
+    Channels data stream was closed.
+  error-msg-gamepad-stream-closed: |
+    Gamepad data stream was closed.
+  error-msg-eval-stream-closed: |
+    Eval data stream was closed.
+  error-msg-link-stream-closed: |
+    Link data stream was closed.
+  error-msg-no-gamepad: |
+    No gamepad selected. Choose one from the node settings.
+  error-msg-no-input: |
+    Input device is not available. Please connect it.
+  error-msg-no-port: |
+    No port selected. Choose one from the node settings.
+  error-msg-no-config: |
+    Could not load config.
+  error-msg-config-errors: |
+    One or more errors found in the current configuration.
+  error-msg-link-not-started: |
+    Could not start link.
+  error-msg-link-not-stopped: |
+    Could not stop link.
+  notif-config-loaded: |
+    Config successfully loaded.
+  notif-config-applied: |
+    Config applied successfully.

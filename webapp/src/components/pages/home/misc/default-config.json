@@ -1,0 +1,371 @@
+{
+  "nodes": [
+    {
+      "width": 108,
+      "height": 108,
+      "type": "attitude_indicator",
+      "selected": false,
+      "id": "5",
+      "position": {
+        "x": -142.80555555555554,
+        "y": 81.09999999999997
+      },
+      "data": {
+        "label": "attitude_indicator5"
+      },
+      "positionAbsolute": {
+        "x": -142.80555555555554,
+        "y": 81.09999999999997
+      },
+      "dragging": false
+    },
+    {
+      "width": 108,
+      "height": 108,
+      "type": "heading_indicator",
+      "selected": false,
+      "id": "6",
+      "position": {
+        "x": -143.25,
+        "y": 309
+      },
+      "data": {
+        "label": "heading_indicator6"
+      },
+      "positionAbsolute": {
+        "x": -143.25,
+        "y": 309
+      },
+      "dragging": false
+    },
+    {
+      "width": 108,
+      "height": 108,
+      "type": "fuel_indicator",
+      "selected": false,
+      "id": "1",
+      "position": {
+        "x": -144.25,
+        "y": 193.625
+      },
+      "data": {
+        "label": "fuel_indicator1"
+      },
+      "positionAbsolute": {
+        "x": -144.25,
+        "y": 193.625
+      },
+      "dragging": false
+    },
+    {
+      "width": 69,
+      "height": 22,
+      "type": "link_stats_ul_lq",
+      "selected": false,
+      "id": "8",
+      "position": {
+        "x": -24.138888888888886,
+        "y": 128.30277777777783
+      },
+      "data": {
+        "value": 0,
+        "font_size": 14,
+        "icon_location": "left",
+        "padding_location": "start",
+        "padding_char": "0",
+        "padding_count": 0,
+        "label": "link_stats_ul_lq8"
+      },
+      "positionAbsolute": {
+        "x": -24.138888888888886,
+        "y": 128.30277777777783
+      },
+      "dragging": false
+    },
+    {
+      "width": 60,
+      "height": 22,
+      "type": "link_stats_rf_mode",
+      "selected": false,
+      "id": "10",
+      "position": {
+        "x": -23.916666666666657,
+        "y": 149.68750000000003
+      },
+      "data": {
+        "value": 0,
+        "font_size": 14,
+        "icon_location": "left",
+        "padding_location": "start",
+        "padding_char": " ",
+        "padding_count": "0",
+        "label": "link_stats_rf_mode10"
+      },
+      "positionAbsolute": {
+        "x": -23.916666666666657,
+        "y": 149.68750000000003
+      },
+      "dragging": false
+    },
+    {
+      "width": 42,
+      "height": 22,
+      "type": "flight_mode",
+      "selected": false,
+      "id": "11",
+      "position": {
+        "x": -22.083333333333343,
+        "y": 106.07638888888894
+      },
+      "data": {
+        "value": "...",
+        "font_size": 14,
+        "icon_location": "left",
+        "padding_location": "start",
+        "padding_char": " ",
+        "padding_count": "0",
+        "label": "flight_mode11"
+      },
+      "positionAbsolute": {
+        "x": -22.083333333333343,
+        "y": 106.07638888888894
+      },
+      "dragging": false
+    },
+    {
+      "width": 73,
+      "height": 22,
+      "type": "gps_heading",
+      "selected": false,
+      "id": "2",
+      "position": {
+        "x": -29.75,
+        "y": 336.03819444444446
+      },
+      "data": {
+        "value": 0,
+        "font_size": 14,
+        "icon_location": "left",
+        "padding_location": "start",
+        "padding_char": "0",
+        "padding_count": 5,
+        "fixed_precision": 2,
+        "label": "gps_heading2"
+      },
+      "positionAbsolute": {
+        "x": -29.75,
+        "y": 336.03819444444446
+      },
+      "dragging": false
+    },
+    {
+      "width": 89,
+      "height": 22,
+      "type": "gps_longitude",
+      "selected": false,
+      "id": "3",
+      "position": {
+        "x": -29.25,
+        "y": 356.53819444444446
+      },
+      "data": {
+        "value": 0,
+        "font_size": 14,
+        "icon_location": "left",
+        "padding_location": "start",
+        "padding_char": "0",
+        "padding_count": 7,
+        "fixed_precision": 4,
+        "label": "gps_longitude3"
+      },
+      "positionAbsolute": {
+        "x": -29.25,
+        "y": 356.53819444444446
+      },
+      "dragging": false
+    },
+    {
+      "width": 89,
+      "height": 22,
+      "type": "gps_latitude",
+      "selected": false,
+      "id": "4",
+      "position": {
+        "x": -29.25,
+        "y": 377.03819444444446
+      },
+      "data": {
+        "value": 0,
+        "font_size": 14,
+        "icon_location": "left",
+        "padding_location": "start",
+        "padding_char": "0",
+        "padding_count": 7,
+        "fixed_precision": 4,
+        "label": "gps_latitude4"
+      },
+      "positionAbsolute": {
+        "x": -29.25,
+        "y": 377.03819444444446
+      },
+      "dragging": false
+    },
+    {
+      "width": 69,
+      "height": 22,
+      "type": "battery_fuel",
+      "selected": false,
+      "id": "7",
+      "position": {
+        "x": -24.75,
+        "y": 225.53819444444443
+      },
+      "data": {
+        "value": 0,
+        "font_size": 14,
+        "icon_location": "left",
+        "padding_location": "start",
+        "padding_char": "0",
+        "padding_count": 0,
+        "label": "battery_fuel7"
+      },
+      "positionAbsolute": {
+        "x": -24.75,
+        "y": 225.53819444444443
+      },
+      "dragging": false
+    },
+    {
+      "width": 81,
+      "height": 22,
+      "type": "battery_current",
+      "selected": false,
+      "id": "12",
+      "position": {
+        "x": -25.75,
+        "y": 247.53819444444443
+      },
+      "data": {
+        "value": 0,
+        "font_size": 14,
+        "icon_location": "left",
+        "padding_location": "start",
+        "padding_char": "0",
+        "padding_count": 0,
+        "fixed_precision": 2,
+        "label": "battery_current12"
+      },
+      "positionAbsolute": {
+        "x": -25.75,
+        "y": 247.53819444444443
+      },
+      "dragging": false
+    },
+    {
+      "width": 38,
+      "height": 22,
+      "type": "gps_satellites",
+      "selected": false,
+      "id": "13",
+      "position": {
+        "x": -27.52777777777777,
+        "y": 314.79999999999995
+      },
+      "data": {
+        "value": 0,
+        "font_size": 14,
+        "icon_location": "left",
+        "padding_location": "start",
+        "padding_char": "0",
+        "padding_count": 0,
+        "label": "gps_satellites13"
+      },
+      "positionAbsolute": {
+        "x": -27.52777777777777,
+        "y": 314.79999999999995
+      },
+      "dragging": false
+    },
+    {
+      "width": 72,
+      "height": 22,
+      "type": "gps_altitude",
+      "selected": false,
+      "id": "15",
+      "position": {
+        "x": -28.52777777777777,
+        "y": 395.79999999999995
+      },
+      "data": {
+        "value": 0,
+        "font_size": 14,
+        "icon_location": "left",
+        "padding_location": "start",
+        "padding_char": "0",
+        "padding_count": 0,
+        "fixed_precision": 2,
+        "label": "gps_altitude15"
+      },
+      "positionAbsolute": {
+        "x": -28.52777777777777,
+        "y": 395.79999999999995
+      },
+      "dragging": false
+    },
+    {
+      "width": 51,
+      "height": 22,
+      "type": "barometer_altitude",
+      "selected": false,
+      "id": "16",
+      "position": {
+        "x": -23.52777777777777,
+        "y": 171.29999999999998
+      },
+      "data": {
+        "value": 0,
+        "font_size": 14,
+        "icon_location": "left",
+        "padding_location": "start",
+        "padding_char": 0,
+        "padding_count": 0,
+        "label": "barometer_altitude16"
+      },
+      "positionAbsolute": {
+        "x": -23.52777777777777,
+        "y": 171.29999999999998
+      },
+      "dragging": false
+    },
+    {
+      "width": 58,
+      "height": 28,
+      "type": "beats_chart",
+      "selected": false,
+      "id": "17",
+      "position": {
+        "x": -23.52777777777777,
+        "y": 82.37499999999997
+      },
+      "data": {
+        "value": 0,
+        "label": "beats_chart17"
+      },
+      "positionAbsolute": {
+        "x": -23.52777777777777,
+        "y": 82.37499999999997
+      },
+      "dragging": false
+    }
+  ],
+  "edges": [],
+  "metadata": {
+    "details": {
+      "link": {
+        "tx": "COM16",
+        "baud-rate": "921600"
+      }
+    },
+    "key": "home_config"
+  }
+}

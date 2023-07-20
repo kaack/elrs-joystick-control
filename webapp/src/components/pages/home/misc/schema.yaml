@@ -1,0 +1,2186 @@
+# SPDX-FileCopyrightText: © 2023 OneEyeFPV oneeyefpv@gmail.com
+# SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-License-Identifier: FS-0.9-or-later
+
+$schema: 'https://json-schema.org/draft/2020-12/schema'
+title: config
+id: 'https://github.com/kaak/elrs-joystick-control/webapp/src/misc/schema.yaml'
+type: object
+description: Schema Representing the widgets for the home screen (e.g. Telemetry)
+properties:
+  widgets:
+    $ref: '#/definitions/widgets'
+unevaluatedProperties: true
+definitions:
+  widgets:
+    type: object
+    unevaluatedProperties:
+      $ref: '#/definitions/widget'
+  widget:
+    type: object
+    required:
+      - id
+      - type
+    properties:
+      id:
+        type: string
+      value:
+        type: integer
+      type:
+        type: string
+        enum:
+          - attitude_indicator
+          - heading_indicator
+          - heading
+          - battery_voltage
+          - battery_current
+          - battery_percent
+          - battery_fuel
+          - gps_latitude
+          - gps_longitude
+          - gps_ground_speed
+          - gps_home_distance
+          - gps_heading
+          - gps_altitude
+          - gps_satellites
+          - attitude_pitch
+          - attitude_roll
+          - attitude_yaw
+          - link_stats_ul_lq
+          - link_stats_ul_snr
+          - link_stats_ul_rssi1
+          - link_stats_ul_rssi2
+          - link_stats_dl_lq
+          - link_stats_dl_snr
+          - link_stats_dl_rssi
+          - link_stats_rf_mode
+          - flight_mode
+          - barometer_altitude
+          - variometer_speed
+          - link_rx_dl_power
+          - link_rx_ul_rssi
+          - link_tx_dl_rssi
+          - link_tx_up_power
+          - beats_chart
+    dependentSchemas:
+      attitude_indicator:
+        $ref: '#/definitions/attitude_indicator'
+      heading_indicator:
+        $ref: '#/definitions/heading_indicator'
+      heading:
+        $ref: '#/definitions/heading'
+      battery_voltage:
+        $ref: '#/definitions/battery_voltage'
+      battery_current:
+        $ref: '#/definitions/battery_current'
+      battery_percent:
+        $ref: '#/definitions/battery_percent'
+      battery_fuel:
+        $ref: '#/definitions/battery_fuel'
+      gps_latitude:
+        $ref: '#/definitions/gps_latitude'
+      gps_longitude:
+        $ref: '#/definitions/gps_longitude'
+      gps_ground_speed:
+        $ref: '#/definitions/gps_ground_speed'
+      gps_home_distance:
+        $ref: '#/definitions/gps_home_distance'
+      gps_heading:
+        $ref: '#/definitions/gps_heading'
+      gps_altitude:
+        $ref: '#/definitions/gps_altitude'
+      gps_satellites:
+        $ref: '#/definitions/gps_satellites'
+      attitude_pitch:
+        $ref: '#/definitions/attitude_pitch'
+      attitude_roll:
+        $ref: '#/definitions/attitude_roll'
+      attitude_yaw:
+        $ref: '#/definitions/attitude_yaw'
+      link_stats_ul_lq:
+        $ref: '#/definitions/link_stats_ul_lq'
+      link_stats_ul_snr:
+        $ref: '#/definitions/link_stats_ul_snr'
+      link_stats_ul_rssi1:
+        $ref: '#/definitions/link_stats_ul_rssi1'
+      link_stats_ul_rssi2:
+        $ref: '#/definitions/link_stats_ul_rssi2'
+      link_stats_dl_lq:
+        $ref: '#/definitions/link_stats_dl_lq'
+      link_stats_dl_snr:
+        $ref: '#/definitions/link_stats_dl_snr'
+      link_stats_dl_rssi:
+        $ref: '#/definitions/link_stats_dl_rssi'
+      link_stats_rf_mode:
+        $ref: '#/definitions/link_stats_rf_mode'
+      flight_mode:
+        $ref: '#/definitions/flight_mode'
+      barometer_altitude:
+        $ref: '#/definitions/barometer_altitude'
+      variometer_speed:
+        $ref: '#/definitions/variometer_speed'
+      link_rx_dl_power:
+        $ref: '#/definitions/link_rx_dl_power'
+      link_rx_ul_rssi:
+        $ref: '#/definitions/link_rx_ul_rssi'
+      link_tx_dl_rssi:
+        $ref: '#/definitions/link_tx_dl_rssi'
+      link_tx_up_power:
+        $ref: '#/definitions/link_tx_up_power'
+      beats_chart:
+        $ref: '#/definitions/beats_chart'
+    unevaluatedProperties: true
+  attitude_indicator:
+    type: object
+    required:
+      - type
+      - attitude_indicator
+    properties:
+      type:
+        type: string
+        enum:
+          - attitude_indicator
+      attitude_indicator:
+        type: object
+        title: Attitude indicator
+        description: |
+          Displays the pitch and roll telemetry data combined
+        unevaluatedProperties: true
+  heading_indicator:
+    type: object
+    required:
+      - type
+      - heading_indicator
+    properties:
+      type:
+        type: string
+        enum:
+          - heading_indicator
+      heading_indicator:
+        type: object
+        title: Heading indicator
+        description: |
+          Displays the aircraft gyroscopic heading relative to the initial heading (when it was powered on)
+        unevaluatedProperties: true
+  fuel_indicator:
+    type: object
+    required:
+      - type
+      - fuel_indicator
+    properties:
+      type:
+        type: string
+        enum:
+          - fuel_indicator
+      fuel_indicator:
+        type: object
+        title: Fuel indicator
+        description: |
+          Displays both the amount of fuel left (percent), and the battery voltage
+        unevaluatedProperties: true
+  battery_voltage:
+    type: object
+    required:
+      - type
+      - battery_voltage
+    properties:
+      type:
+        type: string
+        enum:
+          - battery_voltage
+      battery_voltage:
+        type: object
+        title: Battery voltage
+        description: |
+          Displays the measured battery voltage
+        properties:
+          value:
+            title: value
+            type: number
+            default: 0
+            $meta:
+              unit: "V"
+              editable: false
+          font_size:
+            title: Font size
+            description: |
+              How big the icon and text should be
+            type: integer
+            default: 14
+            $meta:
+              autocomplete: font-size
+          icon_location:
+            title: Icon location
+            description:
+              Place the icon to the left or right of the value
+            type: string
+            enum: [ "left", "right" ]
+            default: left
+            $meta:
+              autocomplete: location-lr
+          padding_location:
+            title: Padding location
+            description: |
+              Use padding spaces at at the start or end of value
+            type: string
+            enum: [ "start", "end" ]
+            default: start
+            $meta:
+              autocomplete: padding-location
+          padding_char:
+            title: Padding character
+            description: |
+              Which character to use for padding the values. Typical it's to use space or zero.
+            type: string
+            default: "0"
+          padding_count:
+            title: Padding count
+            description: |
+              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
+            type: integer
+            default: 0
+          fixed_precision:
+            title: Value precision
+            description: How precise the battery voltage value is (decimal places)
+            type: integer
+            default: 2
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  battery_current:
+    type: object
+    required:
+      - type
+      - battery_current
+    properties:
+      type:
+        type: string
+        enum:
+          - battery_current
+      battery_current:
+        type: object
+        title: Current
+        description: |
+          Displays the current in milli-amps being used at that instant
+        properties:
+          value:
+            title: value
+            type: number
+            default: 0
+            $meta:
+              unit: "mA"
+              editable: false
+          font_size:
+            title: Font size
+            description: |
+              How big the icon and text should be
+            type: integer
+            default: 14
+            $meta:
+              autocomplete: font-size
+          icon_location:
+            title: Icon position
+            type: string
+            enum: [ "left", "right" ]
+            default: left
+            $meta:
+              autocomplete: location-lr
+          padding_location:
+            title: Padding location
+            description: |
+              Use padding spaces at at the start or end of value
+            type: string
+            enum: [ "start", "end" ]
+            default: start
+            $meta:
+              autocomplete: padding-location
+          padding_char:
+            title: Padding character
+            description: |
+              Which character to use for padding the values. Typical it's to use space or zero.
+            type: string
+            default: "0"
+          padding_count:
+            title: Padding count
+            description: |
+              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
+            type: integer
+            default: 0
+          fixed_precision:
+            title: Value precision
+            description: How precise the battery current value is (decimal places)
+            type: integer
+            default: 2
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  battery_percent:
+    type: object
+    required:
+      - type
+      - battery_percent
+    properties:
+      type:
+        type: string
+        enum:
+          - battery_percent
+      battery_percent:
+        type: object
+        title: Battery percent
+        description: |
+          Displays the percentage of battery remaining
+        properties:
+          value:
+            title: value
+            type: integer
+            default: 0
+            $meta:
+              suffix: "%"
+              editable: false
+          font_size:
+            title: Font size
+            description: |
+              How big the icon and text should be
+            type: integer
+            default: 14
+            $meta:
+              autocomplete: font-size
+          icon_location:
+            title: Icon position
+            type: string
+            enum: [ "left", "right" ]
+            default: left
+            $meta:
+              autocomplete: location-lr
+          padding_location:
+            title: Padding location
+            description: |
+              Use padding spaces at at the start or end of value
+            type: string
+            enum: [ "start", "end" ]
+            default: start
+            $meta:
+              autocomplete: padding-location
+          padding_char:
+            title: Padding character
+            description: |
+              Which character to use for padding the values. Typical it's to use space or zero.
+            type: string
+            default: "0"
+          padding_count:
+            title: Padding count
+            description: |
+              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
+            type: integer
+            default: 0
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  battery_fuel:
+    type: object
+    required:
+      - type
+      - battery_fuel
+    properties:
+      type:
+        type: string
+        enum:
+          - battery_fuel
+      battery_fuel:
+        type: object
+        title: Fuel consumed
+        description: |
+          How many milli-amp-hours have been consumed from the battery
+        properties:
+          value:
+            title: value
+            type: integer
+            default: 0
+            $meta:
+              unit: "mAh"
+              editable: false
+          font_size:
+            title: Font size
+            description: |
+              How big the icon and text should be
+            type: integer
+            default: 14
+            $meta:
+              autocomplete: font-size
+          icon_location:
+            title: Icon position
+            type: string
+            enum: [ "left", "right" ]
+            default: left
+            $meta:
+              autocomplete: location-lr
+          padding_location:
+            title: Padding location
+            description: |
+              Use padding spaces at at the start or end of value
+            type: string
+            enum: [ "start", "end" ]
+            default: start
+            $meta:
+              autocomplete: padding-location
+          padding_char:
+            title: Padding character
+            description: |
+              Which character to use for padding the values. Typical it's to use space or zero.
+            type: string
+            default: "0"
+          padding_count:
+            title: Padding count
+            description: |
+              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
+            type: integer
+            default: 0
+        unevaluatedProperties: true
+  gps_latitude:
+    type: object
+    required:
+      - type
+      - gps_latitude
+    properties:
+      type:
+        type: string
+        enum:
+          - gps_latitude
+      gps_latitude:
+        type: object
+        title: GPS latitude
+        description: |
+          GPS latitude coordinate in decimal degrees
+        properties:
+          value:
+            title: value
+            type: number
+            default: 0
+            $meta:
+              suffix: "°"
+              editable: false
+          font_size:
+            title: Font size
+            description: |
+              How big the icon and text should be
+            type: integer
+            default: 14
+            $meta:
+              autocomplete: font-size
+          icon_location:
+            title: Icon position
+            type: string
+            enum: [ "left", "right" ]
+            default: left
+            $meta:
+              autocomplete: location-lr
+          padding_location:
+            title: Padding location
+            description: |
+              Use padding spaces at at the start or end of value
+            type: string
+            enum: [ "start", "end" ]
+            default: start
+            $meta:
+              autocomplete: padding-location
+          padding_char:
+            title: Padding character
+            description: |
+              Which character to use for padding the values. Typical it's to use space or zero.
+            type: string
+            default: "0"
+          padding_count:
+            title: Padding count
+            description: |
+              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
+            type: integer
+            default: 7
+          fixed_precision:
+            title: Value precision
+            description: How many decimal places to use for the GPS coordinate
+            type: integer
+            default: 4
+            $meta:
+              autocomplete: precision-coordinate
+        unevaluatedProperties: true
+  gps_longitude:
+    type: object
+    required:
+      - type
+      - gps_longitude
+    properties:
+      type:
+        type: string
+        enum:
+          - gps_longitude
+      gps_longitude:
+        type: object
+        title: GPS longitude
+        description: |
+          GPS longitude coordinate in decimal degrees
+        properties:
+          value:
+            title: value
+            type: number
+            default: 0
+            $meta:
+              suffix: "°"
+              editable: false
+          font_size:
+            title: Font size
+            description: |
+              How big the icon and text should be
+            type: integer
+            default: 14
+            $meta:
+              autocomplete: font-size
+          icon_location:
+            title: Icon position
+            type: string
+            enum: [ "left", "right" ]
+            default: left
+            $meta:
+              autocomplete: location-lr
+          padding_location:
+            title: Padding location
+            description: |
+              Use padding spaces at at the start or end of value
+            type: string
+            enum: [ "start", "end" ]
+            default: start
+            $meta:
+              autocomplete: padding-location
+          padding_char:
+            title: Padding character
+            description: |
+              Which character to use for padding the values. Typical it's to use space or zero.
+            type: string
+            default: "0"
+          padding_count:
+            title: Padding count
+            description: |
+              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
+            type: integer
+            default: 7
+          fixed_precision:
+            title: Value precision
+            description: How many decimal places to use for the GPS coordinate
+            type: integer
+            default: 4
+            $meta:
+              autocomplete: precision-coordinate
+        unevaluatedProperties: true
+  gps_ground_speed:
+    type: object
+    required:
+      - type
+      - gps_ground_speed
+    properties:
+      type:
+        type: string
+        enum:
+          - gps_ground_speed
+      gps_ground_speed:
+        type: object
+        title: GPS ground speed
+        description: |
+          GPS ground speed, in Km/hr
+        properties:
+          value:
+            title: value
+            type: number
+            default: 0
+            $meta:
+              unit: "Km/hr"
+              editable: false
+          font_size:
+            title: Font size
+            description: |
+              How big the icon and text should be
+            type: integer
+            default: 14
+            $meta:
+              autocomplete: font-size
+          icon_location:
+            title: Icon position
+            type: string
+            enum: [ "left", "right" ]
+            default: left
+            $meta:
+              autocomplete: location-lr
+          padding_location:
+            title: Padding location
+            description: |
+              Use padding spaces at at the start or end of value
+            type: string
+            enum: [ "start", "end" ]
+            default: start
+            $meta:
+              autocomplete: padding-location
+          padding_char:
+            title: Padding character
+            description: |
+              Which character to use for padding the values. Typical it's to use space or zero.
+            type: string
+            default: "0"
+          padding_count:
+            title: Padding count
+            description: |
+              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
+            type: integer
+            default: 0
+          fixed_precision:
+            title: Value precision
+            description: How precise the GPS ground speed value is (decimal places)
+            type: integer
+            default: 2
+        unevaluatedProperties: true
+  gps_home_distance:
+    type: object
+    required:
+      - type
+      - gps_home_distance
+    properties:
+      type:
+        type: string
+        enum:
+          - gps_home_distance
+      gps_home_distance:
+        type: object
+        title: GPS home distance
+        description: |
+          GPS distance to home point (i.e. take off location) in meters
+        properties:
+          value:
+            title: value
+            type: integer
+            default: 0
+            $meta:
+              unit: "m"
+              editable: false
+          font_size:
+            title: Font size
+            description: |
+              How big the icon and text should be
+            type: integer
+            default: 14
+            $meta:
+              autocomplete: font-size
+          icon_location:
+            title: Icon position
+            type: string
+            enum: [ "left", "right" ]
+            default: left
+            $meta:
+              autocomplete: location-lr
+          padding_location:
+            title: Padding location
+            description: |
+              Use padding spaces at at the start or end of value
+            type: string
+            enum: [ "start", "end" ]
+            default: start
+            $meta:
+              autocomplete: padding-location
+          padding_char:
+            title: Padding character
+            description: |
+              Which character to use for padding the values. Typical it's to use space or zero.
+            type: string
+            default: "0"
+          padding_count:
+            title: Padding count
+            description: |
+              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
+            type: integer
+            default: 0
+        unevaluatedProperties: true
+  gps_heading:
+    type: object
+    required:
+      - type
+      - gps_heading
+    properties:
+      type:
+        type: string
+        enum:
+          - gps_heading
+      gps_heading:
+        type: object
+        title: GPS heading
+        description: |
+          GPS heading
+        properties:
+          value:
+            title: value
+            type: number
+            default: 0
+            $meta:
+              suffix: "°"
+              editable: false
+          font_size:
+            title: Font size
+            description: |
+              How big the icon and text should be
+            type: integer
+            default: 14
+            $meta:
+              autocomplete: font-size
+          icon_location:
+            title: Icon position
+            type: string
+            enum: [ "left", "right" ]
+            default: left
+            $meta:
+              autocomplete: location-lr
+          padding_location:
+            title: Padding location
+            description: |
+              Use padding spaces at at the start or end of value
+            type: string
+            enum: [ "start", "end" ]
+            default: start
+            $meta:
+              autocomplete: padding-location
+          padding_char:
+            title: Padding character
+            description: |
+              Which character to use for padding the values. Typical it's to use space or zero.
+            type: string
+            default: "0"
+          padding_count:
+            title: Padding count
+            description: |
+              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
+            type: integer
+            default: 5
+          fixed_precision:
+            title: Value precision
+            description: How precise the GPS heading is (decimal places)
+            type: integer
+            default: 2
+            $meta:
+              editable: false
+              autocomplete: precision-gps
+        unevaluatedProperties: true
+  gps_altitude:
+    type: object
+    required:
+      - type
+      - gps_altitude
+    properties:
+      type:
+        type: string
+        enum:
+          - gps_altitude
+      gps_altitude:
+        type: object
+        title: GPS altitude
+        description: |
+          GPS altitude (meters)
+        properties:
+          value:
+            title: value
+            type: number
+            default: 0
+            $meta:
+              unit: "m"
+              editable: false
+          font_size:
+            title: Font size
+            description: |
+              How big the icon and text should be
+            type: integer
+            default: 14
+            $meta:
+              autocomplete: font-size
+          icon_location:
+            title: Icon position
+            type: string
+            enum: [ "left", "right" ]
+            default: left
+            $meta:
+              autocomplete: location-lr
+          padding_location:
+            title: Padding location
+            description: |
+              Use padding spaces at at the start or end of value
+            type: string
+            enum: [ "start", "end" ]
+            default: start
+            $meta:
+              autocomplete: padding-location
+          padding_char:
+            title: Padding character
+            description: |
+              Which character to use for padding the values. Typical it's to use space or zero.
+            type: string
+            default: "0"
+          padding_count:
+            title: Padding count
+            description: |
+              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
+            type: integer
+            default: 0
+          fixed_precision:
+            title: Value precision
+            description: How precise the barometer altitude value is (decimal places)
+            type: integer
+            default: 2
+        unevaluatedProperties: true
+  gps_satellites:
+    type: object
+    required:
+      - type
+      - gps_satellites
+    properties:
+      type:
+        type: string
+        enum:
+          - gps_satellites
+      gps_satellites:
+        type: object
+        title: GPS satellites
+        description: |
+          How many satellites being used for GPS tracking
+        properties:
+          value:
+            title: value
+            type: integer
+            default: 0
+            $meta:
+              editable: false
+          font_size:
+            title: Font size
+            description: |
+              How big the icon and text should be
+            type: integer
+            default: 14
+            $meta:
+              autocomplete: font-size
+          icon_location:
+            title: Icon position
+            type: string
+            enum: [ "left", "right" ]
+            default: left
+            $meta:
+              autocomplete: location-lr
+          padding_location:
+            title: Padding location
+            description: |
+              Use padding spaces at at the start or end of value
+            type: string
+            enum: [ "start", "end" ]
+            default: start
+            $meta:
+              autocomplete: padding-location
+          padding_char:
+            title: Padding character
+            description: |
+              Which character to use for padding the values. Typical it's to use space or zero.
+            type: string
+            default: "0"
+          padding_count:
+            title: Padding count
+            description: |
+              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
+            type: integer
+            default: 0
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  attitude_pitch:
+    type: object
+    required:
+      - type
+      - attitude_pitch
+    properties:
+      type:
+        type: string
+        enum:
+          - attitude_pitch
+      attitude_pitch:
+        type: object
+        title: Pitch attitude
+        description: |
+          The pitch attitude in degrees off the aircraft's transverse axis
+        properties:
+          value:
+            title: value
+            type: number
+            default: 0
+            $meta:
+              unit: "°"
+              editable: false
+          font_size:
+            title: Font size
+            description: |
+              How big the icon and text should be
+            type: integer
+            default: 14
+            $meta:
+              autocomplete: font-size
+          icon_location:
+            title: Icon position
+            type: string
+            enum: [ "left", "right" ]
+            default: left
+            $meta:
+              autocomplete: location-lr
+          padding_location:
+            title: Padding location
+            description: |
+              Use padding spaces at at the start or end of value
+            type: string
+            enum: [ "start", "end" ]
+            default: start
+            $meta:
+              autocomplete: padding-location
+          padding_char:
+            title: Padding character
+            description: |
+              Which character to use for padding the values. Typical it's to use space or zero.
+            type: string
+            default: "0"
+          padding_count:
+            title: Padding count
+            description: |
+              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
+            type: integer
+            default: 0
+          fixed_precision:
+            title: Value precision
+            description: How precise the pitch value is (decimal places)
+            type: integer
+            default: 2
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  attitude_roll:
+    type: object
+    required:
+      - type
+      - attitude_roll
+    properties:
+      type:
+        type: string
+        enum:
+          - attitude_roll
+      attitude_roll:
+        type: object
+        title: Roll attitude
+        description: |
+          The roll attitude in degrees off the the aircraft's longitudinal axis
+        properties:
+          value:
+            title: value
+            type: number
+            default: 0
+            $meta:
+              unit: "°"
+              editable: false
+          font_size:
+            title: Font size
+            description: |
+              How big the icon and text should be
+            type: integer
+            default: 14
+            $meta:
+              autocomplete: font-size
+          icon_location:
+            title: Icon position
+            type: string
+            enum: [ "left", "right" ]
+            default: left
+            $meta:
+              autocomplete: location-lr
+          padding_location:
+            title: Padding location
+            description: |
+              Use padding spaces at at the start or end of value
+            type: string
+            enum: [ "start", "end" ]
+            default: start
+            $meta:
+              autocomplete: padding-location
+          padding_char:
+            title: Padding character
+            description: |
+              Which character to use for padding the values. Typical it's to use space or zero.
+            type: string
+            default: "0"
+          padding_count:
+            title: Padding count
+            description: |
+              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
+            type: integer
+            default: 0
+          fixed_precision:
+            title: Value precision
+            description: How precise the roll value is (decimal places)
+            type: integer
+            default: 2
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  attitude_yaw:
+    type: object
+    required:
+      - type
+      - attitude_yaw
+    properties:
+      type:
+        type: string
+        enum:
+          - attitude_yaw
+      attitude_yaw:
+        type: object
+        title: Yaw attitude
+        description: |
+          The yaw attitude in degrees off the the aircraft's vertical axis
+        properties:
+          value:
+            title: value
+            type: number
+            default: 0
+            $meta:
+              unit: "°"
+              editable: false
+          font_size:
+            title: Font size
+            description: |
+              How big the icon and text should be
+            type: integer
+            default: 14
+            $meta:
+              autocomplete: font-size
+          icon_location:
+            title: Icon position
+            type: string
+            enum: [ "left", "right" ]
+            default: left
+            $meta:
+              autocomplete: location-lr
+          padding_location:
+            title: Padding location
+            description: |
+              Use padding spaces at at the start or end of value
+            type: string
+            enum: [ "start", "end" ]
+            default: start
+            $meta:
+              autocomplete: padding-location
+          padding_char:
+            title: Padding character
+            description: |
+              Which character to use for padding the values. Typical it's to use space or zero.
+            type: string
+            default: "0"
+          padding_count:
+            title: Padding count
+            description: |
+              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
+            type: integer
+            default: 0
+          fixed_precision:
+            title: Value precision
+            description: How precise the yaw value is (decimal places)
+            type: integer
+            default: 2
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  link_stats_ul_lq:
+    type: object
+    required:
+      - type
+      - link_stats_ul_lq
+    properties:
+      type:
+        type: string
+        enum:
+          - link_stats_ul_lq
+      link_stats_ul_lq:
+        type: object
+        title: Uplink link quality (percent)
+        description: |
+          The transmitter's link quality as measured at the RF receiver
+        properties:
+          value:
+            title: value
+            type: integer
+            default: 0
+            $meta:
+              prefix: "UL"
+              suffix: "%"
+              editable: false
+          font_size:
+            title: Font size
+            description: |
+              How big the icon and text should be
+            type: integer
+            default: 14
+            $meta:
+              autocomplete: font-size
+          icon_location:
+            title: Icon position
+            type: string
+            enum: [ "left", "right" ]
+            default: left
+            $meta:
+              autocomplete: location-lr
+          padding_location:
+            title: Padding location
+            description: |
+              Use padding spaces at at the start or end of value
+            type: string
+            enum: [ "start", "end" ]
+            default: start
+            $meta:
+              autocomplete: padding-location
+          padding_char:
+            title: Padding character
+            description: |
+              Which character to use for padding the values. Typical it's to use space or zero.
+            type: string
+            default: "0"
+          padding_count:
+            title: Padding count
+            description: |
+              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
+            type: integer
+            default: 0
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  rx_antenna:
+    type: object
+    required:
+      - type
+      - rx_antenna
+    properties:
+      type:
+        type: string
+        enum:
+          - rx_antenna
+      rx_antenna:
+        type: object
+        title: Active receiver antenna
+        description: |
+          The RF receiver's antenna at that is currently active
+        properties:
+          value:
+            title: value
+            type: integer
+            default: 0
+            $meta:
+              editable: false
+          font_size:
+            title: Font size
+            description: |
+              How big the icon and text should be
+            type: integer
+            default: 14
+            $meta:
+              autocomplete: font-size
+          icon_location:
+            title: Icon position
+            type: string
+            enum: [ "left", "right" ]
+            default: left
+            $meta:
+              autocomplete: location-lr
+          padding_location:
+            title: Padding location
+            description: |
+              Use padding spaces at at the start or end of value
+            type: string
+            enum: [ "start", "end" ]
+            default: start
+            $meta:
+              autocomplete: padding-location
+          padding_char:
+            title: Padding character
+            description: |
+              Which character to use for padding the values. Typical it's to use space or zero.
+            type: string
+            default: "0"
+          padding_count:
+            title: Padding count
+            description: |
+              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
+            type: integer
+            default: 0
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  ul_power:
+    type: object
+    required:
+      - type
+      - ul_power
+    properties:
+      type:
+        type: string
+        enum:
+          - ul_power
+      ul_power:
+        type: object
+        title: Uplink power (milli-watts)
+        description: |
+          The RF transmitter's output power
+        properties:
+          value:
+            title: value
+            type: integer
+            default: 0
+            $meta:
+              prefix: "UL"
+              unit: "mW"
+              editable: false
+          font_size:
+            title: Font size
+            description: |
+              How big the icon and text should be
+            type: integer
+            default: 14
+            $meta:
+              autocomplete: font-size
+          icon_location:
+            title: Icon position
+            type: string
+            enum: [ "left", "right" ]
+            default: left
+            $meta:
+              autocomplete: location-lr
+          padding_location:
+            title: Padding location
+            description: |
+              Use padding spaces at at the start or end of value
+            type: string
+            enum: [ "start", "end" ]
+            default: start
+            $meta:
+              autocomplete: padding-location
+          padding_char:
+            title: Padding character
+            description: |
+              Which character to use for padding the values. Typical it's to use space or zero.
+            type: string
+            default: "0"
+          padding_count:
+            title: Padding count
+            description: |
+              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
+            type: integer
+            default: 0
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  link_stats_ul_snr:
+    type: object
+    required:
+      - type
+      - link_stats_ul_snr
+    properties:
+      type:
+        type: string
+        enum:
+          - link_stats_ul_snr
+      link_stats_ul_snr:
+        type: object
+        title: Uplink signal to noise ratio (dB)
+        description: |
+          The transmitter's signal to noise ratio as measured at the RF receiver
+        properties:
+          value:
+            title: value
+            type: integer
+            default: 0
+            $meta:
+              prefix: "UL"
+              unit: "dB"
+              editable: false
+          font_size:
+            title: Font size
+            description: |
+              How big the icon and text should be
+            type: integer
+            default: 14
+            $meta:
+              autocomplete: font-size
+          icon_location:
+            title: Icon position
+            type: string
+            enum: [ "left", "right" ]
+            default: left
+            $meta:
+              autocomplete: location-lr
+          padding_location:
+            title: Padding location
+            description: |
+              Use padding spaces at at the start or end of value
+            type: string
+            enum: [ "start", "end" ]
+            default: start
+            $meta:
+              autocomplete: padding-location
+          padding_char:
+            title: Padding character
+            description: |
+              Which character to use for padding the values. Typical it's to use space or zero.
+            type: string
+            default: "0"
+          padding_count:
+            title: Padding count
+            description: |
+              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
+            type: integer
+            default: 0
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  link_stats_ul_rssi1:
+    type: object
+    required:
+      - type
+      - link_stats_ul_rssi1
+    properties:
+      type:
+        type: string
+        enum:
+          - link_stats_ul_rssi1
+      link_stats_ul_rssi1:
+        type: object
+        title: Uplink received signal strength (at antenna 1, dBm)
+        description: |
+          The transmitter signal strength (in dBm), at antenna 1, as measured at the RF receiver.
+        properties:
+          value:
+            title: value
+            type: integer
+            default: 0
+            $meta:
+              prefix: "UL"
+              unit: "dBm"
+              editable: false
+          font_size:
+            title: Font size
+            description: |
+              How big the icon and text should be
+            type: integer
+            default: 14
+            $meta:
+              autocomplete: font-size
+          icon_location:
+            title: Icon position
+            type: string
+            enum: [ "left", "right" ]
+            default: left
+            $meta:
+              autocomplete: location-lr
+          padding_location:
+            title: Padding location
+            description: |
+              Use padding spaces at at the start or end of value
+            type: string
+            enum: [ "start", "end" ]
+            default: start
+            $meta:
+              autocomplete: padding-location
+          padding_char:
+            title: Padding character
+            description: |
+              Which character to use for padding the values. Typical it's to use space or zero.
+            type: string
+            default: "0"
+          padding_count:
+            title: Padding count
+            description: |
+              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
+            type: integer
+            default: 0
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  link_stats_ul_rssi2:
+    type: object
+    required:
+      - type
+      - link_stats_ul_rssi2
+    properties:
+      type:
+        type: string
+        enum:
+          - link_stats_ul_rssi2
+      link_stats_ul_rssi2:
+        type: object
+        title: Uplink received signal strength (at antenna 2, dBm)
+        description: |
+          The transmitter's signal strength (in dBm), at antenna 2, as measured at the RF receiver
+        properties:
+          value:
+            title: value
+            type: integer
+            default: 0
+            $meta:
+              prefix: "UL"
+              unit: "dBm"
+              editable: false
+          font_size:
+            title: Font size
+            description: |
+              How big the icon and text should be
+            type: integer
+            default: 14
+            $meta:
+              autocomplete: font-size
+          icon_location:
+            title: Icon position
+            type: string
+            enum: [ "left", "right" ]
+            default: left
+            $meta:
+              autocomplete: location-lr
+          padding_location:
+            title: Padding location
+            description: |
+              Use padding spaces at at the start or end of value
+            type: string
+            enum: [ "start", "end" ]
+            default: start
+            $meta:
+              autocomplete: padding-location
+          padding_char:
+            title: Padding character
+            description: |
+              Which character to use for padding the values. Typical it's to use space or zero.
+            type: string
+            default: "0"
+          padding_count:
+            title: Padding count
+            description: |
+              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
+            type: integer
+            default: 0
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  link_stats_dl_lq:
+    type: object
+    required:
+      - type
+      - link_stats_dl_lq
+    properties:
+      type:
+        type: string
+        enum:
+          - link_stats_dl_lq
+      link_stats_dl_lq:
+        type: object
+        title: Downlink link quality (percent)
+        description: |
+          The receiver's link quality as measured at the RF transmitter.
+        properties:
+          value:
+            title: value
+            type: integer
+            default: 0
+            $meta:
+              prefix: "DL"
+              suffix: "%"
+              editable: false
+          font_size:
+            title: Font size
+            description: |
+              How big the icon and text should be
+            type: integer
+            default: 14
+            $meta:
+              autocomplete: font-size
+          icon_location:
+            title: Icon position
+            type: string
+            enum: [ "left", "right" ]
+            default: left
+            $meta:
+              autocomplete: location-lr
+          padding_location:
+            title: Padding location
+            description: |
+              Use padding spaces at at the start or end of value
+            type: string
+            enum: [ "start", "end" ]
+            default: start
+            $meta:
+              autocomplete: padding-location
+          padding_char:
+            title: Padding character
+            description: |
+              Which character to use for padding the values. Typical it's to use space or zero.
+            type: string
+            default: "0"
+          padding_count:
+            title: Padding count
+            description: |
+              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
+            type: integer
+            default: 0
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  link_stats_dl_snr:
+    type: object
+    required:
+      - type
+      - link_stats_dl_snr
+    properties:
+      type:
+        type: string
+        enum:
+          - link_stats_dl_snr
+      link_stats_dl_snr:
+        type: object
+        title: Downlink signal to noise ratio (dB)
+        description: |
+          The receiver's signal to noise ratio as measured at the RF transmitter
+        properties:
+          value:
+            title: value
+            type: integer
+            default: 0
+            $meta:
+              prefix: "DL"
+              unit: "dB"
+              editable: false
+          font_size:
+            title: Font size
+            description: |
+              How big the icon and text should be
+            type: integer
+            default: 14
+            $meta:
+              autocomplete: font-size
+          icon_location:
+            title: Icon position
+            type: string
+            enum: [ "left", "right" ]
+            default: left
+            $meta:
+              autocomplete: location-lr
+          padding_location:
+            title: Padding location
+            description: |
+              Use padding spaces at at the start or end of value
+            type: string
+            enum: [ "start", "end" ]
+            default: start
+            $meta:
+              autocomplete: padding-location
+          padding_char:
+            title: Padding character
+            description: |
+              Which character to use for padding the values. Typical it's to use space or zero.
+            type: string
+            default: "0"
+          padding_count:
+            title: Padding count
+            description: |
+              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
+            type: integer
+            default: 0
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  link_stats_dl_rssi:
+    type: object
+    required:
+      - type
+      - link_stats_dl_rssi
+    properties:
+      type:
+        type: string
+        enum:
+          - link_stats_dl_rssi
+      link_stats_dl_rssi:
+        type: object
+        title: Downlink received signal strength (dBm)
+        description: |
+          The receiver's signal strength (in dBm) as measured at the RF transmitter
+        properties:
+          value:
+            title: value
+            type: integer
+            default: 0
+            $meta:
+              prefix: "DL"
+              unit: "dBm"
+              editable: false
+          font_size:
+            title: Font size
+            description: |
+              How big the icon and text should be
+            type: integer
+            default: 14
+            $meta:
+              autocomplete: font-size
+          icon_location:
+            title: Icon position
+            type: string
+            enum: [ "left", "right" ]
+            default: left
+            $meta:
+              autocomplete: location-lr
+          padding_location:
+            title: Padding location
+            description: |
+              Use padding spaces at at the start or end of value
+            type: string
+            enum: [ "start", "end" ]
+            default: start
+            $meta:
+              autocomplete: padding-location
+          padding_char:
+            title: Padding character
+            description: |
+              Which character to use for padding the values. Typical it's to use space or zero.
+            type: string
+            default: "0"
+          padding_count:
+            title: Padding count
+            description: |
+              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
+            type: integer
+            default: 0
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  link_stats_rf_mode:
+    type: object
+    required:
+      - type
+      - link_stats_rf_mode
+    properties:
+      type:
+        type: string
+        enum:
+          - link_stats_rf_mode
+      link_stats_rf_mode:
+        type: object
+        title: Radio frequency mode (Hz)
+        description: |
+          The radio frequency mode being used by the radio link
+        properties:
+          value:
+            title: value
+            type: integer
+            default: 0
+            $meta:
+              unit: Hz
+              map:
+                13: F1000
+                12: F500
+                11: D500
+                10: D250
+                9: 500
+                8: 333
+                7: 250
+                6: 200
+                5: 150
+                4: 100
+                3: 100
+                2: 50
+                1: 25
+                0: ...
+              editable: false
+          font_size:
+            title: Font size
+            description: |
+              How big the icon and text should be
+            type: integer
+            default: 14
+            $meta:
+              autocomplete: font-size
+          icon_location:
+            title: Icon position
+            type: string
+            enum: [ "left", "right" ]
+            default: left
+            $meta:
+              autocomplete: location-lr
+          padding_location:
+            title: Padding location
+            description: |
+              Use padding spaces at at the start or end of value
+            type: string
+            enum: [ "start", "end" ]
+            default: start
+            $meta:
+              autocomplete: padding-location
+          padding_char:
+            title: Padding character
+            description: |
+              Which character to use for padding the values. Typical it's to use space or zero.
+            type: string
+            default: " "
+          padding_count:
+            title: Padding count
+            description: |
+              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
+            type: integer
+            default: 0
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  link_rx_ul_rssi:
+    type: object
+    required:
+      - type
+      - link_rx_ul_rssi
+    properties:
+      type:
+        type: string
+        enum:
+          - link_rx_ul_rssi
+      link_rx_ul_rssi:
+        type: object
+        title: Uplink received signal strength (percent)
+        description: |
+          The transmitter's signal strength, as measured at the RF receiver
+        properties:
+          value:
+            title: value
+            type: integer
+            default: 0
+            $meta:
+              prefix: "UL"
+              suffix: "%"
+              editable: false
+          font_size:
+            title: Font size
+            description: |
+              How big the icon and text should be
+            type: integer
+            default: 14
+            $meta:
+              autocomplete: font-size
+          icon_location:
+            title: Icon position
+            type: string
+            enum: [ "left", "right" ]
+            default: left
+            $meta:
+              autocomplete: location-lr
+          padding_location:
+            title: Padding location
+            description: |
+              Use padding spaces at at the start or end of value
+            type: string
+            enum: [ "start", "end" ]
+            default: start
+            $meta:
+              autocomplete: padding-location
+          padding_char:
+            title: Padding character
+            description: |
+              Which character to use for padding the values. Typical it's to use space or zero.
+            type: string
+            default: "0"
+          padding_count:
+            title: Padding count
+            description: |
+              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
+            type: integer
+            default: 0
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  link_rx_dl_power:
+    type: object
+    required:
+      - type
+      - link_rx_dl_power
+    properties:
+      type:
+        type: string
+        enum:
+          - link_rx_dl_power
+      link_rx_dl_power:
+        type: object
+        title: Downlink signal power (in milli-watts)
+        description: |
+          The receiver's downlink signal power measured in milli-watts.
+        properties:
+          value:
+            title: value
+            type: integer
+            default: 0
+            $meta:
+              prefix: "DL"
+              unit: "mW"
+              editable: false
+          font_size:
+            title: Font size
+            description: |
+              How big the icon and text should be
+            type: integer
+            default: 14
+            $meta:
+              autocomplete: font-size
+          icon_location:
+            title: Icon position
+            type: string
+            enum: [ "left", "right" ]
+            default: left
+            $meta:
+              autocomplete: location-lr
+          padding_location:
+            title: Padding location
+            description: |
+              Use padding spaces at at the start or end of value
+            type: string
+            enum: [ "start", "end" ]
+            default: start
+            $meta:
+              autocomplete: padding-location
+          padding_char:
+            title: Padding character
+            description: |
+              Which character to use for padding the values. Typical it's to use space or zero.
+            type: string
+            default: "0"
+          padding_count:
+            title: Padding count
+            description: |
+              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
+            type: integer
+            default: 0
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  link_tx_dl_rssi:
+    type: object
+    required:
+      - type
+      - link_tx_dl_rssi
+    properties:
+      type:
+        type: string
+        enum:
+          - link_tx_dl_rssi
+      link_tx_dl_rssi:
+        type: object
+        title: Downlink received signal strength (percent)
+        description: |
+          The receiver's signal strength, as measured at the RF transmitter
+        properties:
+          value:
+            title: value
+            type: integer
+            default: 0
+            $meta:
+              prefix: "DL"
+              suffix: "%"
+              editable: false
+          font_size:
+            title: Font size
+            description: |
+              How big the icon and text should be
+            type: integer
+            default: 14
+            $meta:
+              autocomplete: font-size
+          icon_location:
+            title: Icon position
+            type: string
+            enum: [ "left", "right" ]
+            default: left
+            $meta:
+              autocomplete: location-lr
+          padding_location:
+            title: Padding location
+            description: |
+              Use padding spaces at at the start or end of value
+            type: string
+            enum: [ "start", "end" ]
+            default: start
+            $meta:
+              autocomplete: padding-location
+          padding_char:
+            title: Padding character
+            description: |
+              Which character to use for padding the values. Typical it's to use space or zero.
+            type: string
+            default: "0"
+          padding_count:
+            title: Padding count
+            description: |
+              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
+            type: integer
+            default: 0
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  link_tx_ul_power:
+    type: object
+    required:
+      - type
+      - link_tx_ul_power
+    properties:
+      type:
+        type: string
+        enum:
+          - link_tx_ul_power
+      link_tx_ul_power:
+        type: object
+        title: Uplink signal power (in milli-watts)
+        description: |
+          The transmitter's uplink signal power measured in milli-watts.
+        properties:
+          value:
+            title: value
+            type: integer
+            default: 0
+            $meta:
+              prefix: "UL"
+              unit: "mW"
+              map:
+                0: 0
+                1: 10
+                2: 25
+                3: 100
+                4: 500
+                5: 1000
+                6: 2000
+                7: 250
+                8: 50
+              editable: false
+          font_size:
+            title: Font size
+            description: |
+              How big the icon and text should be
+            type: integer
+            default: 14
+            $meta:
+              autocomplete: font-size
+          icon_location:
+            title: Icon position
+            type: string
+            enum: [ "left", "right" ]
+            default: left
+            $meta:
+              autocomplete: location-lr
+          padding_location:
+            title: Padding location
+            description: |
+              Use padding spaces at at the start or end of value
+            type: string
+            enum: [ "start", "end" ]
+            default: start
+            $meta:
+              autocomplete: padding-location
+          padding_char:
+            title: Padding character
+            description: |
+              Which character to use for padding the values. Typical it's to use space or zero.
+            type: string
+            default: "0"
+          padding_count:
+            title: Padding count
+            description: |
+              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
+            type: integer
+            default: 0
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  flight_mode:
+    type: object
+    required:
+      - type
+      - flight_mode
+    properties:
+      type:
+        type: string
+        enum:
+          - flight_mode
+      flight_mode:
+        type: object
+        title: Flight mode
+        description: |
+          The aircraft's flight flight mode (e.g. ACRO, HOR, FS, etc)
+        properties:
+          value:
+            title: value
+            type: string
+            default: ...
+            $meta:
+              editable: false
+          font_size:
+            title: Font size
+            description: |
+              How big the icon and text should be
+            type: integer
+            default: 14
+            $meta:
+              autocomplete: font-size
+          icon_location:
+            title: Icon position
+            type: string
+            enum: [ "left", "right" ]
+            default: left
+            $meta:
+              autocomplete: location-lr
+          padding_location:
+            title: Padding location
+            description: |
+              Use padding spaces at at the start or end of value
+            type: string
+            enum: [ "start", "end" ]
+            default: start
+            $meta:
+              autocomplete: padding-location
+          padding_char:
+            title: Padding character
+            description: |
+              Which character to use for padding the values. Typical it's to use space or zero.
+            type: string
+            default: " "
+          padding_count:
+            title: Padding count
+            description: |
+              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
+            type: integer
+            default: 0
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  barometer_altitude:
+    type: object
+    required:
+      - type
+      - barometer_altitude
+    properties:
+      type:
+        type: string
+        enum:
+          - barometer_altitude
+      barometer_altitude:
+        type: object
+        title: Barometer altitude
+        description: |
+          The aircraft's altitude as measured by a barometer instrument
+        properties:
+          value:
+            title: value
+            type: integer
+            default: 0
+            $meta:
+              unit: m
+              editable: false
+          font_size:
+            title: Font size
+            description: |
+              How big the icon and text should be
+            type: integer
+            default: 14
+            $meta:
+              autocomplete: font-size
+          icon_location:
+            title: Icon position
+            type: string
+            enum: [ "left", "right" ]
+            default: left
+            $meta:
+              autocomplete: location-lr
+          padding_location:
+            title: Padding location
+            description: |
+              Use padding spaces at at the start or end of value
+            type: string
+            enum: [ "start", "end" ]
+            default: start
+            $meta:
+              autocomplete: padding-location
+          padding_char:
+            title: Padding character
+            description: |
+              Which character to use for padding the values. Typical it's to use space or zero.
+            type: string
+            default: 0
+          padding_count:
+            title: Padding count
+            description: |
+              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
+            type: integer
+            default: 0
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  variometer_speed:
+    type: object
+    required:
+      - type
+      - variometer_speed
+    properties:
+      type:
+        type: string
+        enum:
+          - variometer_speed
+      variometer_speed:
+        type: object
+        title: Variometer speed
+        description: |
+          The aircraft's vertical speed as measured by a variometer instrument
+        properties:
+          value:
+            title: value
+            type: number
+            default: 0
+            $meta:
+              unit: m/s
+              editable: false
+          font_size:
+            title: Font size
+            description: |
+              How big the icon and text should be
+            type: integer
+            default: 14
+            $meta:
+              autocomplete: font-size
+          icon_location:
+            title: Icon position
+            type: string
+            enum: [ "left", "right" ]
+            default: left
+            $meta:
+              autocomplete: location-lr
+          padding_location:
+            title: Padding location
+            description: |
+              Use padding spaces at at the start or end of value
+            type: string
+            enum: [ "start", "end" ]
+            default: start
+            $meta:
+              autocomplete: padding-location
+          padding_char:
+            title: Padding character
+            description: |
+              Which character to use for padding the values. Typical it's to use space or zero.
+            type: string
+            default: 0
+          padding_count:
+            title: Padding count
+            description: |
+              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
+            type: integer
+            default: 0
+          fixed_precision:
+            title: Value precision
+            description: How precise the variometer speed value is (decimal places)
+            type: integer
+            default: 0
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  beats_chart:
+    type: object
+    required:
+      - type
+      - beats_chart
+    properties:
+      type:
+        type: string
+        enum:
+          - beats_chart
+      beats_chart:
+        type: object
+        title: Telemetry heartbeat
+        description: |
+          Displays a chart of the sync packets received from the transmitter
+        properties:
+          value:
+            title: value
+            type: number
+            default: 0
+            $meta:
+              editable: false
+        unevaluatedProperties: true
+    unevaluatedProperties: true

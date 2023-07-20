@@ -4,30 +4,70 @@
 
 package config
 
-// InputMap *** Map ***
-type InputMap struct {
-	Type string `json:"type"`
-	Map  struct {
-		InputKey      InputHolder     `json:"input_key"`
-		OutputDefault int32           `json:"output_default"`
-		OutputMap     map[int32]int32 `json:"output_map"`
-	} `json:"map" input:"true"`
+import "github.com/kaack/elrs-joystick-control/pkg/util"
+
+type MapT struct {
+	Input         *IOHolder                       `json:"input"`
+	OutputDefault util.RawValue                   `json:"output_default"`
+	OutputMap     map[util.RawValue]util.RawValue `json:"output_map"`
 }
 
-func (i *InputMap) Eval(cc *Controller) (out int32, nan bool) {
-	out, nan = i.Map.InputKey.I.Eval(cc)
+// InputMap *** Map ***
+type InputMap struct {
+	Id    string        `json:"id"`
+	Value util.RawValue `json:"value"`
+	IsNaN bool          `json:"-"`
+
+	Type string `json:"type"`
+	Map  MapT   `json:"map" input:"true"`
+}
+
+func (i *InputMap) Eval(c *Config) (src IOType, out util.RawValue, ch util.ChannelNumber, nan bool) {
+	src, out, ch, nan = i._Eval(c)
+	i.Value = out
+	i.IsNaN = nan
+
+	return src, out, ch, nan
+}
+
+func (i *InputMap) _Eval(c *Config) (src IOType, out util.RawValue, ch util.ChannelNumber, nan bool) {
+
+	//there is no input, result is default value
+	if i.Map.Input == nil {
+		return nil, i.Map.OutputDefault, -1, false
+	}
+
+	//output default value when input is not a number
+	_, out, ch, nan = i.Map.Input.Eval(c)
 	if nan {
-		return i.Map.OutputDefault, false
+		return nil, i.Map.OutputDefault, -1, true
 	}
 
 	var ok bool
-	if out, ok = i.Map.OutputMap[out]; !ok {
-		return i.Map.OutputDefault, false
+	var res util.RawValue
+	if res, ok = i.Map.OutputMap[out]; !ok {
+		return nil, i.Map.OutputDefault, ch, false
 	}
 
-	return out, false
+	return nil, res, ch, false
 }
 
 func (i *InputMap) InputType() string {
 	return i.Type
+}
+
+func (i *InputMap) InputValue() *util.RawValue {
+	if i.IsNaN {
+		return nil
+	}
+	return &i.Value
+}
+
+func (i *InputMap) InputId() string {
+	return i.Id
+}
+
+func (i *InputMap) Children() (out *[]*IOHolder) {
+	return GetChildren(i.Map.Input, nil)
+
 }

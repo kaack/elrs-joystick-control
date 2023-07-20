@@ -6,10 +6,13 @@ package serial
 
 import (
 	se "go.bug.st/serial/enumerator"
-	"log"
+	"gopkg.in/tomb.v2"
 )
 
-type Controller struct{}
+type Controller struct {
+	linkTomb      *tomb.Tomb
+	telemetryTomb *tomb.Tomb
+}
 
 func NewCtl() *Controller {
 	serialCtl := &Controller{}
@@ -17,7 +20,7 @@ func NewCtl() *Controller {
 
 	if err != nil {
 		serialCtl.Quit()
-		log.Fatal(err)
+		panic(err)
 	}
 
 	return serialCtl

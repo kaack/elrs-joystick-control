@@ -1,0 +1,1710 @@
+# SPDX-FileCopyrightText: © 2023 OneEyeFPV oneeyefpv@gmail.com
+# SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-License-Identifier: FS-0.9-or-later
+
+$schema: 'https://json-schema.org/draft/2020-12/schema'
+title: config
+id: 'https://github.com/kaak/elrs-joystick-control/pkg/config/schema.yaml'
+type: object
+description: Schema Representing the Joystick Controller Config
+properties:
+  config:
+    $ref: '#/definitions/config'
+unevaluatedProperties: true
+definitions:
+  config:
+    type: object
+    properties:
+      input_output_map:
+        $ref: '#/definitions/input_output_map'
+    required:
+      - input_output_map
+  input_output_map:
+    type: object
+    unevaluatedProperties:
+      $ref: '#/definitions/input'
+  input:
+    type: object
+    required:
+      - id
+      - type
+    properties:
+      id:
+        type: string
+      value:
+        type: integer
+      type:
+        type: string
+        enum:
+          - if
+          - switch
+          - case
+          - linear
+          - map
+          - seq
+          - add
+          - subtract
+          - max
+          - min
+          - invert
+          - and
+          - or
+          - eq
+          - neq
+          - gte
+          - lte
+          - lt
+          - gt
+          - read
+          - number
+          - tx
+          - gamepad
+          - channel
+          - axis
+          - button
+          - hat
+          - trim
+    dependentSchemas:
+      if:
+        $ref: '#/definitions/if'
+      switch:
+        $ref: '#/definitions/switch'
+      case:
+        $ref: '#/definitions/case'
+      linear:
+        $ref: '#/definitions/linear'
+      map:
+        $ref: '#/definitions/map'
+      add:
+        $ref: '#/definitions/add'
+      subtract:
+        $ref: '#/definitions/subtract'
+      max:
+        $ref: '#/definitions/max'
+      min:
+        $ref: '#/definitions/min'
+      invert:
+        $ref: '#/definitions/invert'
+      and:
+        $ref: '#/definitions/and'
+      or:
+        $ref: '#/definitions/or'
+      eq:
+        $ref: '#/definitions/eq'
+      neq:
+        $ref: '#/definitions/neq'
+      gte:
+        $ref: '#/definitions/gte'
+      lte:
+        $ref: '#/definitions/lte'
+      lt:
+        $ref: '#/definitions/lt'
+      gt:
+        $ref: '#/definitions/gt'
+      read:
+        $ref: '#/definitions/read'
+      number:
+        $ref: '#/definitions/number'
+      tx:
+        $ref: '#/definitions/tx'
+      gamepad:
+        $ref: '#/definitions/gamepad'
+      channel:
+        $ref: '#/definitions/channel'
+      axis:
+        $ref: '#/definitions/axis'
+      button:
+        $ref: '#/definitions/button'
+      hat:
+        $ref: '#/definitions/hat'
+    unevaluatedProperties: true
+  hat:
+    type: object
+    required:
+      - type
+      - hat
+    properties:
+      type:
+        type: string
+        enum:
+          - hat
+      hat:
+        type: object
+        title: Gamepad Hat
+        description: |
+          Maps to a hat/pov switch in a gamepad. Hat switches can have 4
+          (N,S,E,W) or 8 (N,S,E,W,NE,NW,SE,SW) values. Gamepad hats are
+          identified by an index number (starting from 0)
+        required:
+          - input
+          - number
+        properties:
+          label:
+            title: Label
+            description: A short descriptive name
+            type: string
+          input:
+            title: Gamepad
+            $meta:
+              expected: gamepad
+              handle: in1
+            $ref: '#/definitions/input'
+          number:
+            title: Hat number
+            description: Hat index number (starts at 0)
+            type: integer
+          output_invert:
+            title: Invert output
+            description: Multiply output value by -1
+            type: boolean
+            default: false
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  button:
+    type: object
+    required:
+      - type
+      - button
+    properties:
+      type:
+        type: string
+        enum:
+          - button
+      button:
+        type: object
+        title: Gamepad Button
+        description: |
+          Maps to a button in a gamepad. A gamepad button is a push (momentary)
+          button, or a two position switch. Gamepad buttons are identified by an
+          index number (starting from 0)
+        required:
+          - input
+          - number
+        properties:
+          label:
+            title: Label
+            description: A short descriptive name
+            type: string
+          number:
+            title: Button number
+            description: Button index number (starts at 0)
+            $meta:
+              autocomplete: buttons
+            type: integer
+          active_value:
+            title: Active value
+            description: Value to use when the button is active
+            type: integer
+            $meta:
+              autocomplete: raw
+            default: 32767
+          inactive_value:
+            title: Inactive value
+            description: Value to use when the button is inactive
+            type: integer
+            $meta:
+              autocomplete: raw
+            default: 0
+          input:
+            title: Gamepad
+            $meta:
+              expected: gamepad
+              handle: in1
+            $ref: '#/definitions/input'
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  axis:
+    type: object
+    required:
+      - type
+      - axis
+    properties:
+      type:
+        type: string
+        enum:
+          - axis
+      axis:
+        type: object
+        title: Gamepad Axis
+        description: |
+          Maps to an axis in a gamepad. Axes can have values between -32767 and 32767. 
+          Gamepad axes are identified by an index number (starting from 0)
+        required:
+          - input
+          - number
+        properties:
+          label:
+            title: Label
+            description: A short descriptive name
+            type: string
+          number:
+            title: Axis number
+            description: Axis index number (starts at 0)
+            $meta:
+              autocomplete: axes
+            type: integer
+          output_invert:
+            title: Invert output
+            description: Multiply output value by -1
+            $meta:
+              autocomplete: boolean
+            type: boolean
+            default: false
+          deadzone:
+            title: Deadzone
+            description: Deadzone amount around the center position
+            type: integer
+            default: 0
+          input:
+            title: Gamepad
+            $meta:
+              expected: gamepad
+              handle: in1
+            $ref: '#/definitions/input'
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  tx:
+    type: object
+    required:
+      - type
+      - tx
+    properties:
+      type:
+        type: string
+        enum:
+          - tx
+      tx:
+        type: object
+        title: ELRS Transmitter
+        description: |
+          Represents an ExpressLRS radio transmitter device.
+            
+            
+          It reads the value of each channel, and writes it on the specified Port.
+            
+            
+          It expects the channel values to be in CRSF format.
+        required:
+          - port
+          - channels
+        properties:
+          label:
+            title: Label
+            description: A short descriptive name
+            type: string
+          name:
+            title: Product name
+            description: The brand or product name of the ELRS RF transmitter
+            type: string
+          port:
+            title: Port name
+            description: The serial port name (e.g. COM16)
+            $meta:
+              autocomplete: transmitters
+            type: string
+          channels:
+            type: array
+            title: Channels
+            minItems: 1
+            maxItems: 16
+            $meta:
+              expected: channel
+              handle: in1
+            items:
+              $ref: '#/definitions/input'
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  channel:
+    type: object
+    required:
+      - type
+      - channel
+    properties:
+      type:
+        type: string
+        enum:
+          - channel
+      channel:
+        type: object
+        title: Channel
+        description: |
+          Represents a radio control channel used by an ELRS RF transmitter.
+            
+            
+          This node does two things. First it tags the input value with a channel number.
+          Then, it converts the input value from **RAW** to **CRSF** format.
+            
+            
+          The RAW values are mapped uniformly from the `[-32768,  32767]` **RAW** value range down onto the `[0, 1984]` **CRSF** value range.
+          The **RAW-to-CRSF** conversion formula is:
+            
+            
+          ```
+            CRSF = crsfMin + (crsfMax-crsfMin)*(RAW-rawMin)/(rawMax-rawMin)
+          ```  
+            
+            
+          This step is needed because ExpressLRS RF transmitters expect the channel values in **CRSF** format.
+        required:
+          - number
+          - input
+        properties:
+          label:
+            title: Label
+            description: A short descriptive name
+            type: string
+          number:
+            title: Channel number
+            description: The radio control channel number. (1 to 16)
+            $meta:
+              autocomplete: channels
+            type: integer
+          crsf_max:
+            title: CRSF max value
+            description: The maximum CRSF value expected by an ELRS RF transmitter
+            type: integer
+            $meta:
+              autocomplete: crsf
+            default: 1984
+          crsf_min:
+            title: CRSF min value
+            description: The minimum CRSF value expected by an ELRS RF transmitter
+            type: integer
+            $meta:
+              autocomplete: crsf
+            default: 0
+          raw_max:
+            title: RAW max value
+            description: The minimum RAW value output by a gamepad
+            type: integer
+            $meta:
+              autocomplete: raw
+            default: 32767
+          raw_min:
+            title: RAW min value
+            description: The maximum RAW value output by a gamepad
+            type: integer
+            $meta:
+              autocomplete: raw
+            default: -32768
+          input:
+            title: Input
+            $meta:
+              handle: in1
+            $ref: '#/definitions/input'
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  gamepad:
+    type: object
+    required:
+      - type
+      - gamepad
+    properties:
+      type:
+        type: string
+        enum:
+          - gamepad
+      gamepad:
+        type: object
+        title: Gamepad
+        description: |
+          Represents a gamepad (or joystick) device. Gamepads have a unique identifier.
+        required:
+          - id
+        properties:
+          label:
+            title: Label
+            description: A short descriptive name
+            type: string
+          name:
+            title: Product name
+            description: The brand or product name of the gamepad
+            type: string
+          id:
+            title: Device identifier
+            description: The gamepad unique identifier
+            $meta:
+              autocomplete: gamepads
+            type: string
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  switch:
+    type: object
+    required:
+      - type
+      - switch
+    properties:
+      type:
+        type: string
+        enum:
+          - switch
+      switch:
+        type: object
+        title: Switch statement
+        description: |
+          Represents a logical switch-statement, like those used in programming
+          languages.
+            
+            
+          A switch-statement evaluates each input in order (left-to-right), until it finds one
+          that outputs a value. When it does, it uses that value as its own output.
+                      
+            
+          Using a switch-statement, in combination with case-statements, you can selectively 
+          choose a value to output based on which case-statement has a **truthy** condition.
+
+        required:
+          - cases
+        properties:
+          label:
+            title: Label
+            description: A short descriptive name
+            type: string
+          output_sticky:
+            title: Sticky output
+            description: Hold the most recent value as the output.
+            $meta:
+              autocomplete: boolean
+            type: boolean
+            default: false
+          output_default:
+            title: Default output
+            description: |
+              Output this value if all case-statements fail, and there is no sticky value set.
+            type: integer
+            $meta:
+              autocomplete: raw
+            default: 0
+          cases:
+            type: array
+            title: Cases
+            minItems: 1
+            $meta:
+              handle: in1
+            items:
+              $ref: '#/definitions/input'
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  case:
+    type: object
+    required:
+      - type
+      - case
+    properties:
+      type:
+        type: string
+        enum:
+          - case
+      case:
+        type: object
+        title: Case Statement
+        description: |
+          Represents a case-statement, like those used in programming languages.
+            
+            
+          A case-statement has an **input condition**, and an **input value**.  
+          The case-statement connects the input to the output when the condition is
+          **truthy**. Otherwise, no value is sent to the output. 
+            
+            
+          More than one input is allowed for the **condition** handle. If you use multiple conditions, 
+          they are combined with a logical **AND** operator. i.e. `condition = cond[1] AND cond[2] AND cond[n]` ... etc.
+        required:
+          - conditions
+        properties:
+          label:
+            title: Label
+            description: A short descriptive name
+            type: string
+          negate_condition:
+            title: Negate condition
+            description: Negates the condition value before it's checked for **truthy**-ness.
+            $meta:
+              autocomplete: boolean
+            type: boolean
+            default: false
+          input_default:
+            title: Default input value
+            description: 'If there is no input, use this value instead.'
+            type: integer
+            $meta:
+              autocomplete: raw
+          conditions:
+            title: Conditions
+            type: array
+            minItems: 1
+            $meta:
+              handle: cond1
+            items:
+              $ref: '#/definitions/input'
+          input:
+            title: Input
+            $meta:
+              handle: in1
+            $ref: '#/definitions/input'
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  trim:
+    type: object
+    required:
+      - type
+      - trim
+    properties:
+      type:
+        type: string
+        enum:
+          - trim
+      trim:
+        type: object
+        title: Trim value
+        description: |
+          Represents the trim functionality that exists in RC radios. It takes the **Input** value and shifts it up or down
+          by a certain trim amount before writing it the **Output**. There are two ways you can control the trim amount.
+            
+            
+          First, you can use the **Main-Trim up**, or **Main-Trim down** conditions to gradually increase or decrease the **Main-Trim** amount.
+          Or, you can use the **Instant Main-Trim** condition. This immediately calculates and sets the **Main-Trim** value based on how far the **Input**
+          value is off center at that instant. The calculation is done when the condition is **truthy**, but the new trim value is only applied
+          once it goes back down to **falsy**. This makes it very convenient, for example, you can press and hold a momentary button, 
+          to capture the trim value, and then re-center the stick and finally release the button to use the new trim value.
+              
+            
+          Second, you can use the **Sub-Trim** input handle to provide an additional value that will be added to the **Input** 
+          value before applying the **Main-Trim**.
+            
+            
+          The overall trim formula is `Output = MainTrim + (Input + SubTrim)`.
+        properties:
+          label:
+            title: Label
+            description: A short descriptive name
+            type: string
+          main_trim_step:
+            title: Main-Trim step value
+            description: | 
+              How much to add/subtract to the to **Main-Trim** value when the up/down conditions are **truthy**
+            type: integer
+            default: 100
+          main_trim_default:
+            title: Main-Trim initial value
+            description: This is the initial value that the **Main-Trim** is set to.
+            type: integer
+            default: 0
+          sub_trim_default:
+            title: Sub-Trim default value
+            description: If there is no **Sub-Trim** input, use this value instead
+            type: integer
+            default: 0
+          activation_duration_min:
+            title: Activation duration minimum
+            type: integer
+            minimum: 0
+            description: | 
+              Minimum duration (in milliseconds) that the conditions must stay **truthy** for a successful activation.
+              An activation occurs only when the condition transitions from **falsy** to **truthy** and back down to **falsy**.
+              For example, by pressing and releasing a momentary button.
+            default: 50
+          main_trim_increase_conditions:
+            title: Increase Main-Trim
+            type: array
+            minItems: 0
+            $meta:
+              handle: cond1
+            items:
+              $ref: '#/definitions/input'
+          main_trim_instant_conditions:
+            title: Instant Main-Trim
+            type: array
+            minItems: 0
+            $meta:
+              handle: cond2
+            items:
+              $ref: '#/definitions/input'
+          main_trim_decrease_conditions:
+            title: Decrease Main-Trim
+            type: array
+            minItems: 0
+            $meta:
+              handle: cond3
+            items:
+              $ref: '#/definitions/input'
+          input:
+            title: Input
+            $meta:
+              handle: in1
+            $ref: '#/definitions/input'
+          sub_trim:
+            title: Sub-Trim
+            $meta:
+              handle: in2
+            $ref: '#/definitions/input'
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  if:
+    type: object
+    required:
+      - type
+      - if
+    properties:
+      type:
+        type: string
+        enum:
+          - if
+      if:
+        type: object
+        title: If Statement
+        description: |
+          Represents an **If-Then-Else** statement, like those used in programming languages.
+          An If statement has an input **condition**, and two input values (**left** and **right**).
+            
+            
+          The If statement connects the output to one of the inputs based on **truthy**-ness 
+          of the **condition**. If the **condition** is **truthy**, it chooses the **left** input, 
+          otherwise it chooses the **right** input.
+            
+            
+          More than one input is allowed for the **condition** handle. If you use multiple conditions, 
+          they are combined with a logical **AND** operator. i.e. `condition = cond[1] AND cond[2] AND cond[n]` ... etc.
+        required:
+          - conditions
+        properties:
+          label:
+            title: Label
+            description: A short descriptive name
+            type: string
+          negate_condition:
+            title: Negate condition
+            description: Negates the condition value before it's checked for **truthy**-ness.
+            $meta:
+              autocomplete: boolean
+            type: boolean
+            default: false
+          left_default:
+            title: Default left input value
+            description: 'If there is no **left** input, use this value instead.'
+            type: integer
+            $meta:
+              autocomplete: raw
+            default: 32767
+          right_default:
+            title: Default right input value
+            description: 'If there is no **right** input, use this value instead.'
+            type: integer
+            $meta:
+              autocomplete: raw
+            default: -32768
+          conditions:
+            title: Conditions
+            type: array
+            minItems: 1
+            $meta:
+              handle: cond1
+            items:
+              $ref: '#/definitions/input'
+          left:
+            title: Left input
+            $meta:
+              handle: in1
+            $ref: '#/definitions/input'
+          right:
+            title: Right input
+            $meta:
+              handle: in2
+            $ref: '#/definitions/input'
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  seq:
+    type: object
+    required:
+      - type
+      - seq
+    properties:
+      type:
+        type: string
+        enum:
+          - seq
+      seq:
+        type: object
+        title: Sequence
+        description: >-
+          Represents a sequence of values, e.g. `v1, v2, v3, vN ...`.
+          Each time the **condition** is **activated**, the next value in the sequence is output.
+          You can choose to traverse the sequence either in circular **clockwise** direction or **ping-pong** style.
+            
+            
+          The condition is considered to be **activated** when its value transitions from **falsy** to **truthy**, 
+          back down to **falsy**. This can happen for example when pressing and releasing a momentary button in a
+          gamepad. This is very useful to emulate multi-position switches with a single momentary button.
+            
+            
+          You can also do more complex setups by using multiple inputs on the **condition** handle. 
+          For example, you can connect two buttons to the **conditions** handle, and make it so that **activation**
+          happens only when both buttons are pressed and released at the same time. If you use multiple conditions, 
+          they are combined with a logical **AND** operator. i.e. `condition = cond[1] AND cond[2] AND cond[n]` ... etc.
+        required:
+          - conditions
+        properties:
+          label:
+            title: Label
+            description: A short descriptive name
+            type: string
+          traversal_method:
+            title: Traversal Method
+            type: string
+            description: Specifies how to traverse the sequence
+            $meta:
+              autocomplete: traverse
+            enum: ["clockwise", "ping-pong"]
+            default: "ping-pong"
+          activation_duration_min:
+            title: Activation duration min
+            type: integer
+            minimum: 25
+            description: Minimum duration (in milliseconds) that the condition must stay **truthy** for a successful activation
+            default: 50
+          activation_duration_max:
+            title: Activation duration max
+            type: integer
+            minimum: 0
+            description: Maximum duration (in milliseconds) that the condition may stay **truthy** for a successful activation
+            default: 500
+          output_values:
+            title: Sequence output values
+            type: array
+            description: The list of output values (separated by commas)
+            minItems: 2
+            items:
+              type: integer
+            default: [-32768,0,32767]
+          conditions:
+            title: Conditions
+            type: array
+            minItems: 1
+            $meta:
+              handle: cond1
+            items:
+              $ref: '#/definitions/input'
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  linear:
+    type: object
+    required:
+      - type
+      - linear
+    properties:
+      type:
+        type: string
+        enum:
+          - linear
+      linear:
+        type: object
+        title: Linear
+        description: |
+          Performs a linear scale transform of the input value. It allows you to
+          map an input value (from an input range) to an output value in the
+          specified output range. The transform formula is  i.e. `out = outMin +
+          (outMax-outMin)/(inMax-inMin)*(in-inMin)`. This is a uniform (hence
+          linear) scaling transform.
+        required:
+          - input
+          - input_min
+          - input_max
+          - output_min
+          - output_max
+        properties:
+          label:
+            title: Label
+            description: A short descriptive name
+            type: string
+          output_invert:
+            title: Output invert
+            description: Multiply the final output value by -1 (after scaling)
+            $meta:
+              autocomplete: boolean
+            type: boolean
+            default: false
+          output_max:
+            title: Output value max
+            description: Maximum value allowed for the output
+            type: integer
+            $meta:
+              autocomplete: raw
+            default: 32767
+          output_min:
+            title: Output value min
+            description: Minimum value allowed for the output
+            type: integer
+            $meta:
+              autocomplete: raw
+            default: -32768
+          input_max:
+            title: Input value max
+            description: Maximum value allowed for the input
+            type: integer
+            $meta:
+              autocomplete: raw
+            default: 32767
+          input_min:
+            title: Input value min
+            description: Minimum value allowed for the input
+            type: integer
+            $meta:
+              autocomplete: raw
+            default: -32768
+          input_invert:
+            title: Input value invert
+            description: Multiply input value value by -1 (before scaling)
+            $meta:
+              autocomplete: boolean
+            type: boolean
+            default: false
+          input:
+            title: Input
+            $meta:
+              handle: in1
+            $ref: '#/definitions/input'
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  map:
+    type: object
+    required:
+      - type
+      - map
+    properties:
+      type:
+        type: string
+        enum:
+          - map
+      map:
+        type: object
+        title: Lookup Table
+        description: |
+          Performs a **lookup** operation where each input value is mapped to a specific output value using 
+          a **lookup table**. This is similar to using a Map or Dictionary in a programming language. 
+            
+            
+          If the input value exists as a key in the lookup table, then the associated value
+          is used as the output.
+            
+            
+          If there is no match in the lookup table, then the default output value is used.
+        required:
+          - input
+          - output_map
+        properties:
+          label:
+            title: Label
+            description: A short descriptive name
+            type: string
+          output_default:
+            title: Default output
+            description: Output this value if there is no match found in the lookup table
+            type: integer
+            $meta:
+              autocomplete: raw
+            default: 0
+          output_map:
+            title: Output map
+            description: Maps pairs of input and output values
+            type: object
+            unevaluatedProperties:
+              type: integer
+          input:
+            title: Input
+            $meta:
+              handle: in1
+            $ref: '#/definitions/input'
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  and:
+    type: object
+    required:
+      - type
+      - and
+    properties:
+      type:
+        type: string
+        enum:
+          - and
+      and:
+        type: object
+        title: Logical And
+        description: |-
+          Performs `result = (left AND right)` operation. 
+            
+            
+          If the operation result is **truthy**, it outputs the specified **Truthy output**. 
+            
+            
+          If the operation result is **falsy**, it outputs the specified **Falsy output**.
+            
+            
+          More than one input is allowed on the right side. i.e. `result = (left AND right[0]
+          AND right[1] AND right[n] ... )` etc. The result is **truthy** if all
+          values are **truthy**.
+        required:
+          - left
+          - right
+        properties:
+          label:
+            title: Label
+            description: A short descriptive name
+            type: string
+          output_false:
+            title: Falsy output
+            description: Output this value if any input is **falsy**
+            type: integer
+            $meta:
+              autocomplete: raw
+            default: 0
+          output_true:
+            title: Truthy output
+            description: Output this value if all inputs are **truthy**
+            type: integer
+            $meta:
+              autocomplete: raw
+            default: 32767
+          left:
+            title: Left input
+            $meta:
+              handle: in1
+            $ref: '#/definitions/input'
+          right:
+            type: array
+            title: Right inputs
+            minItems: 1
+            $meta:
+              handle: in2
+            items:
+              $ref: '#/definitions/input'
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  add:
+    type: object
+    required:
+      - type
+      - add
+    properties:
+      type:
+        type: string
+        enum:
+          - add
+      add:
+        type: object
+        title: Add values
+        description: |
+          Performs `out = (left + right)` operation. More than one value is
+          allowed on the right side. i.e. `out = (left + right[0] + right[1] +
+          right[n] ... )` etc.
+        required:
+          - left
+        properties:
+          label:
+            title: Label
+            description: A short descriptive name
+            type: string
+          left:
+            title: Left input
+            $meta:
+              handle: in1
+            $ref: '#/definitions/input'
+          right_default:
+            title: Default right value
+            description: 'If there is no right input, use this value instead.'
+            type: integer
+            $meta:
+              autocomplete: raw
+          right:
+            type: array
+            title: Right inputs
+            minItems: 0
+            $meta:
+              handle: in2
+            items:
+              $ref: '#/definitions/input'
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  subtract:
+    type: object
+    required:
+      - type
+      - subtract
+    properties:
+      type:
+        type: string
+        enum:
+          - subtract
+      subtract:
+        type: object
+        title: Subtract values
+        description: |
+          Performs `out = (left - right)` operation. More than one value is
+          allowed on the right side. i.e. `out = (left - right[0] - right[1] -
+          right[n] ... )` etc.
+        required:
+          - left
+        properties:
+          label:
+            title: Label
+            description: A short descriptive name
+            type: string
+          left:
+            title: Left input
+            $meta:
+              handle: in1
+            $ref: '#/definitions/input'
+          right_default:
+            title: Default right value
+            description: 'If there is no right input, use this value instead.'
+            type: integer
+            $meta:
+              autocomplete: raw
+          right:
+            type: array
+            title: Right inputs
+            minItems: 0
+            $meta:
+              handle: in2
+            items:
+              $ref: '#/definitions/input'
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  max:
+    type: object
+    required:
+      - type
+      - max
+    properties:
+      type:
+        type: string
+        enum:
+          - max
+      max:
+        type: object
+        title: Max value
+        description: |
+          Performs `out = Max(left, right)` operation. More than one input is
+          allowed on the right side. i.e. `out = Max(Max(Max(left, right[0]),
+          right[1]), right[n])` ... etc.
+        required:
+          - left
+        properties:
+          label:
+            title: Label
+            description: A short descriptive name
+            type: string
+          left:
+            title: Left input
+            $meta:
+              handle: in1
+            $ref: '#/definitions/input'
+          right_default:
+            title: Default right value
+            description: 'If there is no right input, use this value instead.'
+            type: integer
+            $meta:
+              autocomplete: raw
+          right:
+            type: array
+            title: Right inputs
+            minItems: 0
+            $meta:
+              handle: in2
+            items:
+              $ref: '#/definitions/input'
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  min:
+    type: object
+    required:
+      - type
+      - min
+    properties:
+      type:
+        type: string
+        enum:
+          - min
+      min:
+        type: object
+        title: Min value
+        description: |
+          Performs `out = Min(left, right)` operation. More than one input is
+          allowed on the right side. i.e. `out = Min(Min(Min(left, right[0]),
+          right[1]), right[n])` ... etc.
+        required:
+          - left
+        properties:
+          label:
+            title: Label
+            description: A short descriptive name
+            type: string
+          left:
+            title: Left input
+            $meta:
+              handle: in1
+            $ref: '#/definitions/input'
+          right_default:
+            title: Default right value
+            description: 'If there is no right input, use this value instead.'
+            type: integer
+            $meta:
+              autocomplete: raw
+          right:
+            type: array
+            title: Right inputs
+            minItems: 0
+            $meta:
+              handle: in2
+            items:
+              $ref: '#/definitions/input'
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  invert:
+    type: object
+    required:
+      - type
+      - invert
+    properties:
+      type:
+        type: string
+        enum:
+          - invert
+      invert:
+        type: object
+        title: Invert value
+        description: Performs `out = in * -1` operation.
+        required:
+          - input
+        properties:
+          label:
+            title: Label
+            description: A short descriptive name
+            type: string
+          input:
+            title: Input
+            $meta:
+              handle: in1
+            $ref: '#/definitions/input'
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  or:
+    type: object
+    required:
+      - type
+      - or
+    properties:
+      type:
+        type: string
+        enum:
+          - or
+      or:
+        type: object
+        title: Logical Or
+        description: |
+          Performs `result = (left OR right)` operation.
+            
+            
+          If the operation result is **truthy**, it outputs the specified **Truthy output**.
+            
+            
+          If the operation result is **falsy**, it outputs the specified **Falsy output**. 
+            
+            
+          More than one input is allowed on the right side. i.e. `result = (left OR right[0] OR
+          right[1] OR right[n] ... )` etc. The result is **truthy** if any value is
+          **truthy**.
+        required:
+          - left
+          - right
+        properties:
+          label:
+            title: Label
+            description: A short descriptive name
+            type: string
+          output_false:
+            title: Falsy output
+            description: Output this value if all inputs are **falsy**
+            type: integer
+            $meta:
+              autocomplete: raw
+            default: 0
+          output_true:
+            title: Truthy output
+            description: Output this value if any input is **truthy**
+            type: integer
+            $meta:
+              autocomplete: raw
+            default: 32767
+          left:
+            title: Left input
+            $meta:
+              handle: in1
+            $ref: '#/definitions/input'
+          right:
+            type: array
+            title: Right inputs
+            minItems: 1
+            $meta:
+              handle: in2
+            items:
+              $ref: '#/definitions/input'
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  eq:
+    type: object
+    required:
+      - type
+      - eq
+    properties:
+      type:
+        type: string
+        enum:
+          - eq
+      eq:
+        type: object
+        title: Equals
+        description: |
+          Performs `result = (left == right)` comparison.
+            
+            
+          If the comparison result is **truthy**, it outputs the specified **Truthy output**. 
+            
+            
+          If the comparison result is **falsy**, it outputs the specified **Falsy output**.
+            
+            
+          More than one input is allowed on the right side. i.e. `result = (left == right[0])
+          AND (left == right[1]) AND (left == right[n])` ... etc. Result is
+          **truthy** if the left value is equals to all right values.
+        required:
+          - left
+        properties:
+          label:
+            title: Label
+            description: A short descriptive name
+            type: string
+          output_false:
+            title: Falsy output
+            description: Output this value if condition is **falsy**
+            type: integer
+            $meta:
+              autocomplete: raw
+            default: 0
+          output_true:
+            title: Truthy output
+            description: Output this value if condition is **truthy**
+            type: integer
+            $meta:
+              autocomplete: raw
+            default: 32767
+          right_default:
+            title: Default right value
+            description: 'If there is no right input, use this value instead.'
+            type: integer
+            $meta:
+              autocomplete: raw
+          left:
+            title: Left input
+            $meta:
+              handle: in1
+            $ref: '#/definitions/input'
+          right:
+            type: array
+            title: Right inputs
+            minItems: 0
+            $meta:
+              handle: in2
+            items:
+              $ref: '#/definitions/input'
+  neq:
+    type: object
+    required:
+      - type
+      - neq
+    properties:
+      type:
+        type: string
+        enum:
+          - neq
+      neq:
+        type: object
+        title: Not equals
+        description: |
+          Performs `result = NOT(left == right)` comparison. 
+            
+            
+          If the comparison result is **truthy**, it outputs the specified **Truthy output**. 
+            
+            
+          If the comparison result is **falsy**, it outputs the specified **Falsy output**.
+            
+            
+          More than one input is allowed on the right side. i.e. `result = NOT(left ==
+          right[0]) AND NOT(left == right[1]) AND NOT(left == right[n])`... etc.
+          Result is **truthy** if the left value is not equals to any of the right
+          values.
+        required:
+          - left
+        properties:
+          label:
+            title: Label
+            description: A short descriptive name
+            type: string
+          output_false:
+            title: Falsy output
+            description: Output this value if comparison fails
+            type: integer
+            $meta:
+              autocomplete: raw
+            default: 0
+          output_true:
+            title: Truthy output
+            description: Output this value if comparison succeeds
+            type: integer
+            $meta:
+              autocomplete: raw
+            default: 32767
+          right_default:
+            title: Default right value
+            description: 'If there is no right input, use this value instead.'
+            type: integer
+            $meta:
+              autocomplete: raw
+          left:
+            title: Left input
+            $meta:
+              handle: in1
+            $ref: '#/definitions/input'
+          right:
+            type: array
+            title: Right inputs
+            minItems: 0
+            $meta:
+              handle: in2
+            items:
+              $ref: '#/definitions/input'
+  gte:
+    type: object
+    required:
+      - type
+      - gte
+    properties:
+      type:
+        type: string
+        enum:
+          - gte
+      gte:
+        type: object
+        title: Greater than or equals
+        description: |
+          Performs `result = (left >= right)` comparison. 
+            
+            
+          If the comparison result is **truthy**, it outputs the specified **Truthy output**. 
+            
+            
+          If the comparison result is **falsy**, it outputs the specified **Falsy output**.
+            
+            
+          More than one input is allowed on the right side. i.e. `result = (left >= right[0]) AND (left
+          >= right[1]) AND (left >= right[n])` ... etc. Result is **truthy** if the
+          left value is greater than or equals to all right values.
+        required:
+          - left
+        properties:
+          label:
+            title: Label
+            description: A short descriptive name
+            type: string
+          output_false:
+            title: Falsy output
+            description: Output this value if comparison fails
+            type: integer
+            $meta:
+              autocomplete: raw
+            default: 0
+          output_true:
+            title: Truthy output
+            description: Output this value if comparison succeeds
+            type: integer
+            $meta:
+              autocomplete: raw
+            default: 32767
+          right_default:
+            title: Default right value
+            description: 'If there is no right input, use this value instead.'
+            type: integer
+            $meta:
+              autocomplete: raw
+          left:
+            title: Left input
+            $meta:
+              handle: in1
+            $ref: '#/definitions/input'
+          right:
+            type: array
+            title: Right inputs
+            minItems: 0
+            $meta:
+              handle: in2
+            items:
+              $ref: '#/definitions/input'
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  lte:
+    type: object
+    required:
+      - type
+      - lte
+    properties:
+      type:
+        type: string
+        enum:
+          - lte
+      lte:
+        type: object
+        title: Less than or equals
+        description: |
+          Performs `result = (left <= right)` comparison.
+            
+            
+          If the comparison result is **truthy**, it outputs the specified **Truthy output**. 
+            
+            
+          If the comparison result is **falsy**, it outputs the specified **Falsy output**.
+            
+            
+          More than one input is allowed on the right side. i.e. 
+          `result = (left <= right[0]) AND (left <= right[1]) AND (left <= right[n])` ... etc.
+          Result is **truthy** if the left value is less than or equals to all right values.
+        required:
+          - left
+        properties:
+          label:
+            title: Label
+            description: A short descriptive name
+            type: string
+          output_false:
+            title: Falsy output
+            description: Output this value if comparison fails
+            type: integer
+            $meta:
+              autocomplete: raw
+            default: 0
+          output_true:
+            title: Truthy output
+            description: Output this value if comparison succeeds
+            type: integer
+            $meta:
+              autocomplete: raw
+            default: 32767
+          right_default:
+            title: Default right value
+            description: 'If there is no right input, use this value instead.'
+            type: integer
+            $meta:
+              autocomplete: raw
+          left:
+            title: Left input
+            $meta:
+              handle: in1
+            $ref: '#/definitions/input'
+          right:
+            type: array
+            title: Right inputs
+            minItems: 0
+            $meta:
+              handle: in2
+            items:
+              $ref: '#/definitions/input'
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  lt:
+    type: object
+    required:
+      - type
+      - lt
+    properties:
+      type:
+        type: string
+        enum:
+          - lt
+      lt:
+        type: object
+        title: Less than
+        description: |
+          Performs `result = (left < right)` comparison.
+            
+            
+          If the comparison result is **truthy**, it outputs the specified **Truthy output**. 
+            
+            
+          If the comparison result is **falsy**, it outputs the specified **Falsy output**.
+            
+            
+          More than one input is allowed on the right side. i.e. `result = (left < right[0]) AND (left <
+          right[1]) AND (left < right[n])` ... etc. Result is **truthy** if the left
+          value is less than all right values.
+        required:
+          - left
+        properties:
+          label:
+            title: Label
+            description: A short descriptive name
+            type: string
+          output_false:
+            title: Falsy output
+            description: Output this value if comparison fails
+            type: integer
+            $meta:
+              autocomplete: raw
+            default: 0
+          output_true:
+            title: Truthy output
+            description: Output this value if comparison succeeds
+            type: integer
+            $meta:
+              autocomplete: raw
+            default: 32767
+          right_default:
+            title: Default right value
+            description: 'If there is no right input, use this value instead.'
+            type: integer
+            $meta:
+              autocomplete: raw
+          left:
+            title: Left input
+            $meta:
+              handle: in1
+            $ref: '#/definitions/input'
+          right:
+            type: array
+            title: Right inputs
+            minItems: 0
+            $meta:
+              handle: in2
+            items:
+              $ref: '#/definitions/input'
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  gt:
+    type: object
+    required:
+      - type
+      - gt
+    properties:
+      type:
+        type: string
+        enum:
+          - gt
+      gt:
+        type: object
+        title: Greater than
+        description: |
+          Performs `result = (left > right)` comparison. 
+            
+            
+          If the comparison result is **truthy**, it outputs the specified **Truthy output**. 
+            
+            
+          If the comparison result is **falsy**, it outputs the specified **Falsy output**.
+            
+            
+          More than one input is allowed on the right side. i.e. `result = (left > right[0]) AND (left >
+          right[1]) AND (left > right[n])` ... etc. Result is **truthy** if the left value is greater than all right values.
+        required:
+          - left
+        properties:
+          label:
+            title: Label
+            description: A short descriptive name
+            type: string
+          output_false:
+            title: Falsy output
+            description: Output this value if comparison fails
+            type: integer
+            $meta:
+              autocomplete: raw
+            default: 0
+          output_true:
+            title: Truthy output
+            description: Output this value if comparison succeeds
+            type: integer
+            $meta:
+              autocomplete: raw
+            default: 32767
+          right_default:
+            title: Default right value
+            description: 'If there is no right input, use this value instead.'
+            type: integer
+            $meta:
+              autocomplete: raw
+          left:
+            title: Left input
+            $meta:
+              handle: in1
+            $ref: '#/definitions/input'
+          right:
+            type: array
+            title: Right inputs
+            minItems: 0
+            $meta:
+              handle: in2
+            items:
+              $ref: '#/definitions/input'
+        unevaluatedProperties: true
+    unevaluatedProperties: true
+  read:
+    type: object
+    required:
+      - type
+      - read
+    properties:
+      type:
+        type: string
+        enum:
+          - read
+      read:
+        type: object
+        title: Read value
+        description: Outputs the value of an existing top-level entry in the inputs map
+        required:
+          - source
+        properties:
+          label:
+            title: Label
+            description: A short descriptive name
+            type: string
+          source:
+            title: Source input
+            description: A reference to an existing entry in the inputs map
+            type: string
+      unevaluatedProperties: true
+    unevaluatedProperties: true
+  number:
+    type: object
+    required:
+      - type
+      - number
+    properties:
+      type:
+        type: string
+        enum:
+          - number
+      number:
+        type: object
+        title: Number
+        description: Outputs the specified numeric value.
+        required:
+          - output
+        properties:
+          label:
+            title: Label
+            description: A short descriptive name
+            type: string
+          output:
+            title: Output value
+            description: Output this value as a constant
+            type: integer
+        unevaluatedProperties: true
+    unevaluatedProperties: true

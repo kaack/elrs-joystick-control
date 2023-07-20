@@ -1,0 +1,243 @@
+// SPDX-FileCopyrightText: © 2023 OneEyeFPV oneeyefpv@gmail.com
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: FS-0.9-or-later
+
+syntax = "proto3";
+
+import "google/protobuf/struct.proto";
+
+package JoystickControl;
+
+option go_package = "github.com/kaack/elrs-joystick-control/pkg/server/pb";
+
+message Empty {}
+
+message ValidationError {
+  string message = 1;
+  string location = 2;
+  repeated ValidationError causes = 3;
+}
+
+message GetTransmitterRes {
+  repeated Transmitter transmitters = 1;
+}
+
+message Transmitter {
+  string port = 1;
+  string name = 2;
+}
+
+message ValidationErrors {
+  repeated ValidationError errors = 1;
+}
+
+message GetGamepadsRes {
+  repeated Gamepad gamepads = 1;
+}
+
+message Gamepad {
+  string id = 1;
+  string name = 2;
+  int32 axes = 3;
+  int32 buttons = 4;
+  int32 hats = 5;
+}
+
+message GetConfigRes {
+  google.protobuf.Struct config = 1;
+}
+
+message SetConfigReq {
+  google.protobuf.Struct config = 1;
+}
+
+message ValidateConfigRes {
+  repeated string errors = 1;
+  repeated string warnings = 2;
+}
+
+message StartLinkReq {
+  string port = 1;
+  int32 baud_rate = 2;
+}
+
+
+message GetGamepadStreamReq {
+  Gamepad gamepad = 1;
+}
+
+
+enum GamepadInputType {
+  AXIS = 0;
+  BUTTON = 1;
+}
+message GamepadInputState {
+  GamepadInputType type = 1;
+  int32 index = 2;
+  int32 value = 3;
+}
+
+message GamepadInputsStates {
+  repeated GamepadInputState inputs_states = 1;
+}
+
+
+message GetTransmitterStreamReq {
+  Transmitter transmitter = 1;
+}
+
+message TransmitterChannels {
+  repeated TransmitterChannel channels = 1;
+}
+
+message TransmitterChannel {
+  int32 channel_number = 1;
+  int32 channel_value = 2;
+}
+
+message EvalState {
+  bool isNaN = 2;
+  int32 value = 3;
+}
+
+message EvalStates {
+  map<string, EvalState> states = 1;
+}
+
+enum PortState {
+  PortUnknown = 0;
+  PortDisconnected = 1;
+  PortConnected = 2;
+}
+
+enum SupervisorState {
+  SupervisorUnknown = 0;
+  SupervisorInactive = 1;
+  SupervisorActive = 2;
+}
+
+message LinkState {
+  SupervisorState supervisor_state = 1;
+  PortState port_state = 2;
+  uint64 received_packets_count = 3;
+  uint64 sent_packets_count = 4;
+  uint64 error_packets_count = 5;
+}
+
+
+message Telemetry {
+  oneof data {
+    LinkStatsData link_stats = 1;
+    AttitudeData attitude = 2;
+    BatteryData battery = 3;
+    GPSData gps = 4;
+    FlightModeData flight_mode = 5;
+    SyncData sync = 6;
+    LinkTXData link_tx = 7;
+    LinkRXData link_rx = 8;
+    BarometerData barometer = 9;
+    VariometerData variometer = 10;
+    BarometerVariometerData barometer_variometer = 11;
+  }
+}
+
+message BarometerData {
+  float altitude = 1;
+}
+
+message VariometerData {
+  float vertical_speed = 1;
+}
+
+message BarometerVariometerData {
+  float altitude = 1;
+  float vertical_speed = 2;
+}
+
+message FlightModeData {
+  string mode = 1;
+}
+
+message LinkTXData {
+  uint32 downlink_rssi = 1;
+  uint32 uplink_power = 2;
+  uint32 uplink_fps = 3;
+}
+
+message LinkRXData {
+  uint32 uplink_rssi = 1;
+  uint32 downlink_power = 2;
+}
+
+message SyncData {
+  int32 rate = 1;
+  int32 offset = 2;
+}
+
+message AttitudeData {
+  float pitch = 1;
+  float roll = 2;
+  float yaw = 3;
+}
+
+message LinkStatsData {
+  int32 uplink_rssi1 = 1;
+  int32 uplink_rssi2 = 2;
+  uint32 uplink_link_quality = 3;
+  int32 uplink_snr = 4;
+  uint32 active_antenna = 5;
+  uint32 radio_frequency_mode = 6;
+  uint32 uplink_power = 7;
+  int32 downlink_rssi = 8;
+  uint32 downlink_link_quality = 9;
+  int32 downlink_snr = 10;
+}
+
+message GPSData {
+  float latitude = 1;
+  float longitude = 2;
+  float ground_speed = 3;
+  float heading = 4;
+  int32 altitude = 5;
+  uint32 satellites = 6;
+}
+
+message BatteryData {
+  float voltage = 1;
+  float current = 2;
+  float fuel = 3;
+  float remaining = 4;
+}
+
+
+message GetAppInfoRes {
+  string path = 1;
+  string version = 2;
+  string sum = 3;
+  string vcs = 4;
+  string vcs_revision = 5;
+}
+
+service JoystickControl {
+  rpc getGamepads(Empty) returns (GetGamepadsRes) {};
+  rpc getTransmitters(Empty) returns (GetTransmitterRes) {};
+
+  rpc getConfig(Empty) returns (GetConfigRes) {}
+  rpc setConfig(SetConfigReq) returns (Empty) {}
+  rpc validateConfig(Empty) returns (ValidateConfigRes) {};
+
+  rpc startLink(StartLinkReq) returns (Empty) {}
+  rpc stopLink(Empty) returns (Empty) {}
+
+  rpc startHTTP(Empty) returns (Empty) {}
+  rpc stopHTTP(Empty) returns (Empty) {}
+
+  rpc getLinkStream(Empty) returns (stream LinkState) {}
+  rpc getTelemetryStream(Empty) returns (stream Telemetry) {}
+  rpc getEvalStream(Empty) returns (stream EvalStates) {}
+  rpc getTransmitterStream(GetTransmitterStreamReq) returns (stream TransmitterChannels) {}
+  rpc getGamepadStream(GetGamepadStreamReq) returns (stream GamepadInputsStates) {}
+
+  rpc getAppInfo(Empty) returns (GetAppInfoRes) {}
+
+}

@@ -4,51 +4,53 @@
 
 package config
 
-// InputLte *** Less-Than-or-Equals ***
-type InputLte struct {
-	Type string `json:"type"`
-	Lte  struct {
-		OutputFalse int32         `json:"output_false"`
-		OutputTrue  int32         `json:"output_true"`
-		Params      []InputHolder `json:"params"`
-	} `json:"lte" input:"true"`
+import "github.com/kaack/elrs-joystick-control/pkg/util"
+
+type LteT struct {
+	OutputFalse  *util.RawValue `json:"output_false"`
+	OutputTrue   *util.RawValue `json:"output_true"`
+	RightDefault *util.RawValue `json:"right_default"`
+
+	Left  *IOHolder    `json:"left"`
+	Right *[]*IOHolder `json:"right"`
 }
 
-func (i *InputLte) Eval(cc *Controller) (out int32, nan bool) {
-	//if array has no elements, check fails
-	if len(i.Lte.Params) == 0 {
-		return i.Lte.OutputFalse, false
-	}
+// InputLte *** Less-Than-or-Equals ***
+type InputLte struct {
+	Id    string        `json:"id"`
+	Value util.RawValue `json:"value"`
+	IsNaN bool          `json:"-"`
 
-	//get first element
-	out, nan = i.Lte.Params[0].I.Eval(cc)
-	if nan {
-		return i.Lte.OutputFalse, false
-	}
+	Type string `json:"type"`
+	Lte  LteT   `json:"lte" input:"true"`
+}
 
-	//if array has only one element, check succeeds
-	if len(i.Lte.Params) == 1 {
-		return i.Lte.OutputTrue, false
-	}
+func CompareLte(left util.RawValue, right util.RawValue) bool {
+	return left <= right
+}
+func (i *InputLte) Eval(c *Config) (src IOType, out util.RawValue, ch util.ChannelNumber, nan bool) {
+	src, out, ch, nan = EvalRelational(c, i.Lte.Left, i.Lte.Right, i.Lte.RightDefault, i.Lte.OutputTrue, i.Lte.OutputFalse, CompareLte)
+	i.Value = out
+	i.IsNaN = nan
 
-	//otherwise first value must be less than or equal to the rest
-	var curr int32
-	for _, param := range i.Lte.Params[1:] {
-		curr, nan = param.I.Eval(cc)
-		if nan {
-			return i.Lte.OutputFalse, false
-		}
-
-		//found one param where the check fails
-		if !(out <= curr) {
-			return i.Lte.OutputFalse, false
-		}
-	}
-
-	//first param is less than all remaining params
-	return i.Lte.OutputTrue, false
+	return src, out, ch, nan
 }
 
 func (i *InputLte) InputType() string {
 	return i.Type
+}
+
+func (i *InputLte) InputValue() *util.RawValue {
+	if i.IsNaN {
+		return nil
+	}
+	return &i.Value
+}
+
+func (i *InputLte) InputId() string {
+	return i.Id
+}
+
+func (i *InputLte) Children() (out *[]*IOHolder) {
+	return GetChildren(i.Lte.Left, i.Lte.Right)
 }

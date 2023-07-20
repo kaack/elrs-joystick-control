@@ -7,30 +7,54 @@ package config
 import (
 	"encoding/json"
 	"errors"
+	"github.com/kaack/elrs-joystick-control/pkg/util"
 	"reflect"
 )
 
-type InputT interface {
+type IOType interface {
+	InputId() string
 	InputType() string
-	Eval(*Controller) (int32, bool)
+	InputValue() (out *util.RawValue)
+
+	Children() (out *[]*IOHolder)
+
+	Eval(config *Config) (src IOType, out util.RawValue, ch util.ChannelNumber, nan bool)
 }
 
-type InputHolder struct {
-	I InputT
+type IOHolder struct {
+	IO     IOType
+	Ctl    *Controller `json:"-"`
+	Config *Config     `json:"-"`
 }
 
-func (ih *InputHolder) MarshalJSON() ([]byte, error) {
+func (ih *IOHolder) Eval(c *Config) (src IOType, out util.RawValue, ch util.ChannelNumber, nan bool) {
+	return ih.IO.Eval(c)
+}
+
+func (ih *IOHolder) Children() (out *[]*IOHolder) {
+	return ih.IO.Children()
+}
+
+func (ih *IOHolder) InputId() string {
+	return ih.IO.InputId()
+}
+
+func (ih *IOHolder) InputValue() *util.RawValue {
+	return ih.IO.InputValue()
+}
+
+func (ih *IOHolder) MarshalJSON() ([]byte, error) {
 	var data []byte
 	var err error
 
-	if data, err = json.Marshal(ih.I); err != nil {
+	if data, err = json.Marshal(ih.IO); err != nil {
 		return nil, errors.New(err.Error())
 	}
 
 	return data, err
 }
 
-func (ih *InputHolder) UnmarshalJSON(inputsJson []byte) error {
+func (ih *IOHolder) UnmarshalJSON(inputsJson []byte) error {
 	var err error
 	var rawData json.RawMessage
 	if err = json.Unmarshal(inputsJson, &rawData); err != nil {
@@ -55,8 +79,8 @@ func (ih *InputHolder) UnmarshalJSON(inputsJson []byte) error {
 	}
 
 	T := (*typesMap)[tmp.Type]
-	(*ih).I = reflect.New(T).Interface().(InputT)
-	if err := json.Unmarshal(rawData, ih.I); err != nil {
+	(*ih).IO = reflect.New(T).Interface().(IOType)
+	if err := json.Unmarshal(rawData, ih.IO); err != nil {
 		return errors.New(err.Error())
 	}
 

@@ -5,55 +5,65 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	cc "github.com/kaack/elrs-joystick-control/pkg/config"
-	dc "github.com/kaack/elrs-joystick-control/pkg/joysticks"
-	mc "github.com/kaack/elrs-joystick-control/pkg/mixer"
+	dc "github.com/kaack/elrs-joystick-control/pkg/devices"
+	hc "github.com/kaack/elrs-joystick-control/pkg/http"
+	lc "github.com/kaack/elrs-joystick-control/pkg/link"
 	sc "github.com/kaack/elrs-joystick-control/pkg/serial"
-
-	"github.com/kaack/elrs-joystick-control/pkg/server"
-	"github.com/kaack/elrs-joystick-control/pkg/server/pb"
+	gc "github.com/kaack/elrs-joystick-control/pkg/server"
 	"google.golang.org/grpc/reflection"
+	_ "net/http/pprof"
+	"os"
+	"os/signal"
 
 	"google.golang.org/grpc"
-	"log"
-	"net"
 )
 
 func main() {
-	var err error
+
+	webAppPort := new(int)
+	flag.IntVar(webAppPort, "webapp-port", 3000, "Web Application port number")
+
+	grpcPort := new(int)
+	flag.IntVar(grpcPort, "grpc-port", 10000, "gRPC Server port number")
+
+	flag.Parse()
+
+	grpcServer := grpc.NewServer([]grpc.ServerOption{}...)
+	reflection.Register(grpcServer)
+
+	httpCtl := hc.NewCtl(*webAppPort, grpcServer)
+	defer httpCtl.Quit()
 
 	devicesCtl := dc.NewCtl()
 	defer devicesCtl.Quit()
 
-	serialCtl := sc.NewCtl()
-	defer serialCtl.Quit()
-
 	configCtl := cc.NewCtl(devicesCtl)
 	defer configCtl.Quit()
 
-	mixerCtl := mc.NewCtl(devicesCtl, serialCtl, configCtl)
-	defer mixerCtl.Quit()
+	serialCtl := sc.NewCtl()
+	defer serialCtl.Quit()
 
-	port := 10000
-	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", port))
-	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
-	}
+	linkCtl := lc.NewCtl(devicesCtl, serialCtl, configCtl)
+	defer linkCtl.Quit()
 
-	var opts []grpc.ServerOption
-	grpcServer := grpc.NewServer(opts...)
-	reflection.Register(grpcServer)
-	pb.RegisterJoystickControlServer(grpcServer, &server.GRPCServer{
-		DevicesCtl: devicesCtl,
-		SerialCtl:  serialCtl,
-		ConfigCtl:  configCtl,
-		MixerCtl:   mixerCtl,
-	})
+	serverCtl := gc.NewCtl(*grpcPort, grpcServer, devicesCtl, serialCtl, configCtl, linkCtl, httpCtl)
+	defer serverCtl.Quit()
 
-	fmt.Printf("gRPC server listenting on port %d\n", port)
-	if err := grpcServer.Serve(lis); err != nil {
-		log.Fatalf("Could not start gRPC server port port  %d\n", port)
-	}
+	go func() {
+		sigChan := make(chan os.Signal)
+		signal.Notify(sigChan, os.Interrupt)
+		<-sigChan
+		fmt.Println("Ctrl-C detected, exiting")
+		if err := httpCtl.Stop(); err != nil {
+			fmt.Printf("could not stop HTTP controller. %s\n", err.Error())
+		}
+		if err := serverCtl.Stop(); err != nil {
+			fmt.Printf("could not stop HTTP controller. %s\n", err.Error())
+		}
+	}()
 
+	serverCtl.Wait()
 }

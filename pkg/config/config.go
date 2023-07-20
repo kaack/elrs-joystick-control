@@ -6,27 +6,70 @@ package config
 
 import (
 	_ "embed"
-	"github.com/kaack/elrs-joystick-control/pkg/joysticks"
+	"github.com/kaack/elrs-joystick-control/pkg/devices"
+	"github.com/kaack/elrs-joystick-control/pkg/util"
 )
 
-type RawInputDevice joysticks.RawInputDevice
 type Config struct {
-	RawInputDevices    map[string]*RawInputDevice `json:"raw_input_devices_map"`
-	ExternalRfPortName string                     `json:"external_rf_port_name"`
-	InputsMap          map[string]*InputHolder    `json:"inputs_mixer_map"`
-	ChannelsInputsMap  map[int32]string           `json:"channels_inputs_map"`
+	IOMap map[string]*IOHolder `json:"input_output_map"`
+	Ctl   *Controller          `json:"-"`
 }
 
-func (c *Config) RawInputDevice(name string) (*RawInputDevice, bool) {
-	res, ok := c.RawInputDevices[name]
+func (c *Config) GetInputGamepad(deviceId string) (*devices.InputGamepad, bool) {
+	var ok bool
+
+	var res *devices.InputGamepad
+	res, ok = c.Ctl.deviceCtl.Gamepads[deviceId]
+
 	return res, ok
 }
 
-func (c *Config) Input(name string) (*InputT, bool) {
-	var ih *InputHolder
+func NewTransmitter(port string) *OutputTransmitter {
+	return &OutputTransmitter{
+		Values: &[16]util.CRSFValue{},
+		Transmitter: TransmitterT{
+			Port:     port,
+			Channels: &[]*IOHolder{},
+		},
+	}
+}
+func (c *Config) GetTransmitters() map[string]*IOHolder {
+	//group serial ports by their port name
+	var grouped = map[string]*IOHolder{}
+
+	var curTransmitter *OutputTransmitter
 	var ok bool
-	if ih, ok = c.InputsMap[name]; !ok {
+	for _, inout := range c.IOMap {
+		if curTransmitter, ok = inout.IO.(*OutputTransmitter); !ok {
+			continue
+		}
+
+		if _, ok = grouped[curTransmitter.Transmitter.Port]; !ok {
+			//first time we see this port, add a new entry to the map
+			grouped[curTransmitter.Transmitter.Port] = &IOHolder{
+				IO:     NewTransmitter(curTransmitter.Transmitter.Port),
+				Ctl:    c.Ctl,
+				Config: c,
+			}
+		}
+
+		if existing, ok := grouped[curTransmitter.Transmitter.Port].IO.(*OutputTransmitter); ok {
+			if curTransmitter.Transmitter.Channels != nil {
+				*existing.Transmitter.Channels = append(
+					*existing.Transmitter.Channels,
+					*curTransmitter.Transmitter.Channels...)
+			}
+		}
+	}
+
+	return grouped
+}
+
+func (c *Config) IO(name string) (*IOType, bool) {
+	var ih *IOHolder
+	var ok bool
+	if ih, ok = c.IOMap[name]; !ok {
 		return nil, false
 	}
-	return &ih.I, true
+	return &ih.IO, true
 }

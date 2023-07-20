@@ -4,33 +4,55 @@
 
 package config
 
-import "math"
+import (
+	"github.com/kaack/elrs-joystick-control/pkg/util"
+)
+
+type LinearT struct {
+	Input        *IOHolder     `json:"input"`
+	InputMin     util.RawValue `json:"input_min"`
+	InputMax     util.RawValue `json:"input_max"`
+	InputInvert  bool          `json:"input_invert"`
+	OutputMin    util.RawValue `json:"output_min"`
+	OutputMax    util.RawValue `json:"output_max"`
+	OutputInvert bool          `json:"output_invert"`
+}
 
 // InputLinear *** Linear ***
 type InputLinear struct {
-	Type   string `json:"type,omitempty"`
-	Linear struct {
-		Input        InputHolder `json:"input"`
-		InputMin     int32       `json:"input_min"`
-		InputMax     int32       `json:"input_max"`
-		InputInvert  bool        `json:"input_invert"`
-		OutputMin    int32       `json:"output_min"`
-		OutputMax    int32       `json:"output_max"`
-		OutputInvert bool        `json:"output_invert"`
-	} `json:"linear" input:"true"`
+	Id    string        `json:"id"`
+	Value util.RawValue `json:"value"`
+	IsNaN bool          `json:"-"`
+
+	Type   string  `json:"type,omitempty"`
+	Linear LinearT `json:"linear" input:"true"`
 }
 
-func (i *InputLinear) Eval(cc *Controller) (out int32, nan bool) {
-	out, nan = i.Linear.Input.I.Eval(cc)
+func (i *InputLinear) Eval(c *Config) (src IOType, out util.RawValue, ch util.ChannelNumber, nan bool) {
+	src, out, ch, nan = i._Eval(c)
+	i.Value = out
+	i.IsNaN = nan
+
+	return src, out, ch, nan
+}
+
+func (i *InputLinear) _Eval(c *Config) (src IOType, out util.RawValue, ch util.ChannelNumber, nan bool) {
+
+	//no input, result is not a number
+	if i.Linear.Input == nil {
+		return nil, 0, -1, true
+	}
+
+	_, out, ch, nan = i.Linear.Input.Eval(c)
 	if nan {
-		return 0, nan
+		return nil, 0, -1, true
 	}
 
 	if i.Linear.InputInvert {
 		out *= -1
 	}
 
-	out = _MapRange(
+	out = util.MapRange(
 		out,
 		i.Linear.InputMin,
 		i.Linear.InputMax,
@@ -42,20 +64,24 @@ func (i *InputLinear) Eval(cc *Controller) (out int32, nan bool) {
 		out *= -1
 	}
 
-	return out, false
+	return nil, out, ch, false
 }
 
 func (i *InputLinear) InputType() string {
 	return i.Type
 }
 
-func _MapRange(sourceValue int32, sourceMin int32, sourceMax int32, targetMin int32, targetMax int32) int32 {
-	sourceRange := float64(sourceMax - sourceMin)
-	targetRange := float64(targetMax - targetMin)
+func (i *InputLinear) InputValue() *util.RawValue {
+	if i.IsNaN {
+		return nil
+	}
+	return &i.Value
+}
 
-	offset := (math.Max(float64(sourceValue-sourceMin), 0) / sourceRange) * targetRange
-	offset = math.Min(offset, float64(targetMax))
+func (i *InputLinear) InputId() string {
+	return i.Id
+}
 
-	targetValue := targetMin + int32(offset)
-	return targetValue
+func (i *InputLinear) Children() (out *[]*IOHolder) {
+	return GetChildren(i.Linear.Input, nil)
 }
