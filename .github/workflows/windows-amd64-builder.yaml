@@ -1,0 +1,19 @@
+name: Windows/amd64 builder
+on:
+  release:
+    types: [created]
+  workflow_dispatch: # Put here!!
+jobs:
+  build-builder-container:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: docker login
+        env:
+          DOCKER_USER: ${{ secrets.DOCKER_USER }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: docker login -u ${{env.DOCKER_USER}} -p "${{env.DOCKER_PASSWORD}}"
+      - name: Build the Docker image
+        run: docker build -t oneeyefpv/windows-amd64-builder -f Dockerfile.windows-amd64 .
+      - name: Docker Push
+        run: docker push oneeyefpv/windows-amd64-builder

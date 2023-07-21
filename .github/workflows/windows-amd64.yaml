@@ -1,0 +1,26 @@
+name: ELRS Joystick Control (Windows/amd64)
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+jobs:
+  build-binary:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Download builder image
+        run: docker pull oneeyefpv/windows-amd64-builder
+      - name: Build binary
+        run: >
+          docker run -m 4096m -v ${{ github.workspace }}:C:\app -t oneeyefpv/windows-amd64-builder dir /s /c "
+          cd app && 
+          dir && 
+          go generate ./... && 
+          cd cmd\elrs-joystick-control &&
+          go build -trimpath -tags static -o C:\app\elrs-joystick-control.exe . "
+      - name: Upload binary
+        uses: actions/upload-artifact@v3
+        with:
+          name: elrs-joystick-control-windows-amd64.exe
+          path: elrs-joystick-control.exe
+          retention-days: 5
