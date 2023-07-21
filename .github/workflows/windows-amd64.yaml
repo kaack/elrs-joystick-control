@@ -7,20 +7,23 @@ jobs:
   build-binary:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v1
+      - name: Checkout source code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Download builder image
         run: docker pull oneeyefpv/windows-amd64-builder
       - name: Build binary
         run: >
           docker run -m 4096m -v ${{ github.workspace }}:C:\app -t oneeyefpv/windows-amd64-builder dir /s /c "
           cd app && 
-          dir && 
+          dir /a && 
           go generate ./... && 
-          cd cmd\elrs-joystick-control &&
-          go build -trimpath -tags static -o C:\app\elrs-joystick-control.exe . "
+          go build -trimpath -tags static -o elrs-joystick-control.exe .\cmd\elrs-joystick-control\. &&
+          go run scripts\build-release-zip.go --location C:\app --prefix elrs-joystick-control --files *.exe,LICENSE* "
       - name: Upload binary
         uses: actions/upload-artifact@v3
         with:
-          name: elrs-joystick-control-windows-amd64.exe
-          path: elrs-joystick-control.exe
+          name: release-zip
+          path: "*.zip"
           retention-days: 5
