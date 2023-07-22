@@ -20,7 +20,7 @@ jobs:
           dir /a && 
           go generate ./... && 
           go build -trimpath -tags static -o elrs-joystick-control.exe .\cmd\elrs-joystick-control\. &&
-          go run scripts\build-release-zip.go --location C:\app --prefix elrs-joystick-control --files *.exe,LICENSE* "
+          go run scripts\cmd\build-release-zip\build-release-zip.go --location C:\app --prefix elrs-joystick-control --files *.exe,LICENSE* "
       - name: Upload binary
         uses: actions/upload-artifact@v3
         with:

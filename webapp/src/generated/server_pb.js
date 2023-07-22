@@ -7025,11 +7025,9 @@ proto.JoystickControl.GetAppInfoRes.prototype.toObject = function(opt_includeIns
  */
 proto.JoystickControl.GetAppInfoRes.toObject = function(includeInstance, msg) {
   var f, obj = {
-    path: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    version: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    sum: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    vcs: jspb.Message.getFieldWithDefault(msg, 4, ""),
-    vcsRevision: jspb.Message.getFieldWithDefault(msg, 5, "")
+    releaseTag: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    commitHash: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    branchName: jspb.Message.getFieldWithDefault(msg, 3, "")
   };
 
   if (includeInstance) {
@@ -7068,23 +7066,15 @@ proto.JoystickControl.GetAppInfoRes.deserializeBinaryFromReader = function(msg, 
     switch (field) {
     case 1:
       var value = /** @type {string} */ (reader.readString());
-      msg.setPath(value);
+      msg.setReleaseTag(value);
       break;
     case 2:
       var value = /** @type {string} */ (reader.readString());
-      msg.setVersion(value);
+      msg.setCommitHash(value);
       break;
     case 3:
       var value = /** @type {string} */ (reader.readString());
-      msg.setSum(value);
-      break;
-    case 4:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setVcs(value);
-      break;
-    case 5:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setVcsRevision(value);
+      msg.setBranchName(value);
       break;
     default:
       reader.skipField();
@@ -7115,38 +7105,24 @@ proto.JoystickControl.GetAppInfoRes.prototype.serializeBinary = function() {
  */
 proto.JoystickControl.GetAppInfoRes.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getPath();
+  f = message.getReleaseTag();
   if (f.length > 0) {
     writer.writeString(
       1,
       f
     );
   }
-  f = message.getVersion();
+  f = message.getCommitHash();
   if (f.length > 0) {
     writer.writeString(
       2,
       f
     );
   }
-  f = message.getSum();
+  f = message.getBranchName();
   if (f.length > 0) {
     writer.writeString(
       3,
-      f
-    );
-  }
-  f = message.getVcs();
-  if (f.length > 0) {
-    writer.writeString(
-      4,
-      f
-    );
-  }
-  f = message.getVcsRevision();
-  if (f.length > 0) {
-    writer.writeString(
-      5,
       f
     );
   }
@@ -7154,10 +7130,10 @@ proto.JoystickControl.GetAppInfoRes.serializeBinaryToWriter = function(message, 
 
 
 /**
- * optional string path = 1;
+ * optional string release_tag = 1;
  * @return {string}
  */
-proto.JoystickControl.GetAppInfoRes.prototype.getPath = function() {
+proto.JoystickControl.GetAppInfoRes.prototype.getReleaseTag = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
@@ -7166,16 +7142,16 @@ proto.JoystickControl.GetAppInfoRes.prototype.getPath = function() {
  * @param {string} value
  * @return {!proto.JoystickControl.GetAppInfoRes} returns this
  */
-proto.JoystickControl.GetAppInfoRes.prototype.setPath = function(value) {
+proto.JoystickControl.GetAppInfoRes.prototype.setReleaseTag = function(value) {
   return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
 /**
- * optional string version = 2;
+ * optional string commit_hash = 2;
  * @return {string}
  */
-proto.JoystickControl.GetAppInfoRes.prototype.getVersion = function() {
+proto.JoystickControl.GetAppInfoRes.prototype.getCommitHash = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
@@ -7184,16 +7160,16 @@ proto.JoystickControl.GetAppInfoRes.prototype.getVersion = function() {
  * @param {string} value
  * @return {!proto.JoystickControl.GetAppInfoRes} returns this
  */
-proto.JoystickControl.GetAppInfoRes.prototype.setVersion = function(value) {
+proto.JoystickControl.GetAppInfoRes.prototype.setCommitHash = function(value) {
   return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
 /**
- * optional string sum = 3;
+ * optional string branch_name = 3;
  * @return {string}
  */
-proto.JoystickControl.GetAppInfoRes.prototype.getSum = function() {
+proto.JoystickControl.GetAppInfoRes.prototype.getBranchName = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
 };
 
@@ -7202,44 +7178,8 @@ proto.JoystickControl.GetAppInfoRes.prototype.getSum = function() {
  * @param {string} value
  * @return {!proto.JoystickControl.GetAppInfoRes} returns this
  */
-proto.JoystickControl.GetAppInfoRes.prototype.setSum = function(value) {
+proto.JoystickControl.GetAppInfoRes.prototype.setBranchName = function(value) {
   return jspb.Message.setProto3StringField(this, 3, value);
-};
-
-
-/**
- * optional string vcs = 4;
- * @return {string}
- */
-proto.JoystickControl.GetAppInfoRes.prototype.getVcs = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.JoystickControl.GetAppInfoRes} returns this
- */
-proto.JoystickControl.GetAppInfoRes.prototype.setVcs = function(value) {
-  return jspb.Message.setProto3StringField(this, 4, value);
-};
-
-
-/**
- * optional string vcs_revision = 5;
- * @return {string}
- */
-proto.JoystickControl.GetAppInfoRes.prototype.getVcsRevision = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.JoystickControl.GetAppInfoRes} returns this
- */
-proto.JoystickControl.GetAppInfoRes.prototype.setVcsRevision = function(value) {
-  return jspb.Message.setProto3StringField(this, 5, value);
 };
 
 

@@ -35,7 +35,7 @@ export default function AboutPage({}) {
 
 
     const getBackendVersionString = function (appInfo) {
-        return `${appInfo.getVersion()} ${appInfo.getVcs()}-${appInfo.getVcsRevision().substring(0, 7)}`;
+        return `${appInfo.getReleaseTag()}-${appInfo.getCommitHash().substring(0, 7)}`;
     }
 
     const openInNewTab = (url) => {

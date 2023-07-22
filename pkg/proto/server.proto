@@ -211,11 +211,9 @@ message BatteryData {
 
 
 message GetAppInfoRes {
-  string path = 1;
-  string version = 2;
-  string sum = 3;
-  string vcs = 4;
-  string vcs_revision = 5;
+  string release_tag = 1;
+  string commit_hash = 2;
+  string branch_name = 3;
 }
 
 service JoystickControl {

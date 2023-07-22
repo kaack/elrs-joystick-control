@@ -116,6 +116,7 @@ func createZip(outputDir string, fileName string, filesList []string) error {
 		return err
 	}
 
+	//goland:noinspection ALL
 	defer archive.Close()
 	zipWriter := zip.NewWriter(archive)
 
@@ -157,7 +158,7 @@ func createZip(outputDir string, fileName string, filesList []string) error {
 		}
 	}
 
-	zipWriter.Close()
+	_ = zipWriter.Close()
 
 	return nil
 }
@@ -197,7 +198,9 @@ func main() {
 	fmt.Printf("release file name: %s\n", zipOutputFile)
 	fmt.Printf("release file contents: %v", filesList)
 
-	createZip(outputZipDir, zipOutputFile, filesList)
+	if err = createZip(outputZipDir, zipOutputFile, filesList); err != nil {
+		panic(err)
+	}
 
 	return
 }

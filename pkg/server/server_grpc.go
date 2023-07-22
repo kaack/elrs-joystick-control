@@ -20,7 +20,6 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/types/known/structpb"
-	"runtime/debug"
 	"time"
 )
 
@@ -298,29 +297,16 @@ func (s *GRPCServer) GetTelemetryStream(_ *pb.Empty, server pb.JoystickControl_G
 
 func (s *GRPCServer) GetAppInfo(_ context.Context, _ *pb.Empty) (*pb.GetAppInfoRes, error) {
 
-	var info *debug.BuildInfo
-	var ok bool
+	var info *VersionInfo
+	var err error
 
-	if info, ok = debug.ReadBuildInfo(); !ok {
-		return nil, status.Error(codes.Internal, "could not read application information")
-	}
-
-	var vcs string
-	var vcsRevision string
-
-	for _, setting := range info.Settings {
-		if setting.Key == "vcs" {
-			vcs = setting.Value
-		} else if setting.Key == "vcs.revision" {
-			vcsRevision = setting.Value
-		}
+	if info, err = GetVersionInfo(); err != nil {
+		return nil, status.Error(codes.Internal, fmt.Sprintf("could not unmarshal version file. %s", err.Error()))
 	}
 
 	return &pb.GetAppInfoRes{
-		Path:        info.Main.Path,
-		Version:     info.Main.Version,
-		Sum:         info.Main.Sum,
-		Vcs:         vcs,
-		VcsRevision: vcsRevision,
+		ReleaseTag: info.ReleaseTag,
+		CommitHash: info.CommitHash,
+		BranchName: info.BranchName,
 	}, nil
 }
