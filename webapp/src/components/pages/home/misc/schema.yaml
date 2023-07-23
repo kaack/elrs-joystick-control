@@ -46,6 +46,7 @@ definitions:
           - attitude_pitch
           - attitude_roll
           - attitude_yaw
+          - link_stats_ul_power
           - link_stats_ul_lq
           - link_stats_ul_snr
           - link_stats_ul_rssi1
@@ -97,6 +98,8 @@ definitions:
         $ref: '#/definitions/attitude_roll'
       attitude_yaw:
         $ref: '#/definitions/attitude_yaw'
+      link_stats_ul_power:
+        $ref: '#/definitions/link_stats_ul_power'
       link_stats_ul_lq:
         $ref: '#/definitions/link_stats_ul_lq'
       link_stats_ul_snr:
@@ -1083,6 +1086,66 @@ definitions:
             default: 2
         unevaluatedProperties: true
     unevaluatedProperties: true
+  rx_antenna:
+    type: object
+    required:
+      - type
+      - rx_antenna
+    properties:
+      type:
+        type: string
+        enum:
+          - rx_antenna
+      rx_antenna:
+        type: object
+        title: Active receiver antenna
+        description: |
+          The RF receiver's antenna at that is currently active
+        properties:
+          value:
+            title: value
+            type: integer
+            default: 0
+            $meta:
+              editable: false
+          font_size:
+            title: Font size
+            description: |
+              How big the icon and text should be
+            type: integer
+            default: 14
+            $meta:
+              autocomplete: font-size
+          icon_location:
+            title: Icon position
+            type: string
+            enum: [ "left", "right" ]
+            default: left
+            $meta:
+              autocomplete: location-lr
+          padding_location:
+            title: Padding location
+            description: |
+              Use padding spaces at at the start or end of value
+            type: string
+            enum: [ "start", "end" ]
+            default: start
+            $meta:
+              autocomplete: padding-location
+          padding_char:
+            title: Padding character
+            description: |
+              Which character to use for padding the values. Typical it's to use space or zero.
+            type: string
+            default: "0"
+          padding_count:
+            title: Padding count
+            description: |
+              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
+            type: integer
+            default: 0
+        unevaluatedProperties: true
+    unevaluatedProperties: true
   link_stats_ul_lq:
     type: object
     required:
@@ -1145,79 +1208,19 @@ definitions:
             default: 0
         unevaluatedProperties: true
     unevaluatedProperties: true
-  rx_antenna:
+  link_stats_ul_power:
     type: object
     required:
       - type
-      - rx_antenna
+      - link_stats_ul_power
     properties:
       type:
         type: string
         enum:
-          - rx_antenna
-      rx_antenna:
+          - link_stats_ul_power
+      link_stats_ul_power:
         type: object
-        title: Active receiver antenna
-        description: |
-          The RF receiver's antenna at that is currently active
-        properties:
-          value:
-            title: value
-            type: integer
-            default: 0
-            $meta:
-              editable: false
-          font_size:
-            title: Font size
-            description: |
-              How big the icon and text should be
-            type: integer
-            default: 14
-            $meta:
-              autocomplete: font-size
-          icon_location:
-            title: Icon position
-            type: string
-            enum: [ "left", "right" ]
-            default: left
-            $meta:
-              autocomplete: location-lr
-          padding_location:
-            title: Padding location
-            description: |
-              Use padding spaces at at the start or end of value
-            type: string
-            enum: [ "start", "end" ]
-            default: start
-            $meta:
-              autocomplete: padding-location
-          padding_char:
-            title: Padding character
-            description: |
-              Which character to use for padding the values. Typical it's to use space or zero.
-            type: string
-            default: "0"
-          padding_count:
-            title: Padding count
-            description: |
-              Length of the value after adding the padding characters. Units and suffixes are not included in this length.
-            type: integer
-            default: 0
-        unevaluatedProperties: true
-    unevaluatedProperties: true
-  ul_power:
-    type: object
-    required:
-      - type
-      - ul_power
-    properties:
-      type:
-        type: string
-        enum:
-          - ul_power
-      ul_power:
-        type: object
-        title: Uplink power (milli-watts)
+        title: Uplink signal power (in milli-watts)
         description: |
           The RF transmitter's output power
         properties:
@@ -1228,6 +1231,16 @@ definitions:
             $meta:
               prefix: "UL"
               unit: "mW"
+              map:
+                0: 0
+                1: 10
+                2: 25
+                3: 100
+                4: 500
+                5: 1000
+                6: 2000
+                7: 250
+                8: 50
               editable: false
           font_size:
             title: Font size

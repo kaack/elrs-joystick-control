@@ -9,7 +9,6 @@ import * as StructPb from "google-protobuf/google/protobuf/struct_pb";
 export const Empty = ServerPb['Empty'];
 export const SetConfigReq = ServerPb['SetConfigReq'];
 export const GetGamepadStreamReq = ServerPb['GetGamepadStreamReq'];
-export const GamepadInputType = ServerPb['GamepadInputType'];
 export const GetTransmitterStreamReq = ServerPb['GetTransmitterStreamReq'];
 
 // noinspection JSUnusedGlobalSymbols
@@ -46,5 +45,15 @@ export const VariometerData = ServerPb['VariometerData'];
 export const BarometerData = ServerPb['BarometerData'];
 export const BarometerVariometerData = ServerPb['BarometerVariometerData'];
 
+
+// Responses (used mainly for mocks)
+export const GetAppInfoRes = ServerPb['GetAppInfoRes'];
+export const GetTransmitterRes = ServerPb['GetTransmitterRes'];
+export const GetGamepadsRes = ServerPb['GetGamepadsRes'];
+export const TransmitterChannels = ServerPb['TransmitterChannels'];
+export const TransmitterChannel = ServerPb['TransmitterChannel'];
+export const GamepadInputsStates = ServerPb['GamepadInputsStates'];
+export const GamepadInputState = ServerPb['GamepadInputState'];
+export const GamepadInputType = ServerPb['GamepadInputType'];
 
 

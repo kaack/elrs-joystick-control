@@ -4,22 +4,7 @@
 
 
 import {CRSFMax, CRSFMin, DShotMax, DShotMin, PWMMax, PWMMin, RawMax, RawMin} from "./constants";
-
-export function MapRange(ix, ixMin, ixMax, iyMin, iyMax) {
-
-    //use floats to avoid overflows
-    let fx = parseFloat(ix)
-    let fxMin = parseFloat(ixMin)
-    let fxMax = parseFloat(ixMax)
-    let fyMin = parseFloat(iyMin)
-    let fyMax = parseFloat(iyMax)
-
-    let fy = fyMin + (fyMax - fyMin) * (fx - fxMin) / (fxMax - fxMin)
-    fy = Math.max(fy, fyMin)
-    fy = Math.min(fy, fyMax)
-    return fy
-
-}
+import {MapRange} from "./util";
 
 export function CRSFToCRSF(x) {
     //this looks stupid, but it just makes sure the value stays within range

@@ -33,3 +33,12 @@ NodeSchemaError.prototype.toString = function() {
     return `${this.message}`;
 }
 
+
+export class Warning extends Error {
+    constructor(message) {
+        super(message);
+    }
+}
+
+
+

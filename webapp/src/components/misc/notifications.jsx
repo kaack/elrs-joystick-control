@@ -5,6 +5,7 @@
 import React, {useEffect} from 'react';
 
 import {useSnackbar} from "notistack";
+import {Warning} from "./errors";
 
 export const notificationsRef = {};
 export function NotificationMessages() {
@@ -17,7 +18,21 @@ export function NotificationMessages() {
     return <></>;
 }
 
+export function showWarning(message) {
+    if (message instanceof Error || message instanceof Warning) {
+        message = `${message.message}`
+    }
+
+    notificationsRef.current?.enqueueSnackbar?.(message, {
+        variant: "warning", style: {textAlign: 'left'}
+    });
+}
+
 export function showError(message) {
+    if (message instanceof Warning) {
+        return showWarning(message);
+    }
+
     if (message instanceof Error) {
         message = `${message.message}`
     }

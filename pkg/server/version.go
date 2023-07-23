@@ -10,7 +10,7 @@ import (
 	"sync"
 )
 
-//go:generate  go run ..\..\scripts\cmd\generate-version-file\generate-version-file.go --repo ..\.. --location ./generated
+//go:generate  go run ../../scripts/cmd/generate-version-file/generate-version-file.go --repo ../.. --location  ./generated
 //go:embed generated/version.json
 var versionJson []byte
 

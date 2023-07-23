@@ -12,6 +12,7 @@ import {SparklinesLine} from "react-sparklines/src/Sparklines";
 import Box from "@mui/material/Box";
 import HeartbeatIcon from "../../../icons/HeartBeatIcon";
 import {TelemetryIcon} from "../misc/TelemetryIcon";
+import {randomPlusOrMinus} from "../../../misc/util";
 
 class SparkErrorBoundary extends Component {
     constructor(props) {
@@ -93,7 +94,7 @@ function HeartbeatNode(node) {
     const onValueChange = function (data) {
         if (data instanceof SyncData) {
             if (dataRef?.current?.length < limit + 1) {
-                let value = data.getOffset() * (Math.round(Math.random()) * 2 - 1);
+                let value = data.getOffset() * randomPlusOrMinus();
                 dataRef?.current?.push(value);
             }
 

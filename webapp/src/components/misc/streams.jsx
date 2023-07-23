@@ -3,19 +3,20 @@
 // SPDX-License-Identifier: FS-0.9-or-later
 
 import {StatusCode} from "grpc-web";
-import {JoystickControlPromiseClient} from "../../generated/server_grpc_web_pb";
 import {Empty, GetGamepadStreamReq, GetTransmitterStreamReq, Telemetry} from "../../pbwrap";
 import {getServerUrl} from "./settings";
+import {getClient} from "./server";
+
 
 export const getTransmitterStream = async function (transmitter) {
-    let client = new JoystickControlPromiseClient(getServerUrl(), null, null);
+    let client = getClient(getServerUrl(), null, null);
     let req = new GetTransmitterStreamReq();
     req.setTransmitter(transmitter);
     return client.getTransmitterStream(req)
 };
 
 export const getGamepadStream = async function (gamepad) {
-    let client = new JoystickControlPromiseClient(getServerUrl(), null, null);
+    let client = getClient(getServerUrl(), null, null);
     let req = new GetGamepadStreamReq();
     req.setGamepad(gamepad);
 
@@ -23,18 +24,18 @@ export const getGamepadStream = async function (gamepad) {
 };
 
 export const getEvalStream = async function () {
-    let client = new JoystickControlPromiseClient(getServerUrl(), null, null);
+    let client = getClient(getServerUrl(), null, null);
     return client.getEvalStream(new Empty());
 }
 
 export const getLinkStream = async function () {
-    let client = new JoystickControlPromiseClient(getServerUrl(), null, null);
+    let client = getClient(getServerUrl(), null, null);
     return client.getLinkStream(new Empty());
 }
 
 
 export const getTelemetryStream = async function () {
-    let client = new JoystickControlPromiseClient(getServerUrl(), null, null);
+    let client = getClient(getServerUrl(), null, null);
     return client.getTelemetryStream(new Empty());
 }
 
@@ -81,6 +82,9 @@ const TelemetryMap = new Map([
     [Telemetry.DataCase.LINK_RX, t => t.getLinkRx()],
     [Telemetry.DataCase.LINK_TX, t => t.getLinkTx()],
     [Telemetry.DataCase.SYNC, t => t.getSync()],
+    [Telemetry.DataCase.BAROMETER, t => t.getBarometer()],
+    [Telemetry.DataCase.BAROMETER_VARIOMETER, t => t.getBarometerVariometer()],
+    [Telemetry.DataCase.VARIOMETER, t => t.getVariometer()],
 ])
 
 export async function streamTelemetry({
@@ -124,10 +128,10 @@ export async function streamTelemetry({
 }
 
 
-export async function streamChannels(gamepad, {
+export async function streamChannels(transmitter, {
     onStreamBegin, onStreamActive, onStreamData, onStreamError, onStreamEnd
 }) {
-    let stream = await getTransmitterStream(gamepad);
+    let stream = await getTransmitterStream(transmitter);
 
     onStreamBegin && onStreamBegin(stream);
 

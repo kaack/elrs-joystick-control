@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // SPDX-License-Identifier: FS-0.9-or-later
 
+import {USE_LOCAL_STORAGE_KEY} from "./settings";
+
 export const memoryStorage = new (class MemoryStorage {
     data = {};
 
@@ -15,8 +17,8 @@ export const memoryStorage = new (class MemoryStorage {
 })
 
 export function isLocalStorageActive() {
-    return (localStorage && localStorage.getItem("useLocalStorage") === "true") ||
-        (localStorage && localStorage.getItem("useLocalStorage") !== "false"); //this is needed for very first time
+    return (localStorage && localStorage.getItem(USE_LOCAL_STORAGE_KEY) === "true") ||
+        (localStorage && localStorage.getItem(USE_LOCAL_STORAGE_KEY) !== "false"); //this is needed for very first time
 }
 
 export function isString(value) {

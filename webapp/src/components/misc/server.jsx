@@ -5,10 +5,20 @@
 
 import {JoystickControlPromiseClient} from "../../generated/server_grpc_web_pb";
 import {Empty, SetConfigReq, StartLinkReq, Struct} from "../../pbwrap";
-import {getServerUrl} from "./settings";
+import {getServerUrl, isMockBackend} from "./settings";
+import * as mock from "../mock/JoystickControlPromiseClient"
+
+export const getClient = function (serverUrl, credentials, options) {
+    if (isMockBackend()) {
+        //for demos, where there is no backend
+        return new mock.JoystickControlPromiseClient(serverUrl, credentials, options)
+    }
+
+    return new JoystickControlPromiseClient(getServerUrl(), credentials, options);
+};
 
 export const getGamepads = async function () {
-    let client = new JoystickControlPromiseClient(getServerUrl(), null, null);
+    let client = getClient(getServerUrl(), null, null);
     let res = await client.getGamepads(new Empty(), {});
 
     // noinspection JSUnresolvedReference
@@ -16,7 +26,7 @@ export const getGamepads = async function () {
 };
 
 export const getTransmitters = async function () {
-    let client = new JoystickControlPromiseClient(getServerUrl(), null, null);
+    let client = getClient(getServerUrl(), null, null);
     let res = await client.getTransmitters(new Empty(), {});
 
     // noinspection JSUnresolvedReference
@@ -25,7 +35,7 @@ export const getTransmitters = async function () {
 
 
 export const setConfig = async function (config) {
-    let client = new JoystickControlPromiseClient(getServerUrl(), null, null);
+    let client = getClient(getServerUrl(), null, null);
     let req = new SetConfigReq();
     req.setConfig(Struct.fromJavaScript(config));
 
@@ -34,7 +44,7 @@ export const setConfig = async function (config) {
 
 
 export const startLink = async function ({port, baudRate}) {
-    let client = new JoystickControlPromiseClient(getServerUrl(), null, null);
+    let client = getClient(getServerUrl(), null, null);
     let req = new StartLinkReq();
     req.setPort(port);
     req.setBaudRate(baudRate);
@@ -46,7 +56,7 @@ export const startLink = async function ({port, baudRate}) {
 };
 
 export const stopLink = async function () {
-    let client = new JoystickControlPromiseClient(getServerUrl(), null, null);
+    let client = getClient(getServerUrl(), null, null);
 
     // noinspection UnnecessaryLocalVariableJS
     let res = await client.stopLink(new Empty(), {});
@@ -54,8 +64,7 @@ export const stopLink = async function () {
 };
 
 export const getAppInfo = async function () {
-    let client = new JoystickControlPromiseClient(getServerUrl(), null, null);
-
+    let client = getClient(getServerUrl(), null, null);
     // noinspection UnnecessaryLocalVariableJS
     let res = await client.getAppInfo(new Empty(), {});
     return res;

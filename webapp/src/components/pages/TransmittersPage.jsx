@@ -61,7 +61,7 @@ function TransmitterCard({transmitter}) {
                         textIndent: "10px",
 
                         textOverflow: "ellipsis"
-                    }}>{`${transmitter.getPort()}` + (transmitter.getName() ? `- ${transmitter.getName()}` : "")}</Typography>
+                    }}>{`${transmitter.getPort()}` + (transmitter.getName() ? ` - ${transmitter.getName()}` : "")}</Typography>
                 </Box>
                 <Box style={{width: "100%", alignContent: "center", textAlign: "center"}}>
                     {React.cloneElement(TransmitterNode.menuIcon, {style: {width: 64, height: 64, padding: 25}})}

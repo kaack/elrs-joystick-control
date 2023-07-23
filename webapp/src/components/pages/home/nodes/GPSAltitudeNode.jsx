@@ -12,7 +12,7 @@ function GPSAltitudeNode(node) {
     return (<GenericTelemetryNode
         valueProps={{
             isValidTelemetryData: data => data instanceof GPSData,
-            getTelemetryValue: data => data.getAttitude()
+            getTelemetryValue: data => data.getAltitude()
         }}
         node={node}/>);
 

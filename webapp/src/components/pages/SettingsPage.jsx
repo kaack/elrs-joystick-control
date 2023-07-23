@@ -13,7 +13,7 @@ import {
 import {isLocalStorageActive, storageSet} from "../misc/storage";
 import i18n from "../misc/I18n";
 import SettingsIcon from "@mui/icons-material/Settings";
-import {getServerUrl} from "../misc/settings";
+import {getServerUrl, isMockBackend, MOCK_BACKEND_KEY, USE_LOCAL_STORAGE_KEY} from "../misc/settings";
 
 const SettingsCard = function({label, children}) {
     return <Card elevation={1} style={{
@@ -34,11 +34,13 @@ const SettingsCard = function({label, children}) {
         {children}
     </Card>
 }
+
 export default function SettingsPage({}) {
 
     const [fullScreen, setFullScreen] = React.useState(!!document.fullscreenElement);
     const [serverUrl, setServerUrl] = useState(getServerUrl());
     const [useLocalStorage, setUseLocalStorage] = useState(isLocalStorageActive())
+    const [mockBackend, setMockBackend] = useState(isMockBackend())
 
 
     const intervalRef = useRef(null);
@@ -70,7 +72,13 @@ export default function SettingsPage({}) {
     const handleLocalStorage = useCallback(() => {
         let flipped = !useLocalStorage;
         setUseLocalStorage(flipped)
-        localStorage.setItem("useLocalStorage", flipped.toString()); //this is the only one we always store in local storage
+        localStorage.setItem(USE_LOCAL_STORAGE_KEY, flipped.toString()); //this is the only one we always store in local storage
+    }, null);
+
+    const handleMockBackend = useCallback(() => {
+        let flipped = !mockBackend;
+        setMockBackend(flipped)
+        storageSet(MOCK_BACKEND_KEY, flipped.toString());
     }, null);
 
     const handleServerUrl = useCallback(function(e) {
@@ -98,12 +106,21 @@ export default function SettingsPage({}) {
                 />
             </SettingsCard>
 
-            <SettingsCard label={"Connection"}>
+            {!mockBackend && <SettingsCard label={"Connection"}>
                 <TextField
                     value={serverUrl || ''}
                     onChange={handleServerUrl}
                     label={"Server URL"}
                     style={{marginTop: "10px", width: "100%", backgroundColor: "white"}}/>
+            </SettingsCard> }
+
+            <SettingsCard label={"Mock"}>
+                <FormControlLabel
+                    control={
+                        <Switch checked={Boolean(mockBackend)} onChange={handleMockBackend} name="mock"/>
+                    }
+                    label="Mock backend server"
+                />
             </SettingsCard>
         </>
     );

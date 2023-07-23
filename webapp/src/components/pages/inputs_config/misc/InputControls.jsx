@@ -24,7 +24,7 @@ import ValueIcon from "../../../icons/ValueIcon";
 // noinspection ES6UnusedImports
 import {StatusCode} from "grpc-web";
 import {streamValues} from "../../../misc/streams";
-import {showError, showSuccess} from "../../../misc/notifications";
+import {showError, showSuccess, showWarning} from "../../../misc/notifications";
 import {setConfig} from "../../../misc/server";
 import {
     getNodes
@@ -38,7 +38,7 @@ import {
 } from "./node-access";
 
 import {loadConfigFromFile, saveConfigToFile} from "./config-access";
-import {NodeConfigError} from "../../../misc/errors";
+import {NodeConfigError, Warning} from "../../../misc/errors";
 // noinspection DuplicatedCode
 import i18n from "../../../misc/I18n";
 
@@ -120,8 +120,12 @@ export function InputControls() {
                 showSuccess(`${i18n("notif-config-applied")}`);
 
             } catch (ex) {
-                showError(`${i18n("error-msg-no-config")} ${ex.message}`);
-                showSchemaErrors({ex, config});
+                if (ex instanceof Warning) {
+                    showWarning(ex);
+                } else {
+                    showError(`${i18n("error-msg-no-config")} ${ex.message}`);
+                    showSchemaErrors({ex, config});
+                }
             }
             setApplyingConfig(false);
         })()
@@ -177,6 +181,8 @@ export function InputControls() {
             }
         }).then((stream) => {
             streamRef.current = stream;
+        }).catch(function (ex) {
+            showError(ex);
         });
 
     }, [showValues]);

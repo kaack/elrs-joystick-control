@@ -18,7 +18,7 @@ function LinkStatsUplinkPowerNode(node) {
 
 }
 
-LinkStatsUplinkPowerNode.type = "ul_power";
+LinkStatsUplinkPowerNode.type = "link_stats_ul_power";
 LinkStatsUplinkPowerNode.menuIcon = <SignalPowerTelemetryIcon  />;
 
 
