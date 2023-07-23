@@ -26,6 +26,16 @@ inputs, converts them to Crossfire format (CRSF), and sends them to an RC Transm
 The TX then sends the control signals over air to the drone.  Both the USB control devices and the
 RC Transmitter module must be connected to the same computer where the application is running on.
 
+## Try it out
+
+You can try out the configurator for this application online over at [kaack.github.io/elrs-joystick-control](https://kaack.github.io/elrs-joystick-control?mockBackend=true)
+
+The online Web-UI starts with a mocked backend by default. The mocked backend, emulates most of the functionality
+and allows you to try things out without actually installing or running anything in your computer.
+
+When you are ready to actually run the application locally, you access the Web-UI on https://localhost:3000
+
+
 ## How the application talks to the ELRS Transmitter
 
 ELRS TX modules have an I/O pin that is used for receiving radio inputs.
@@ -123,13 +133,92 @@ from module to module. See the ELRS documentation to determine the proper method
 
 
 ## How to use the application
-When the application starts, it exposes a Web UI on port 3000, and a gRPC service on port 10000.
+When the application starts, it exposes a Web-UI on port 3000, and a gRPC service on port 10000.
 
-For most use-cases, the Web UI will give you all the functionality you will need. From there you can do things like
+For most use-cases, the Web-UI will give you all the functionality you will need. From there you can do things like
 configure the inputs and outputs, setup telemetry widgets, and start/stop the radio control link.
 
 Behind the scenes, the Web-UI uses the gRPC service to interact with the application itself.
 You can use the gRPC service directly as well, if you want to interact with the application programmatically.
+
+
+## How to use the Web-UI
+
+When you run the application locally, you can access the Web-UI through a browser over at https://localhost:3000.
+
+The Web-UI has multiple pages, that allow you to configure and manage the application.
+
+### Web-UI Home Page
+
+#### Starting/Stopping Link
+From the `Home` page, you can start and stop the link with the ELRS RF transmitter. On the bottom left, click on the
+transmitter icon. That will open a dialog where you can start and stop the link.
+
+Starting the link just means that the application will begin writing channel data to the ELRS RF transmitter, and reading telemetry data that
+is output by the transmitter. Note that starting/stopping the link is separate from applying inputs/outputs configuration.
+If you have not yet applied inputs/outputs configuration, all channel values will be set to 0.
+
+You will need to go to the `Inputs Config` page to create and apply inputs/outputs configuration.
+
+#### Viewing telemetry data
+
+From the `Home` page, you can view the telemetry data live as it's being received by the ELRS RF transmitter.
+Telemetry data is only received when the link is active. You can add new telemetry widgets to the home screen, or delete
+existing ones. You can also modify various display properties of each telemetry widget by double-clicking on them.
+
+### Web-UI RF Transmitters Page
+
+The `RF Transmitters` page displays a list of all serial ports detected on the computer where the application is running.
+The application has no way of knowing if the serial ports are actually ELRS RF transmitters. If you have other devices
+connected that also use virtual serial ports, those will show up in this list as well. (e.g. flight controller)
+
+If you click on one of the items in the list, the Web-UI shows the values for all 16 channels associated with the serial port.
+This does not mean that the values are actually being sent to the RF transmitter. That only happens when you start the link
+from the `Home` page. The channel values you see there are computed live based on inputs/outputs configuration that has been applied.
+
+You will need to go to the `Inputs Config` page to create and apply inputs/outputs configuration.
+
+###  Web-UI Gamepads Page
+
+The `Gamepads` page shows you a list of all gamepad devices that are connected to the computer where the application is running.
+
+If you click on one of the gamepads in the list, the Web-UI shows you a live view of all axes, and button values that gamepad.
+
+### Web-UI Inputs Config Page
+
+The `Input Config` page is where you build the and apply the inputs/outputs configuration.
+
+On the bottom right side, there is menu that let you add nodes for various config items such as gamepads, buttons, axes, channels etc.
+There are also nodes that allow you to transform, or even apply logic such as switch-statements, if-else statements.
+The idea is for you to build a config where gamepad inputs get mapped to channels for an RF transmitter.
+
+On the left side, there is a menu that lets you apply the config. When you apply the config, the Web-UI constructs a config file
+and sends it to the backend application. There is validation that happens both on the Web-UI and the backend to help
+you identify errors in your config.
+
+Also, on the left menu (if you expand it), you will find additional functions that such as `Toggle Labels`, and `Toggle values`.
+
+The `Toggle labels` function allows you to show or hide the labels for each of the nodes.
+
+
+The `Toggle values` function allow you to see the live values for each node in your configuration. This is very useful as it lets you see exactly how the
+data flows through the nodes, and how it's transformed.
+
+### Web-UI Settings Page
+
+The `Settings` page lets you modify various aspects of the Web-UI.
+
+* **Connection**
+    * **Server URL** (string) - This is the URL where the backend application is running. By default, this is set to the same host, and port that you used to access the Web-UI
+* **Mock**
+    * **Mock backend server** (toggle) - If you enable this, the Web-UI ignores the **Server URL** property, and uses mocked data to populate the Web-UI.
+* **Persistence**
+    * **Use local storage** (toggle) - This is enabled by default. It means that the Web-UI stores configuration using your browser's local storage mechanism.
+      This is what allows you to close and re-open the page, without losing configuration data. If you turn it off, the data is stored in-memory, and will be lost when you close the page.
+
+### Web-UI About Page
+
+The `About` page has information about the application itself such as the version number, licenses, etc.
 
 ## How to use the gRPC service
 
@@ -230,71 +319,58 @@ as well.
 
 ## Compiling on Windows (x86_64)
 
+If you want to compile the application in your own Windows machine, you can do so using Docker with Windows Containers.
+There is a pre-built Windows docker image that has all the build tools, and pre-requisites installed. Follow these
+steps to build the application:
 
-* Install GoLang SDK
-    * Add Go's SDK /bin directory to your path
-        * e.g. `C:\Users\your_user\sdk\go1.20.3\bin`
-    * Set GOROOT env var (this is where Go SDK is installed)
-        * e.g. `GOROOT=C:\Users\your_user\sdk\go1.20.3`
-    * Set GOPATH env var (this is where Go's third party packages are installed)
-        * e.g. `GOPATH=C:\Users\your_user\go`
+* Install [Docker Desktop](https://docs.docker.com/desktop/install/windows-install/) for Windows
 
 
-* Install Protocol Buffer compiler
-    * Download the `win64` zip from the official [releases](https://github.com/protocolbuffers/protobuf/releases/)
-    * Extract the zip file somewhere (e.g. `C:\protoc-23.2-win64`)
-    * Add the /bin directory to your path
-        * e.g. `C:\protoc-23.2-win64\bin`
+* Switch Docker to use [Windows Containers](https://docs.docker.com/desktop/faqs/windowsfaqs/#how-do-i-switch-between-windows-and-linux-containers)
 
 
-* Install Protobuf compiler plugins for `go` and `go-grpc`
-    * `go install google.golang.org/protobuf/cmd/protoc-gen-go`
-    * `go install google.golang.org/grpc/cmd/protoc-gen-go-grpc`
+* Pull the builder image
+  ```
+  docker pull oneeyefpv/windows-amd64-builder
+  ```
 
 
-* Install Protobuf compiler plugin for `grpc-web`
-    * Download the `windows-x86_64` exe from the official [releases](https://github.com/grpc/grpc-web/releases/)
-    * Move the exe file into the protoc /bin directory
-        * e.g. `C:\protoc-23.2-win64\bin`
+* Clone this repo to your local machine
+  ```
+  git clone https://github.com/kaack/elrs-joystick-control.git
+  ```
 
 
-* Install Protobuf compiler plugin for `js`
-    * Download the `win64` zip from the official [releases](https://github.com/protocolbuffers/protobuf-javascript/releases)
-    * Extract the zip file somewhere (e.g. `C:\protobuf-javascript-3.21.2-win64`)
-    * Add the /bin directory to your path
-        * e.g. `C:\protobuf-javascript-3.21.2-win64\bin`
+* Switch to the `elrs-joystick-control` directory
+  ```
+   cd elrs-joystick-control
+  ```
 
 
-* Install mingw
-    * Download the `x86_64-*-win32-seh-msvcrt` 7z file from the official [releases](https://github.com/niXman/mingw-builds-binaries/releases)
-    * Extract the file somewhere (e.g. `C:\mingw64`)
-    * Add the MingGW /bin and /include directories to your path
-        * `C:\mingw64\bin`
-        * `C:\mingw64\include`
+* Create a docker container from the builder image, and connect to it
+  ```
+  docker run --rm -it -m 4096m -v %cd%:C:\app -t oneeyefpv/windows-amd64-builder /s /c
+  ```
 
 
-* Install nodejs
-    * Download the win64 zip file from the Node.js official [releases](https://nodejs.org/en/download)
-    * Extract the zip file somewhere (e.g. `C:\node-v18.16.0-win-x64`)
-    * Add `C:\node-v18.16.0-win-x64` to your path  (this dir contains, node.exe, and npm.exe)
+* From within the container, build the `elrs-joystick-control.exe` binary executable
+  ```
+  cd app
+  go generate ./... 
+  go build -tags static -o elrs-joystick-control.exe .\cmd\elrs-joystick-control\.
+  ```
 
 
-* Install SDL2 development libraries
-    * Download the `SDL2-devel-*-mingw` zip file from the official [releases](https://github.com/libsdl-org/SDL/releases)
-    * Extract the zip somewhere, and find the `x86_64-w64-mingw32` directory
-    * Copy the contents of `x86_64-w64-mingw32/bin` into `C:\mingw64\bin`
-    * Copy the contents of `x86_64-w64-mingw32/include` into `C:\mingw64\include`
-
-
-* Run the Go Generate Command from the root of the repo
-    * `go generate ./...`
-
-
-* Run the Go Build Command from the root of the repo
-    * `go build -tags static -o elrs_joystick_control.exe cmd\elrs-joystick-control\main.go`
-
+* Exit the container
+  ```
+  exit
+  ```
+  The binary executable should be on the root of the repo now.
 
 ## Compiling on Linux (x86_64)
+
+
+* Install Node.js
 
 
 * Install GoLang SDK
@@ -316,7 +392,15 @@ as well.
   sudo apt-get install libsdl2-2.0-0 libsdl2-dev
   ```
 
+* Clone this repo to your local machine
+  ```
+  git clone https://github.com/kaack/elrs-joystick-control.git
+  ```
+
+
 * Run the Go Build Command from the root of the repo
   ```bash
+  cd elrs-joystick-control
+  go generate ./...
   go build -tags static -o elrs_joystick_control cmd\elrs-joystick-control\main.go
   ``` 
