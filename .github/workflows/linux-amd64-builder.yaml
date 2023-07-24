@@ -1,0 +1,19 @@
+name: Linux/amd64 builder
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+jobs:
+  build-builder-container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: docker login
+        env:
+          DOCKER_USER: ${{ secrets.DOCKER_USER }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: docker login -u ${{env.DOCKER_USER}} -p "${{env.DOCKER_PASSWORD}}"
+      - name: Build the Docker image
+        run: docker build -t oneeyefpv/linux-amd64-builder -f Dockerfile.linux-amd64 .
+      - name: Docker Push
+        run: docker push oneeyefpv/linux-amd64-builder

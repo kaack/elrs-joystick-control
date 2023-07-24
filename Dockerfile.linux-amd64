@@ -1,0 +1,97 @@
+# SPDX-FileCopyrightText: © 2023 OneEyeFPV oneeyefpv@gmail.com
+# SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-License-Identifier: FS-0.9-or-later
+
+FROM ubuntu:20.04
+# Using older image on purpose so that the 
+# final binary is linked against GLIBC 2.31
+
+LABEL maintainer="oneeyefpv@gmail.com"
+
+# GoLang
+ARG GO_VERSION=1.20.6
+ARG GO_TARGZ_URL=https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz
+
+# protoc
+ARG PROTOC_VERSION=23.4
+ARG PROTOC_ZIP_URL=https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-x86_64.zip
+
+# protoc-gen-grpc-web
+ARG GRPC_WEB_VERSION=1.4.2
+ARG GRPC_WEB_BIN_URL=https://github.com/grpc/grpc-web/releases/download/${GRPC_WEB_VERSION}/protoc-gen-grpc-web-${GRPC_WEB_VERSION}-linux-x86_64
+
+# protoc-gen-js
+ARG PROTOC_JS_VERSION=3.21.2
+ARG PROTOC_JS_TARGZ_URL=https://github.com/protocolbuffers/protobuf-javascript/releases/download/v${PROTOC_JS_VERSION}/protobuf-javascript-${PROTOC_JS_VERSION}-linux-x86_64.tar.gz
+
+# node
+ARG NODE_VERSION=17.9.1
+ARG NODE_TARGZ_URL=https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.gz
+
+# install core utilities 
+RUN apt-get update && apt-get install -y curl zip unzip
+
+RUN echo "**** Download and install golang version: ${GO_VERSION}" \
+    && echo "**** url: ${GO_TARGZ_URL}" \
+    && curl -o go.tar.gz -sfL "${GO_TARGZ_URL}"  \
+    && tar -xvf "go.tar.gz" \
+    && mv go go-sdk \
+    && mkdir go
+
+ENV PATH="${PATH}:/go-sdk/bin:/go/bin"
+
+RUN echo "*** Download and install protoc version ${PROTOC_VERSION}" \
+    && echo "*** url: ${PROTOC_ZIP_URL}" \
+    && curl -o protoc.zip -sfL "${PROTOC_ZIP_URL}" \
+    && ls -la \
+    && unzip protoc.zip -d protoc
+
+ENV PATH="${PATH}:/protoc/bin" 
+    
+RUN echo "*** Download and install grpc-web protoc plugin version ${GRPC_WEB_VERSION}" \
+    && echo "*** url: ${GRPC_WEB_BIN_URL}" \
+    && curl -o protoc-gen-grpc-web -sfL "${GRPC_WEB_BIN_URL}" \
+    && chmod a+x protoc-gen-grpc-web \
+    && mv protoc-gen-grpc-web protoc/bin/
+
+RUN echo "*** Download and install protoc-js version ${PROTOC_JS_VERSION}" \
+    && echo "*** url: ${PROTOC_JS_TARGZ_URL}" \
+    && curl -o protoc-js.tar.gz -sfL "${PROTOC_JS_TARGZ_URL}" \
+    && mkdir protoc-js \
+    && tar -xvf protoc-js.tar.gz -C protoc-js
+
+ENV PATH="${PATH}:/protoc-js/bin" 
+
+RUN echo "*** Download and install node version ${NODE_VERSION}" \
+    && echo "url: ${NODE_TARGZ_URL}" \
+    && curl -o node.tar.gz -sfL "${NODE_TARGZ_URL}"  \
+    && mkdir node \
+    && tar xvf node.tar.gz --strip-components=1 -C node
+
+ENV PATH="${PATH}:/node/bin"
+
+RUN  echo "*** Installing protoc-gen-go / protoc-gen-go-grpc" \
+    && export GOPATH=/go \
+    && export GOROOT=/go-sdk \
+    && export GOARCH=amd64 \
+    && export GOOS=linux \
+    && go install google.golang.org/protobuf/cmd/protoc-gen-go@latest  \
+    && go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+
+
+ENV DEBIAN_FRONTEND=noninteractive 
+RUN echo "*** Download and install SDL2" \
+    && apt-get install -y libsdl2-2.0-0 libsdl2-dev
+
+RUN echo "*** Download and install gcc" \
+    && apt-get install -y gcc
+
+RUN echo "*** Setting env "
+ENV CC gcc
+ENV CGO_ENABLED 1
+ENV GOPATH /go
+ENV GOROOT /go-sdk
+ENV GOARCH amd64
+ENV GOOS linux
+
+ENTRYPOINT ["bash", "-c"]

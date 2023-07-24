@@ -313,9 +313,8 @@ There are a lot of comments in the schema explaining each node in the config doe
 
 ## Supported Operating Systems
 
-I have only tested this application in Windows so far, so that's what I can vouch for. But, the code is written such
-that it uses cross-platform libraries. So in theory, you should be able to compile it and run it in a Linux machine
-as well.
+I have only flown with this application in Windows so far, so that's what I can vouch for. In any case, below you can
+find instructions for building the application binary on both Windows and Linux.
 
 ## Compiling on Windows (x86_64)
 
@@ -349,7 +348,7 @@ steps to build the application:
 
 * Create a docker container from the builder image, and connect to it
   ```
-  docker run --rm -it -m 4096m -v %cd%:C:\app -t oneeyefpv/windows-amd64-builder /s /c
+  docker run --rm -it -m 4096m -v %cd%:C:\app oneeyefpv/windows-amd64-builder /s /c
   ```
 
 
@@ -370,27 +369,14 @@ steps to build the application:
 ## Compiling on Linux (x86_64)
 
 
-* Install Node.js
+* Install [Docker Engine](https://docs.docker.com/desktop/install/linux-install/) for Linux
 
 
-* Install GoLang SDK
-  ```bash
-  curl -sflO https://dl.google.com/go/go1.20.5.linux-amd64.tar.gz
-
-  mkdir -p $HOME/go-sdk
-  tar -xzvf go1.20.5.linux-amd64.tar.gz -C $HOME/go-sdk
-
-  mkdir -p $HOME/go
-
-  export PATH=$HOME/go-sdk/go/bin:$PATH
-  export GOROOT=$HOME/go-sdk/go
-  export GOPATH=$HOME/go
+* Pull the builder image
+  ```
+  docker pull oneeyefpv/linux-amd64-builder
   ```
 
-* Install SDL2
-  ```bash
-  sudo apt-get install libsdl2-2.0-0 libsdl2-dev
-  ```
 
 * Clone this repo to your local machine
   ```
@@ -398,9 +384,28 @@ steps to build the application:
   ```
 
 
-* Run the Go Build Command from the root of the repo
-  ```bash
-  cd elrs-joystick-control
-  go generate ./...
-  go build -tags static -o elrs_joystick_control cmd\elrs-joystick-control\main.go
-  ``` 
+* Switch to the `elrs-joystick-control` directory
+  ```
+   cd elrs-joystick-control
+  ```
+
+
+* Create a docker container from the builder image, and connect to it
+  ```
+  docker run --rm -it -m 4096m -v `pwd`:/app oneeyefpv/linux-amd64-builder bash
+  ```
+
+
+* From within the container, build the `elrs-joystick-control` binary executable
+  ```
+  cd app
+  go generate ./... 
+  go build -trimpath -tags static --ldflags '-s -w' -o elrs-joystick-control ./cmd/elrs-joystick-control/.
+  ```
+
+
+* Exit the container
+  ```
+  exit
+  ```
+  The binary executable should be on the root of the repo now.

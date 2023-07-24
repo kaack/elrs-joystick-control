@@ -24,6 +24,6 @@ jobs:
       - name: Upload binary
         uses: actions/upload-artifact@v3
         with:
-          name: release-zip
+          name: release-windows-amd64
           path: "*.zip"
           retention-days: 5

@@ -1,0 +1,29 @@
+name: ELRS Joystick Control (Linux/amd64)
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+jobs:
+  build-binary:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Download builder image
+        run: docker pull oneeyefpv/linux-amd64-builder
+      - name: Build binary
+        run: >
+          docker run -m 4096m -v ${{ github.workspace }}:/app -t oneeyefpv/linux-amd64-builder "
+          cd app && 
+          ls -la && 
+          go generate ./... && 
+          go build -trimpath -tags static --ldflags '-s -w' -o elrs-joystick-control ./cmd/elrs-joystick-control/.  &&
+          go run scripts/cmd/build-release-zip/build-release-zip.go --location /app --prefix elrs-joystick-control --files *-control,LICENSE* "
+      - name: Upload binary
+        uses: actions/upload-artifact@v3
+        with:
+          name: release-linux-amd64
+          path: "*.zip"
+          retention-days: 5
