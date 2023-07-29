@@ -18,6 +18,7 @@
     "@grpc/proto-loader": "~0.5.4",
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.13.4",
+    "@mui/system": "^5.14.1",
     "@reactflow/background": "^11.2.2",
     "@reactflow/controls": "^11.1.13",
     "@reactflow/core": "^11.7.2",

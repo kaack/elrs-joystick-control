@@ -7,6 +7,7 @@ package telemetry
 import (
 	"encoding/binary"
 	"github.com/kaack/elrs-joystick-control/pkg/crossfire"
+	"github.com/kaack/elrs-joystick-control/pkg/proto/generated/pb"
 )
 
 func isTelemetryAddress(c crossfire.Endpoint) bool {
@@ -25,4 +26,12 @@ func BarometerAltitude(data []byte) float32 {
 	}
 
 	return float32(raw) / 10
+}
+
+func LinkStatusFlagArrayToProto(flags []LinkStatusFlag) []pb.LinkStatusFlag {
+	var res []pb.LinkStatusFlag
+	for _, flag := range flags {
+		res = append(res, pb.LinkStatusFlag(flag))
+	}
+	return res
 }

@@ -43,6 +43,23 @@ JoystickControlPromiseClient.prototype.getAppInfo = async function(req) {
     return mockServer.getAppInfo(req)
 }
 
+
+
+JoystickControlPromiseClient.prototype.getCRSFDevices = async function (req) {
+    return mockServer.getCRSFDevices(req);
+};
+
+
+JoystickControlPromiseClient.prototype.getCRSFDeviceFields = async function (req) {
+    return mockServer.getCRSFDeviceFields(req);
+};
+
+
+JoystickControlPromiseClient.prototype.setCRSFDeviceField = async function (req) {
+    return mockServer.setCRSFDeviceField(req);
+};
+
+
 JoystickControlPromiseClient.prototype.getLinkStream = async function(req) {
     return mockServer.getLinkStream(req);
 }

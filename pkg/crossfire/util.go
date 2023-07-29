@@ -29,6 +29,80 @@ func CreateModelIDFrame(modelId uint8) []uint8 {
 	return frame
 }
 
+func CreatePingDevicesFrame() []uint8 {
+	frame := []uint8{
+		/* 0: */ uint8(UartSyncFrame),
+		/* 1: */ 5,
+		/* 2: */ uint8(PingDevicesFrame),
+		/* 3: */ uint8(AllEndpoint),
+		/* 4: */ uint8(LuaEndpoint),
+		/* 5: */ 0, //crc BA
+		/* 6: */ 0, //crc D5
+	}
+
+	frame[5] = crc.BA(frame[2:5])
+	frame[6] = crc.D5(frame[2:6])
+	return frame
+}
+
+func CreateParameterSettingsReadFrame(deviceId uint8, fieldId uint8, fieldChunk uint8) []uint8 {
+	frame := []uint8{
+		/* 0: */ uint8(UartSyncFrame),
+		/* 1: */ 7,
+		/* 2: */ uint8(ParameterSettingsReadFrame),
+		/* 3: */ deviceId,
+		/* 4: */ uint8(LuaEndpoint),
+		/* 5: */ fieldId,
+		/* 6: */ fieldChunk,
+		/* 7: */ 0, //crc BA
+		/* 8: */ 0, //crc D5
+	}
+
+	frame[7] = crc.BA(frame[2:7])
+	frame[8] = crc.D5(frame[2:8])
+	return frame
+}
+
+func CreateParameterSettingWriteFrameUint8(deviceId uint8, fieldId uint8, fieldValue uint8) []uint8 {
+	frame := []uint8{
+		/* 0: */ uint8(UartSyncFrame),
+		/* 1: */ 7,
+		/* 2: */ uint8(ParameterSettingsWriteFrame),
+		/* 3: */ deviceId,
+		/* 4: */ uint8(LuaEndpoint),
+		/* 5: */ fieldId,
+		/* 6: */ fieldValue,
+		/* 7: */ 0, //crc BA
+		/* 8: */ 0, //crc D5
+	}
+
+	frame[7] = crc.BA(frame[2:7])
+	frame[8] = crc.D5(frame[2:8])
+	//fmt.Printf("%x\n", frame)
+	return frame
+}
+
+// CreateParameterSettingWriteFrameUint16
+// not sure if this would work, ELRS seems to throw away the least-significant-byte of the fieldValue
+func CreateParameterSettingWriteFrameUint16(deviceId uint8, fieldId uint8, fieldValue uint16) []uint8 {
+	frame := []uint8{
+		/* 0: */ uint8(UartSyncFrame),
+		/* 1: */ 8,
+		/* 2: */ uint8(ParameterSettingsWriteFrame),
+		/* 3: */ deviceId,
+		/* 4: */ uint8(LuaEndpoint),
+		/* 5: */ fieldId,
+		/* 6: */ uint8((fieldValue >> 8) & 0x0F),
+		/* 7: */ uint8(fieldValue & 0x0F),
+		/* 8: */ 0, //crc BA
+		/* 9: */ 0, //crc D5
+	}
+
+	frame[8] = crc.BA(frame[2:8])
+	frame[9] = crc.D5(frame[2:9])
+	return frame
+}
+
 func GetRefreshRate(baudRate int32) time.Duration {
 	if baudRate <= 115200 {
 		return 16 * 1000 * time.Microsecond

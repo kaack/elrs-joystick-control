@@ -909,6 +909,372 @@ proto.JoystickControl.JoystickControlPromiseClient.prototype.getGamepadStream =
  * @const
  * @type {!grpc.web.MethodDescriptor<
  *   !proto.JoystickControl.Empty,
+ *   !proto.JoystickControl.GetCRSFDevicesRes>}
+ */
+const methodDescriptor_JoystickControl_getCRSFDevices = new grpc.web.MethodDescriptor(
+  '/JoystickControl.JoystickControl/getCRSFDevices',
+  grpc.web.MethodType.UNARY,
+  proto.JoystickControl.Empty,
+  proto.JoystickControl.GetCRSFDevicesRes,
+  /**
+   * @param {!proto.JoystickControl.Empty} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.JoystickControl.GetCRSFDevicesRes.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.JoystickControl.Empty} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.JoystickControl.GetCRSFDevicesRes)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.JoystickControl.GetCRSFDevicesRes>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.JoystickControl.JoystickControlClient.prototype.getCRSFDevices =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/JoystickControl.JoystickControl/getCRSFDevices',
+      request,
+      metadata || {},
+      methodDescriptor_JoystickControl_getCRSFDevices,
+      callback);
+};
+
+
+/**
+ * @param {!proto.JoystickControl.Empty} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.JoystickControl.GetCRSFDevicesRes>}
+ *     Promise that resolves to the response
+ */
+proto.JoystickControl.JoystickControlPromiseClient.prototype.getCRSFDevices =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/JoystickControl.JoystickControl/getCRSFDevices',
+      request,
+      metadata || {},
+      methodDescriptor_JoystickControl_getCRSFDevices);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.JoystickControl.GetCRSFDeviceFieldsReq,
+ *   !proto.JoystickControl.GetCRSFDeviceFieldsRes>}
+ */
+const methodDescriptor_JoystickControl_getCRSFDeviceFields = new grpc.web.MethodDescriptor(
+  '/JoystickControl.JoystickControl/getCRSFDeviceFields',
+  grpc.web.MethodType.UNARY,
+  proto.JoystickControl.GetCRSFDeviceFieldsReq,
+  proto.JoystickControl.GetCRSFDeviceFieldsRes,
+  /**
+   * @param {!proto.JoystickControl.GetCRSFDeviceFieldsReq} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.JoystickControl.GetCRSFDeviceFieldsRes.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.JoystickControl.GetCRSFDeviceFieldsReq} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.JoystickControl.GetCRSFDeviceFieldsRes)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.JoystickControl.GetCRSFDeviceFieldsRes>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.JoystickControl.JoystickControlClient.prototype.getCRSFDeviceFields =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/JoystickControl.JoystickControl/getCRSFDeviceFields',
+      request,
+      metadata || {},
+      methodDescriptor_JoystickControl_getCRSFDeviceFields,
+      callback);
+};
+
+
+/**
+ * @param {!proto.JoystickControl.GetCRSFDeviceFieldsReq} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.JoystickControl.GetCRSFDeviceFieldsRes>}
+ *     Promise that resolves to the response
+ */
+proto.JoystickControl.JoystickControlPromiseClient.prototype.getCRSFDeviceFields =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/JoystickControl.JoystickControl/getCRSFDeviceFields',
+      request,
+      metadata || {},
+      methodDescriptor_JoystickControl_getCRSFDeviceFields);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.JoystickControl.GetCRSFDeviceFieldReq,
+ *   !proto.JoystickControl.GetCRSFDeviceFieldRes>}
+ */
+const methodDescriptor_JoystickControl_getCRSFDeviceField = new grpc.web.MethodDescriptor(
+  '/JoystickControl.JoystickControl/getCRSFDeviceField',
+  grpc.web.MethodType.UNARY,
+  proto.JoystickControl.GetCRSFDeviceFieldReq,
+  proto.JoystickControl.GetCRSFDeviceFieldRes,
+  /**
+   * @param {!proto.JoystickControl.GetCRSFDeviceFieldReq} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.JoystickControl.GetCRSFDeviceFieldRes.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.JoystickControl.GetCRSFDeviceFieldReq} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.JoystickControl.GetCRSFDeviceFieldRes)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.JoystickControl.GetCRSFDeviceFieldRes>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.JoystickControl.JoystickControlClient.prototype.getCRSFDeviceField =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/JoystickControl.JoystickControl/getCRSFDeviceField',
+      request,
+      metadata || {},
+      methodDescriptor_JoystickControl_getCRSFDeviceField,
+      callback);
+};
+
+
+/**
+ * @param {!proto.JoystickControl.GetCRSFDeviceFieldReq} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.JoystickControl.GetCRSFDeviceFieldRes>}
+ *     Promise that resolves to the response
+ */
+proto.JoystickControl.JoystickControlPromiseClient.prototype.getCRSFDeviceField =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/JoystickControl.JoystickControl/getCRSFDeviceField',
+      request,
+      metadata || {},
+      methodDescriptor_JoystickControl_getCRSFDeviceField);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.JoystickControl.SetCRSFDeviceFieldReq,
+ *   !proto.JoystickControl.SetCRSFDeviceFieldRes>}
+ */
+const methodDescriptor_JoystickControl_setCRSFDeviceField = new grpc.web.MethodDescriptor(
+  '/JoystickControl.JoystickControl/setCRSFDeviceField',
+  grpc.web.MethodType.UNARY,
+  proto.JoystickControl.SetCRSFDeviceFieldReq,
+  proto.JoystickControl.SetCRSFDeviceFieldRes,
+  /**
+   * @param {!proto.JoystickControl.SetCRSFDeviceFieldReq} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.JoystickControl.SetCRSFDeviceFieldRes.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.JoystickControl.SetCRSFDeviceFieldReq} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.JoystickControl.SetCRSFDeviceFieldRes)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.JoystickControl.SetCRSFDeviceFieldRes>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.JoystickControl.JoystickControlClient.prototype.setCRSFDeviceField =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/JoystickControl.JoystickControl/setCRSFDeviceField',
+      request,
+      metadata || {},
+      methodDescriptor_JoystickControl_setCRSFDeviceField,
+      callback);
+};
+
+
+/**
+ * @param {!proto.JoystickControl.SetCRSFDeviceFieldReq} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.JoystickControl.SetCRSFDeviceFieldRes>}
+ *     Promise that resolves to the response
+ */
+proto.JoystickControl.JoystickControlPromiseClient.prototype.setCRSFDeviceField =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/JoystickControl.JoystickControl/setCRSFDeviceField',
+      request,
+      metadata || {},
+      methodDescriptor_JoystickControl_setCRSFDeviceField);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.JoystickControl.Empty,
+ *   !proto.JoystickControl.GetCRSFDeviceLinkStatusRes>}
+ */
+const methodDescriptor_JoystickControl_getCRSFDeviceLinkStatus = new grpc.web.MethodDescriptor(
+  '/JoystickControl.JoystickControl/getCRSFDeviceLinkStatus',
+  grpc.web.MethodType.UNARY,
+  proto.JoystickControl.Empty,
+  proto.JoystickControl.GetCRSFDeviceLinkStatusRes,
+  /**
+   * @param {!proto.JoystickControl.Empty} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.JoystickControl.GetCRSFDeviceLinkStatusRes.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.JoystickControl.Empty} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.JoystickControl.GetCRSFDeviceLinkStatusRes)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.JoystickControl.GetCRSFDeviceLinkStatusRes>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.JoystickControl.JoystickControlClient.prototype.getCRSFDeviceLinkStatus =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/JoystickControl.JoystickControl/getCRSFDeviceLinkStatus',
+      request,
+      metadata || {},
+      methodDescriptor_JoystickControl_getCRSFDeviceLinkStatus,
+      callback);
+};
+
+
+/**
+ * @param {!proto.JoystickControl.Empty} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.JoystickControl.GetCRSFDeviceLinkStatusRes>}
+ *     Promise that resolves to the response
+ */
+proto.JoystickControl.JoystickControlPromiseClient.prototype.getCRSFDeviceLinkStatus =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/JoystickControl.JoystickControl/getCRSFDeviceLinkStatus',
+      request,
+      metadata || {},
+      methodDescriptor_JoystickControl_getCRSFDeviceLinkStatus);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.JoystickControl.Empty,
+ *   !proto.JoystickControl.Empty>}
+ */
+const methodDescriptor_JoystickControl_clearCRSFDeviceLinkCriticalFlags = new grpc.web.MethodDescriptor(
+  '/JoystickControl.JoystickControl/clearCRSFDeviceLinkCriticalFlags',
+  grpc.web.MethodType.UNARY,
+  proto.JoystickControl.Empty,
+  proto.JoystickControl.Empty,
+  /**
+   * @param {!proto.JoystickControl.Empty} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.JoystickControl.Empty.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.JoystickControl.Empty} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.JoystickControl.Empty)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.JoystickControl.Empty>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.JoystickControl.JoystickControlClient.prototype.clearCRSFDeviceLinkCriticalFlags =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/JoystickControl.JoystickControl/clearCRSFDeviceLinkCriticalFlags',
+      request,
+      metadata || {},
+      methodDescriptor_JoystickControl_clearCRSFDeviceLinkCriticalFlags,
+      callback);
+};
+
+
+/**
+ * @param {!proto.JoystickControl.Empty} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.JoystickControl.Empty>}
+ *     Promise that resolves to the response
+ */
+proto.JoystickControl.JoystickControlPromiseClient.prototype.clearCRSFDeviceLinkCriticalFlags =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/JoystickControl.JoystickControl/clearCRSFDeviceLinkCriticalFlags',
+      request,
+      metadata || {},
+      methodDescriptor_JoystickControl_clearCRSFDeviceLinkCriticalFlags);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.JoystickControl.Empty,
  *   !proto.JoystickControl.GetAppInfoRes>}
  */
 const methodDescriptor_JoystickControl_getAppInfo = new grpc.web.MethodDescriptor(

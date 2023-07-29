@@ -71,6 +71,7 @@ enum GamepadInputType {
   AXIS = 0;
   BUTTON = 1;
 }
+
 message GamepadInputState {
   GamepadInputType type = 1;
   int32 index = 2;
@@ -138,7 +139,36 @@ message Telemetry {
     BarometerData barometer = 9;
     VariometerData variometer = 10;
     BarometerVariometerData barometer_variometer = 11;
+    CRSFDeviceInfoData device_info = 12;
+    CRSFDeviceFieldEntryData device_field_entry = 13;
+    CRSFDeviceFieldData device_field = 14;
+    CRSFDeviceLinkStatusData device_link_status = 15;
   }
+}
+
+message CRSFDeviceLinkStatusData {
+  uint32 bad_packets_count = 2;
+  uint32 good_packets_count = 1;
+  repeated LinkStatusFlag flags = 3;
+  string warning_info = 4;
+}
+
+message CRSFDeviceFieldEntryData {
+  uint32 id = 1;
+  uint32 chunks_remaining = 2;
+  uint32 parent_id = 3;
+  CRSFDeviceFieldType data_type = 4;
+  bytes buffer = 5;
+
+}
+message CRSFDeviceInfoData {
+  uint32 id = 1;
+  string name = 2;
+  uint32 serial_number = 3;
+  string hardware_version = 4;
+  string software_version = 5;
+  uint32 field_count = 6;
+  uint32 parameter_version = 7;
 }
 
 message BarometerData {
@@ -216,6 +246,266 @@ message GetAppInfoRes {
   string branch_name = 3;
 }
 
+
+message GetCRSFDevicesRes {
+  repeated CRSFDeviceInfoData devices = 1;
+}
+
+message GetCRSFDeviceFieldsRes {
+  repeated CRSFDeviceFieldData fields = 1;
+}
+
+
+enum CRSFDeviceFieldType {
+  UINT8 = 0;
+  INT8 = 1;
+  UINT16 = 2;
+  INT16 = 3;
+  UINT32 = 4;
+  INT32 = 5;
+  UINT64 = 6;
+  INT64 = 7;
+  FLOAT = 8;
+  TEXT_SELECT = 9;
+  STRING = 10;
+  FOLDER = 11;
+  INFO = 12;
+  COMMAND = 13;
+  VTX = 14;
+  STATUS = 46;
+  OUT_OF_RANGE = 127;
+}
+
+message CRSFDeviceFieldData {
+  oneof data {
+    CRSFDeviceFieldUint8 uint8 = 1;
+    CRSFDeviceFieldInt8 int8 = 2;
+    CRSFDeviceFieldUint16 uint16 = 3;
+    CRSFDeviceFieldInt16 int16 = 4;
+    CRSFDeviceFieldUint32 uint32 = 5;  // not used by ELRS <= 3.3.0
+    CRSFDeviceFieldInt32 int32 = 6;    // not used by ELRS <= 3.3.0
+    CRSFDeviceFieldUint64 uint64 = 7;  // not used by ELRS <= 3.3.0
+    CRSFDeviceFieldInt64 int64 = 8;    // not used by ELRS <= 3.3.0
+    CRSFDeviceFieldFloat float = 9;    // not used by ELRS <= 3.3.0
+    CRSFDeviceFieldTextSelect text_select = 10;
+    CRSFDeviceFieldString string = 11;
+    CRSFDeviceFieldFolder folder = 12;
+    CRSFDeviceFieldInfo info = 13;
+    CRSFDeviceFieldCommand command = 14;
+  }
+}
+
+
+enum CRSFDeviceFieldCommandStep {
+  IDLE = 0;
+  CLICK = 1;
+  EXECUTING = 2;
+  ASK_CONFIRM = 3;
+  CONFIRMED = 4;
+  CANCEL = 5;
+  QUERY = 6;
+}
+
+
+message CRSFDeviceFieldUint8 {
+  string name = 1;
+  CRSFDeviceFieldType type = 2;
+  uint32 id = 3;
+  uint32 parent_id = 4;
+  uint32 value = 5;
+  uint32 min = 6;
+  uint32 max = 7;
+  uint32 default = 8;
+  string units = 9;
+}
+
+message CRSFDeviceFieldInt8 {
+  string name = 1;
+  CRSFDeviceFieldType type = 2;
+  uint32 id = 3;
+  uint32 parent_id = 4;
+  int32 value = 5;
+  int32 min = 6;
+  int32 max = 7;
+  int32 default = 8;
+  string units = 9;
+
+}
+
+
+message CRSFDeviceFieldUint16 {
+  string name = 1;
+  CRSFDeviceFieldType type = 2;
+  uint32 id = 3;
+  uint32 parent_id = 4;
+  uint32 value = 5;
+  uint32 min = 6;
+  uint32 max = 7;
+  uint32 default = 8;
+  string units = 9;
+}
+
+message CRSFDeviceFieldInt16 {
+  string name = 1;
+  CRSFDeviceFieldType type = 2;
+  uint32 id = 3;
+  uint32 parent_id = 4;
+  int32 value = 5;
+  int32 min = 6;
+  int32 max = 7;
+  int32 default = 8;
+  string units = 9;
+}
+
+
+message CRSFDeviceFieldUint32 {
+  string name = 1;
+  CRSFDeviceFieldType type = 2;
+  uint32 id = 3;
+  uint32 parent_id = 4;
+  uint32 value = 5;
+  uint32 min = 6;
+  uint32 max = 7;
+  uint32 default = 8;
+  string units = 9;
+}
+
+message CRSFDeviceFieldInt32 {
+  string name = 1;
+  CRSFDeviceFieldType type = 2;
+  uint32 id = 3;
+  uint32 parent_id = 4;
+  int32 value = 5;
+  int32 min = 6;
+  int32 max = 7;
+  int32 default = 8;
+  string units = 9;
+}
+
+message CRSFDeviceFieldUint64 {
+  string name = 1;
+  CRSFDeviceFieldType type = 2;
+  uint32 id = 3;
+  uint32 parent_id = 4;
+  uint64 value = 5;
+  uint64 min = 6;
+  uint64 max = 7;
+  uint64 default = 8;
+  string units = 9;
+}
+
+message CRSFDeviceFieldInt64 {
+  string name = 1;
+  CRSFDeviceFieldType type = 2;
+  uint32 id = 3;
+  uint32 parent_id = 4;
+  int64 value = 5;
+  int64 min = 6;
+  int64 max = 7;
+  int64 default = 8;
+  string units = 9;
+}
+
+message CRSFDeviceFieldFloat {
+  string name = 1;
+  CRSFDeviceFieldType type = 2;
+  uint32 id = 3;
+  uint32 parent_id = 4;
+  float value = 5;
+  float min = 6;
+  float max = 7;
+  float default = 8;
+  string units = 9;
+}
+
+message CRSFDeviceFieldInfo {
+  string name = 1;
+  CRSFDeviceFieldType type = 2;
+  uint32 id = 3;
+  uint32 parent_id = 4;
+  string value = 5;
+}
+
+message CRSFDeviceFieldString {
+  string name = 1;
+  CRSFDeviceFieldType type = 2;
+  uint32 id = 3;
+  uint32 parent_id = 4;
+  string value = 5;
+}
+
+message CRSFDeviceFieldFolder {
+  string name = 1;
+  CRSFDeviceFieldType type = 2;
+  uint32 id = 3;
+  uint32 parent_id = 4;
+}
+
+message CRSFDeviceFieldCommand {
+  string name = 1;
+  CRSFDeviceFieldType type = 2;
+  uint32 id = 3;
+  uint32 parent_id = 4;
+  CRSFDeviceFieldCommandStep step = 5;
+  uint32 timeout = 6;
+  string message = 7;
+}
+
+
+message CRSFDeviceFieldTextSelect {
+  string name = 1;
+  CRSFDeviceFieldType type = 2;
+  uint32 id = 3;
+  uint32 parent_id = 4;
+  repeated string options = 5;
+  uint32 value = 6;
+  uint32 min = 7;
+  uint32 max = 8;
+  uint32 default = 9;
+  string units = 10;
+}
+
+message GetCRSFDeviceFieldReq {
+  CRSFDeviceInfoData device = 1;
+  uint32 field_id = 2;
+}
+
+message GetCRSFDeviceFieldsReq {
+  CRSFDeviceInfoData device = 1;
+}
+
+message GetCRSFDeviceFieldRes {
+  CRSFDeviceFieldData field = 1;
+}
+
+message SetCRSFDeviceFieldReq {
+  CRSFDeviceInfoData device = 1;
+  CRSFDeviceFieldData field = 2;
+}
+
+message SetCRSFDeviceFieldRes {
+  CRSFDeviceFieldData field = 1;
+}
+
+
+
+enum LinkStatusFlag {
+  CONNECTED = 0;
+  STATUS1 = 1;
+  MODEL_MATCH = 2;
+  IS_ARMED = 3;
+  WARNING1 = 4;
+  ERROR_CONNECTED = 5;
+  ERROR_BAUDRATE = 6;
+  CRITICAL_WARNING2 = 7;
+}
+
+
+
+message GetCRSFDeviceLinkStatusRes {
+  CRSFDeviceLinkStatusData link_status = 1;
+}
+
 service JoystickControl {
   rpc getGamepads(Empty) returns (GetGamepadsRes) {};
   rpc getTransmitters(Empty) returns (GetTransmitterRes) {};
@@ -235,6 +525,16 @@ service JoystickControl {
   rpc getEvalStream(Empty) returns (stream EvalStates) {}
   rpc getTransmitterStream(GetTransmitterStreamReq) returns (stream TransmitterChannels) {}
   rpc getGamepadStream(GetGamepadStreamReq) returns (stream GamepadInputsStates) {}
+
+
+
+  rpc getCRSFDevices(Empty) returns (GetCRSFDevicesRes);
+  rpc getCRSFDeviceFields(GetCRSFDeviceFieldsReq) returns (GetCRSFDeviceFieldsRes) {}
+  rpc getCRSFDeviceField(GetCRSFDeviceFieldReq) returns (GetCRSFDeviceFieldRes) {}
+  rpc setCRSFDeviceField(SetCRSFDeviceFieldReq) returns (SetCRSFDeviceFieldRes) {}
+
+  rpc getCRSFDeviceLinkStatus(Empty) returns (GetCRSFDeviceLinkStatusRes) {}
+  rpc clearCRSFDeviceLinkCriticalFlags(Empty) returns(Empty) {}
 
   rpc getAppInfo(Empty) returns (GetAppInfoRes) {}
 

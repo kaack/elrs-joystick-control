@@ -40,7 +40,7 @@ StyledDialogTitle.propTypes = {
     children: PropTypes.node, onClose: PropTypes.func.isRequired,
 };
 
-export default function PopupDialog({title, open, onClose, children}) {
+export default function PopupDialog({title, open, onClose, children, style, contentStyle}) {
 
     const handleClose = useCallback(function () {
         onClose && onClose()
@@ -48,7 +48,10 @@ export default function PopupDialog({title, open, onClose, children}) {
 
     return (<StyledDialog
         PaperProps={{
-            style: {borderRadius: 10}
+            style: {
+                borderRadius: 10,
+                ...style
+            }
         }}
         fullWidth={true}
         maxWidth={"sm"}
@@ -57,12 +60,17 @@ export default function PopupDialog({title, open, onClose, children}) {
         open={open}
     >
         <StyledDialogTitle style={{
-            paddingLeft: 25, paddingRight: 45, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"
+            paddingLeft: 25,
+            paddingRight: 45,
+            overflow: "hidden",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
+            color: "#656565"
 
         }} id={`${title}-dialog-title`} onClose={() => handleClose()}>
             {title}
         </StyledDialogTitle>
-        <DialogContent style={{paddingLeft: 25, paddingRight: 25, paddingBottom: 25}}>
+        <DialogContent style={{paddingLeft: 25, paddingRight: 25, paddingBottom: 25, ...contentStyle}}>
             {children}
         </DialogContent>
     </StyledDialog>);

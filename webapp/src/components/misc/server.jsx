@@ -4,7 +4,7 @@
 
 
 import {JoystickControlPromiseClient} from "../../generated/server_grpc_web_pb";
-import {Empty, SetConfigReq, StartLinkReq, Struct} from "../../pbwrap";
+import {Empty, GetCRSFDeviceFieldsReq, SetConfigReq, SetCRSFDeviceFieldReq, StartLinkReq, Struct} from "../../pbwrap";
 import {getServerUrl, isMockBackend} from "./settings";
 import * as mock from "../mock/JoystickControlPromiseClient"
 
@@ -69,4 +69,45 @@ export const getAppInfo = async function () {
     let res = await client.getAppInfo(new Empty(), {});
     return res;
 };
+
+
+
+export const getCRSFDevices = async function () {
+    let client = getClient(getServerUrl(), null, null);
+    let res = await client.getCRSFDevices(new Empty(), {});
+
+    // noinspection JSUnresolvedReference
+    return res.getDevicesList();
+};
+
+
+export const getCRSFDeviceFields = async function (device) {
+    let client = getClient(getServerUrl(), null, null);
+
+    let req = new GetCRSFDeviceFieldsReq();
+    req.setDevice(device);
+    let res = await client.getCRSFDeviceFields(req, {});
+
+    // noinspection JSUnresolvedReference
+    return res.getFieldsList();
+};
+
+
+export const setCRSFDeviceField = async function (device, field) {
+    let client = getClient(getServerUrl(), null, null);
+
+    let req = new SetCRSFDeviceFieldReq();
+    req.setDevice(device);
+    req.setField(field)
+
+   
+    // noinspection UnnecessaryLocalVariableJS
+    let res = await client.setCRSFDeviceField(req, {});
+
+    return res;
+};
+
+
+
+
 

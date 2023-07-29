@@ -8,7 +8,26 @@ type ChannelRequest int32
 
 const (
 	SendModelId ChannelRequest = iota
+	PingDevices ChannelRequest = iota
 )
+
+type ReadDeviceFieldsRequest struct {
+	deviceId   uint8
+	fieldId    uint8
+	fieldChunk uint8
+}
+
+type WriteDeviceFieldRequestUint8 struct {
+	deviceId   uint8
+	fieldId    uint8
+	fieldValue uint8
+}
+
+type WriteDeviceFieldRequestUint16 struct {
+	deviceId   uint8
+	fieldId    uint8
+	fieldValue uint16
+}
 
 type PortState int32
 

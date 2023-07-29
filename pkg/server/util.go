@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/kaack/elrs-joystick-control/pkg/proto/generated/pb"
+	"strings"
 )
 
 //goland:noinspection GoUnusedExportedFunction
@@ -52,4 +53,16 @@ func EvalAsString(states *pb.EvalStates) string {
 
 	return ""
 
+}
+
+// FixOptionsArrows HACK: ELRS uses 0xC0 and 0xC1 as UP/DOWN arrows, which are not valid UTF-8
+func FixOptionsArrows(field *pb.CRSFDeviceFieldData) {
+	if textSelect := field.GetTextSelect(); textSelect != nil {
+		options := textSelect.GetOptions()
+		for index, option := range options {
+			option = strings.ReplaceAll(option, "\xc0", "⬆️")
+			option = strings.ReplaceAll(option, "\xc1", "⬇️")
+			textSelect.Options[index] = option
+		}
+	}
 }

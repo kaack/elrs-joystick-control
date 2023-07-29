@@ -21,6 +21,7 @@ import SettingsPage from "./components/pages/SettingsPage";
 import HomePage from "./components/pages/HomePage";
 import GamepadsPage from "./components/pages/GamepadsPage";
 import TransmittersPage from "./components/pages/TransmittersPage";
+import ExpressLRSSettingsPage from "./components/pages/ExpressLRSSettingsPage";
 import {SnackbarProvider} from "notistack";
 import {NotificationMessages} from "./components/misc/notifications";
 import AboutPage from "./components/pages/AboutPage";
@@ -78,6 +79,8 @@ export default function App() {
                         <List style={{padding: 0, margin: 0}}>
                             <MenuItem key={HomePage.id} id={HomePage.id} label={HomePage.title} icon={<HomeIcon/>}/>
                             <Divider/>
+                            <MenuItem key={ExpressLRSSettingsPage.id} id={ExpressLRSSettingsPage.id} label={ExpressLRSSettingsPage.title}
+                                      icon={ExpressLRSSettingsPage.menuIcon}/>
                             <MenuItem key={TransmittersPage.id} id={TransmittersPage.id} label={TransmittersPage.title}
                                       icon={TransmittersPage.menuIcon}/>
                             <MenuItem key={GamepadsPage.id} id={GamepadsPage.id} label={GamepadsPage.title}
@@ -113,6 +116,10 @@ export default function App() {
                     case TransmittersPage.id:
                         return <GenericPage title={TransmittersPage.title}>
                             <TransmittersPage/>
+                        </GenericPage>;
+                    case ExpressLRSSettingsPage.id:
+                        return <GenericPage title={ExpressLRSSettingsPage.title}>
+                            <ExpressLRSSettingsPage/>
                         </GenericPage>;
                     case AboutPage.id:
                         return <GenericPage title={AboutPage.title}>

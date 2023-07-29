@@ -5,11 +5,13 @@
 import React, {useCallback, useState, useEffect} from 'react';
 import {Card, Skeleton, Typography} from "@mui/material";
 import Box from "@mui/material/Box";
-import TransmitterNode from "./inputs_config/nodes/TransmitterNode";
-import {TransmitterViewer} from "./transmitters/TransmitterViewer";
 import i18n from "../misc/I18n";
 import {showError, showWarning} from "../misc/notifications";
-import {getTransmitters} from "../misc/server";
+import {getCRSFDevices} from "../misc/server";
+import SettingsIcon from "../icons/SettingsIcon";
+import {CRSFDeviceViewer} from "./express_lrs_settings/CRSFDeviceViewer";
+import {RpcError, StatusCode} from "grpc-web";
+
 
 const cardStyle = {
     cursor: "pointer", '&:hover': {
@@ -17,10 +19,8 @@ const cardStyle = {
     }
 };
 
-function TransmitterCard({transmitter}) {
-
+function CRSFDeviceCard({device}) {
     const [open, setOpen] = React.useState(false);
-
     const handleViewerOpen = useCallback(function () {
         setOpen(true);
     }, []);
@@ -29,9 +29,8 @@ function TransmitterCard({transmitter}) {
         setOpen(false);
     }, []);
 
-
     return (<>
-            {open ? <TransmitterViewer transmitter={transmitter} open={open} onClose={handleViewerClose}/> : ""}
+            {open ? <CRSFDeviceViewer device={device} open={open} onClose={handleViewerClose}/> : ""}
             <Card
                 sx={cardStyle}
                 elevation={4}
@@ -61,10 +60,18 @@ function TransmitterCard({transmitter}) {
                         textIndent: "10px",
 
                         textOverflow: "ellipsis"
-                    }}>{`${transmitter.getPort()}` + (transmitter.getName() ? ` - ${transmitter.getName()}` : "")}</Typography>
+                    }}>{`${device.getName()}`}</Typography>
                 </Box>
                 <Box style={{width: "100%", alignContent: "center", textAlign: "center"}}>
-                    {React.cloneElement(TransmitterNode.menuIcon, {style: {width: 64, height: 64, padding: 25}})}
+                    <Box key={"software-version"} style={{
+                        margin: '10px',
+                        textAlign: 'center',
+                        display: 'flex',
+                        justifyContent: 'center'
+                    }}>
+                        <Typography style={{marginLeft: 10, fontWeight: 400}}>version:</Typography>
+                        <Typography style={{marginLeft: 10, fontWeight: 500}}>{device.getSoftwareVersion()}</Typography>
+                    </Box>
                 </Box>
             </Card>
         </>
@@ -72,7 +79,7 @@ function TransmitterCard({transmitter}) {
     );
 }
 
-function TransmitterSkeleton() {
+function CRSFDeviceSkeleton() {
     return <Skeleton variant={"rounded"} style={{
         padding: 10,
         marginBottom: 20,
@@ -88,59 +95,51 @@ function TransmitterSkeleton() {
 
 
 let timeoutId;
-let successfulLoadAttempts = 0;
 let failedLoadAttempts = 0;
-export default function TransmittersPage({}) {
 
-    const [transmitters, setTransmitters] = useState(null);
-
-    const loadTransmitters = useCallback(async function () {
+export default function ExpressLRSSettingsPage({}) {
+    const [devices, setDevices] = useState(null);
+    const loadDevices = useCallback(async function () {
         try {
-            //console.log("loading transmitters");
-            let transmitters = await getTransmitters();
-            setTransmitters(transmitters);
-
-            successfulLoadAttempts++;
+            setDevices(await getCRSFDevices())
             failedLoadAttempts = 0;
-
-            if (successfulLoadAttempts === 1 && transmitters.length === 0) {
-                showWarning(i18n("error-msg-transmitters-not-detected"));
-            }
         } catch (ex) {
-            successfulLoadAttempts = 0;
             failedLoadAttempts++;
             if (failedLoadAttempts === 1) {
-                showError(`${i18n("error-msg-transmitters-not-loaded")}`);
-                setTransmitters([]);
+                if (ex instanceof RpcError && (ex.code === StatusCode.INVALID_ARGUMENT || ex.code === StatusCode.INTERNAL)) {
+                    showWarning(`${ex.message}`);
+                } else {
+                    showError(`${i18n("error-msg-crsf-devices-not-loaded")}`);
+                }
+                setDevices([]);
+                timeoutId = setTimeout(loadDevices, 5000)
             }
-            console.error(`could not load transmitters list. ${ex.message}`, ex);
+            console.error(`could not load crsf devices list. ${ex.message}`, ex);
         }
-        timeoutId = setTimeout(loadTransmitters, 5000)
-    }, [transmitters])
 
-    //check the transmitters list every few seconds, and update it
+    }, [devices])
+
+    //check the devices list every few seconds, and update it
     useEffect(() => {
         failedLoadAttempts = 0;
-        successfulLoadAttempts = 0;
-        timeoutId = setTimeout(loadTransmitters, 0);
+        timeoutId = setTimeout(loadDevices, 0);
         return () => clearTimeout(timeoutId)
     }, []);
-
 
     return (<Box style={{
         textAlign: "center", margin: 0, padding: 0, backgroundColor: "none", display: "flex", flexDirection: "column"
     }}>
         {(() => {
-            if (transmitters === null || transmitters?.length === 0) {
-                return [<TransmitterSkeleton key={"s1"}/>, <TransmitterSkeleton key={"s2"}/>];
+            if (devices === null || devices?.length === 0) {
+                return [<CRSFDeviceSkeleton key={"s1"}/>, <CRSFDeviceSkeleton key={"s2"}/>];
             } else {
-                return transmitters.sort().map(t => <TransmitterCard key={t.getPort()} transmitter={t}/>)
+                return devices.sort().map(d => <CRSFDeviceCard key={d.getName()} device={d}/>)
             }
         })()}
 
     </Box>);
 };
 
-TransmittersPage.id = "tx";
-TransmittersPage.title = i18n("main-menu-tx");
-TransmittersPage.menuIcon = TransmitterNode.menuIcon;
+ExpressLRSSettingsPage.id = "elrs_settings";
+ExpressLRSSettingsPage.title = i18n("main-menu-elrs-settings");
+ExpressLRSSettingsPage.menuIcon = <SettingsIcon/>;

@@ -31,6 +31,8 @@ strings:
     Gamepads
   main-menu-settings: |
     Settings
+  main-menu-elrs-settings: |
+    ExpressLRS Settings
   main-menu-about: |
     About
   about-page-frontend-version: |
@@ -131,8 +133,14 @@ strings:
     This is the number of packets received from the RF transmitter that resulted in error during processing.
   error-msg-transmitters-not-loaded: |
     Could not load transmitters list. Please verify server URL in settings.
+  error-msg-transmitters-not-detected: |
+    No transmitter devices connected, will wait ...
+  error-msg-crsf-devices-not-loaded: |
+    Could not load CRSF devices list. Please verify server URL in settings.
   error-msg-gamepads-not-loaded: |
     Could not load gamepads list. Please verify server URL in settings.
+  error-msg-gamepads-not-detected: |
+    No gamepad devices connected, will wait ...
   error-msg-telemetry-not-started: |
     Could not start telemetry stream. Please verify server URL in settings.
   error-msg-channels-stream-closed: |

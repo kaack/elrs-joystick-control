@@ -176,16 +176,6 @@ func Split(data []byte, atEOF bool) (advance int, token *[]byte, err error) {
 	return int(skip), &frame, nil
 }
 
-//func Unmarshal(data []byte, v TelemType) error {
-//	switch res := (v).(type) {
-//	case *THolder:
-//		return res.Unmarshal(data)
-//	default:
-//		//no-op, ignore unknown telemetry packets
-//	}
-//	return nil
-//}
-
 func Unmarshal(data []byte) (TelemType, error) {
 	if len(data) < 3 {
 		return nil, errors.New("cannot unmarshal %x as telemetry frame. length is too small")
@@ -194,9 +184,22 @@ func Unmarshal(data []byte) (TelemType, error) {
 	fAddr := crossfire.Endpoint(data[0])
 	fType := crossfire.FrameType(data[2])
 
-	if fAddr == crossfire.HandsetEndpoint && fType == crossfire.RadioFrame {
+	if fAddr == crossfire.HandsetEndpoint && fType == crossfire.StatusFrame {
+		frame := StatusExtFrame{RawData: data}
+		return &frame, nil
+	} else if fAddr == crossfire.HandsetEndpoint && fType == crossfire.ParameterSettingsEntryFrame {
 		if len(data) < MinExtendedFrameSize {
-			return nil, errors.New(fmt.Sprintf("cannot unmarshal %x as extended telemetry frame. length is too small", data))
+			return nil, errors.New(fmt.Sprintf("cannot unmarshal %x as extended device entry settings telemetry frame. length is too small", data))
+		}
+		return NewDeviceSettingsEntryExtFrame(data), nil
+	} else if fAddr == crossfire.HandsetEndpoint && fType == crossfire.DeviceInfoFrame {
+		if len(data) < MinExtendedFrameSize {
+			return nil, errors.New(fmt.Sprintf("cannot unmarshal %x as extended device info telemetry frame. length is too small", data))
+		}
+		return NewDeviceInfoExtFrame(data), nil
+	} else if fAddr == crossfire.HandsetEndpoint && fType == crossfire.RadioFrame {
+		if len(data) < MinExtendedFrameSize {
+			return nil, errors.New(fmt.Sprintf("cannot unmarshal %x as extended radio telemetry frame. length is too small", data))
 		}
 		fExtType := crossfire.FrameType(data[5])
 		if fExtType == crossfire.OpenTxSyncFrame {
@@ -258,6 +261,8 @@ func Unmarshal(data []byte) (TelemType, error) {
 			frame := VariometerFrame{RawData: data}
 			return &frame, nil
 		}
+	} else {
+		fmt.Printf("(recv-loop) unknown frame: %x\n", data)
 	}
 
 	//unknown telemetry frame, ignore it

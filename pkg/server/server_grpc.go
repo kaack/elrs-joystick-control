@@ -310,3 +310,128 @@ func (s *GRPCServer) GetAppInfo(_ context.Context, _ *pb.Empty) (*pb.GetAppInfoR
 		BranchName: info.BranchName,
 	}, nil
 }
+
+func (s *GRPCServer) GetCRSFDevices(_ context.Context, _ *pb.Empty) (*pb.GetCRSFDevicesRes, error) {
+
+	luaChan := s.LinkCtl.DeviceInfoBroadcaster.Subscribe()
+	defer s.LinkCtl.DeviceInfoBroadcaster.Unsubscribe(luaChan)
+
+	var err error
+	var devicesList []*pb.CRSFDeviceInfoData
+	if devicesList, err = s.LinkCtl.GetCRSFDevices(); err != nil {
+		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("could not get devices. %s", err.Error()))
+	}
+
+	res := pb.GetCRSFDevicesRes{
+		Devices: devicesList,
+	}
+
+	return &res, nil
+}
+
+func (s *GRPCServer) GetCRSFDeviceFields(_ context.Context, req *pb.GetCRSFDeviceFieldsReq) (*pb.GetCRSFDeviceFieldsRes, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("request payload required"))
+	}
+
+	deviceInfo := req.GetDevice()
+
+	if deviceInfo == nil {
+		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("device info required"))
+	}
+
+	var err error
+	var deviceFields []*pb.CRSFDeviceFieldData
+
+	if deviceFields, err = s.LinkCtl.GetCRSFDeviceFields(deviceInfo); err != nil {
+		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("could not get device fields. %s", err.Error()))
+	}
+
+	for _, field := range deviceFields {
+		FixOptionsArrows(field)
+	}
+
+	res := pb.GetCRSFDeviceFieldsRes{
+		Fields: deviceFields,
+	}
+
+	return &res, nil
+}
+
+func (s *GRPCServer) GetCRSFDeviceField(_ context.Context, req *pb.GetCRSFDeviceFieldReq) (*pb.GetCRSFDeviceFieldRes, error) {
+
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("request payload required"))
+	}
+
+	deviceInfo := req.GetDevice()
+
+	if deviceInfo == nil {
+		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("device is required"))
+	}
+
+	var err error
+	var deviceField *pb.CRSFDeviceFieldData
+
+	if deviceField, err = s.LinkCtl.GetCRSFDeviceField(deviceInfo, req.GetFieldId(), time.Second); err != nil {
+		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("could get device field. %s", err.Error()))
+	}
+
+	if deviceField == nil {
+		return nil, status.Error(codes.NotFound, fmt.Sprintf("could not get device field. %s", err.Error()))
+	}
+
+	FixOptionsArrows(deviceField)
+
+	res := pb.GetCRSFDeviceFieldRes{
+		Field: deviceField,
+	}
+
+	return &res, nil
+}
+
+func (s *GRPCServer) SetCRSFDeviceField(_ context.Context, req *pb.SetCRSFDeviceFieldReq) (*pb.SetCRSFDeviceFieldRes, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("request payload required"))
+	}
+
+	var err error
+	var deviceField *pb.CRSFDeviceFieldData
+
+	if deviceField, err = s.LinkCtl.SetCRSFDeviceField(req.GetDevice(), req.GetField()); err != nil {
+		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("could not set device field. %s", err.Error()))
+	}
+
+	res := pb.SetCRSFDeviceFieldRes{
+		Field: deviceField,
+	}
+
+	return &res, nil
+}
+
+func (s *GRPCServer) GetCRSFDeviceLinkStatus(_ context.Context, _ *pb.Empty) (*pb.GetCRSFDeviceLinkStatusRes, error) {
+
+	var err error
+	var deviceLinkStatus *pb.CRSFDeviceLinkStatusData
+
+	if deviceLinkStatus, err = s.LinkCtl.GetCRSFDeviceLinkStatus(5 * time.Second); err != nil {
+		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("could not get device link status. %s", err.Error()))
+	}
+
+	res := pb.GetCRSFDeviceLinkStatusRes{
+		LinkStatus: deviceLinkStatus,
+	}
+
+	return &res, nil
+}
+
+func (s *GRPCServer) ClearCRSFDeviceLinkCriticalFlags(_ context.Context, _ *pb.Empty) (*pb.Empty, error) {
+
+	var err error
+
+	if err = s.LinkCtl.ClearCRSFDeviceLinkCriticalFlags(); err != nil {
+		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("could not clear device link critical flags. %s", err.Error()))
+	}
+
+	return &pb.Empty{}, nil
+}

@@ -102,6 +102,9 @@ Loop:
 			c.recvPacketsCount += 1
 
 			switch tFrame := (tPacket).(type) {
+			case telem.TelemStatusExtType:
+				//fmt.Printf("(recv-loop) %s\n", tFrame)
+				c.DeviceStatusBroadcaster.Broadcast(tFrame.Proto())
 			case telem.TelemSyncType:
 				c.TelemetryBroadcaster.Broadcast(tFrame.Proto())
 				sendChan <- &tFrame
@@ -115,8 +118,14 @@ Loop:
 				telem.TelemBarometerType,           //TBS only
 				telem.TelemVariometerType,          //TBS Only
 				telem.TelemBarometerVariometerType: // ELRS only
-				c.TelemetryBroadcaster.Broadcast(tFrame.Proto())
 				//fmt.Printf("(recv-loop) %s\n", tFrame)
+				c.TelemetryBroadcaster.Broadcast(tFrame.Proto())
+			case telem.TelemDeviceInfoExtType:
+				//fmt.Printf("(recv-loop) %s\n", tFrame)
+				c.DeviceInfoBroadcaster.Broadcast(tFrame.Proto())
+			case telem.TelemDeviceSettingsEntryExtType:
+				//fmt.Printf("(recv-loop) %s\n", tFrame)
+				c.DeviceFieldBroadcaster.Broadcast(tFrame.Proto())
 			default:
 				//fmt.Printf("(recv-loop) tData: %x\n", tData)
 			}

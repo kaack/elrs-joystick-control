@@ -55,6 +55,9 @@ func (c *Controller) SupervisorLoop(port string, baudRate int32) error {
 	recvChan := make(chan any)
 	portChan := make(chan any)
 
+	c.sendChan = sendChan
+	c.recvChan = recvChan
+
 Supervisor:
 	for {
 		c.portState = PortDisconnected

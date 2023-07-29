@@ -31,6 +31,8 @@ let timeoutId = 0;
 export const TelemetryFlow = function ({}) {
     const [reload, setReload] = useState(0);
     const [configLoaded, setConfigLoaded] = useState(false);
+    const [allowPanning, setAllowPanning] = useState(false)
+
 
     const streamRef = useRef();
 
@@ -148,12 +150,12 @@ export const TelemetryFlow = function ({}) {
                 multiSelectionKeyCode={selectionKeyCodes}
                 deleteKeyCode={deleteKeyCodes}
                 selectionOnDrag={true}
-                panOnDrag={true}
+                panOnDrag={allowPanning}
                 selectionMode={SelectionMode.Partial}
 
             >
-                <LinkControls/>
-                <AppMenu/>
+                <LinkControls setAllowPanning={setAllowPanning}/>
+                {allowPanning && <AppMenu/>}
                 {/*<Background color="#aaa" gap={16}/>*/}
             </ReactFlow>
 

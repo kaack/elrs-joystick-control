@@ -3,7 +3,15 @@
 // SPDX-License-Identifier: FS-0.9-or-later
 
 
-import {Empty, GetAppInfoRes, GetGamepadsRes, GetTransmitterRes} from "../../pbwrap";
+import {
+    CRSFDeviceFieldData,
+    CRSFDeviceInfoData,
+    Empty,
+    GetAppInfoRes, GetCRSFDeviceFieldsReq, GetCRSFDeviceFieldsRes,
+    GetCRSFDevicesRes,
+    GetGamepadsRes,
+    GetTransmitterRes, SetCRSFDeviceFieldReq, SetCRSFDeviceFieldRes
+} from "../../pbwrap";
 import {MockLink} from "./MockLink";
 import {MockLinkStream} from "./MockLinkStream";
 import {MockTelemetryStream} from "./MockTelemetryStream";
@@ -11,12 +19,15 @@ import {MockDrone} from "./MockDrone";
 import {MockTransmitter} from "./MockTransmitter";
 import {MockGamepad} from "./MockGamepad";
 import {Warning} from "../misc/errors";
+import {MockCRSFDevice} from "./MockCRSFDevice";
+import {RpcError, StatusCode} from "grpc-web";
 
 
 export const MockServer = function () {
     this._link = null;
     this._linkStream = null;
     this._telemetryStream = null;
+
     this._transmitters = new Map([
         ["COM6", new MockTransmitter({port: "COM6", name: "Silicon Labs CP210x USB to UART Bridge"})]
     ]);
@@ -24,6 +35,17 @@ export const MockServer = function () {
         ["id1", new MockGamepad({id: "id1", name: "ThrustMaster Warthog", axes: 2, buttons: 19, hats: 1})],
         ["id2", new MockGamepad({id: "id2", name: "ThrustMaster T.16000M", axes: 4, buttons: 14, hats: 1})]
     ]);
+
+
+    this._crsfDevices = new Map([
+        [238, new MockCRSFDevice({
+            id: 238,
+            name: "BFPV 2G4Micro1W",
+            hardwareVersion: "0.0.0",
+            softwareVersion: "3.1.2",
+            fieldCount: 21
+        })]
+    ])
 
     return this;
 }
@@ -117,7 +139,7 @@ MockServer.prototype.stopLink = function (req) {
  */
 MockServer.prototype.getTransmitters = function (req) {
     let res = new GetTransmitterRes();
-    res.setTransmittersList(Array.from(this._transmitters.values()).map( t => t.getProto()))
+    res.setTransmittersList(Array.from(this._transmitters.values()).map(t => t.getProto()))
     return res;
 }
 
@@ -146,6 +168,88 @@ MockServer.prototype.getAppInfo = function (req) {
     res.setCommitHash("mock")
     return res;
 }
+
+
+// noinspection JSUnusedLocalSymbols
+/**
+ *
+ * @param req
+ * @returns {res | GetCRSFDevicesRes}
+ */
+MockServer.prototype.getCRSFDevices = async function (req) {
+    if (this._link === null) {
+        throw new RpcError(StatusCode.INVALID_ARGUMENT, "Link is not active. You can start the RF link from the home page.", null);
+    }
+
+    let res = new GetCRSFDevicesRes();
+    res.setDevicesList(Array.from(this._crsfDevices.values()).map(t => t.getProto()))
+    return res;
+};
+
+
+MockServer.prototype.getCRSFDeviceFields = async function (req) {
+    if (this._link === null) {
+        throw new RpcError(StatusCode.INVALID_ARGUMENT, "Link is not active. You can start the RF link from the home page.", null);
+    }
+
+    if (!req || !(req instanceof GetCRSFDeviceFieldsReq)) {
+        throw new RpcError(StatusCode.INVALID_ARGUMENT, "request is required", null);
+    }
+
+    let device = req.getDevice();
+
+    // noinspection DuplicatedCode
+    if (!device || !(device instanceof CRSFDeviceInfoData)) {
+        throw new RpcError(StatusCode.INVALID_ARGUMENT, "device is required", null);
+    }
+
+    let crsfDevice = Array.from(this._crsfDevices.values()).find((d) => d.getProto().getId() === device.getId());
+    if (!crsfDevice) {
+        throw new RpcError(StatusCode.NOT_FOUND, "device not found", null)
+    }
+
+    let res = new GetCRSFDeviceFieldsRes();
+    res.setFieldsList(crsfDevice.getFieldsList());
+
+    return res;
+};
+
+
+MockServer.prototype.setCRSFDeviceField = async function (req) {
+    if (this._link === null) {
+        throw new RpcError(StatusCode.INVALID_ARGUMENT, "Link is not active. You can start the RF link from the home page.", null);
+    }
+
+    if (!req || !(req instanceof SetCRSFDeviceFieldReq)) {
+        throw new RpcError(StatusCode.INVALID_ARGUMENT, "request is required", null);
+    }
+
+    // noinspection DuplicatedCode
+    let device = req.getDevice();
+
+    if (!device || !(device instanceof CRSFDeviceInfoData)) {
+        throw new RpcError(StatusCode.INVALID_ARGUMENT, "device is required", null);
+    }
+
+    let field = req.getField();
+
+    if (!field || !(field instanceof CRSFDeviceFieldData)) {
+        throw new RpcError(StatusCode.INVALID_ARGUMENT, "field is required", null);
+    }
+
+
+    let crsfDevice = Array.from(this._crsfDevices.values()).find((d) => d.getProto().getId() === device.getId());
+    if (!crsfDevice) {
+        throw new RpcError(StatusCode.NOT_FOUND, "device not found", null)
+    }
+
+    let newField = crsfDevice.setField(field);
+
+    let res = new SetCRSFDeviceFieldRes();
+    res.setField(newField);
+
+    return res;
+};
 
 // noinspection JSUnusedLocalSymbols
 /**
@@ -234,3 +338,5 @@ MockServer.prototype.getGamepadStream = function (req) {
 MockServer.prototype.getEvalStream = function (req) {
     throw new Warning("Values data stream is not yet implemented for mocked backend")
 }
+
+

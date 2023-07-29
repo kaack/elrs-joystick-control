@@ -65,24 +65,56 @@ Loop:
 		case <-c.sendLoopTomb.Dying():
 			break Loop
 		case chData := <-sendChan:
+			//fmt.Printf("chData: %v\n", chData)
 			switch data := (chData).(type) {
 			//receive data from the recv loop
 			case ChannelRequest:
 				if data == SendModelId {
 					fmt.Printf("(send-loop) writing model id frame\n")
 					if _, err = port.Write(crsf.CreateModelIDFrame(0)); err != nil {
-						c.sentPacketsCount += 1
-						fmt.Printf("(send-loop)could not write model id frame on port %s. %s\n", port.Name, err.Error())
+						c.errorPacketsCount += 1
+						fmt.Printf("(send-loop) could not write model id frame on port %s. %s\n", port.Name, err.Error())
 						break
 					}
 					continue
+				} else if data == PingDevices {
+					fmt.Printf("(send-loop) pinging devices\n")
+					if _, err = port.Write(crsf.CreatePingDevicesFrame()); err != nil {
+						c.errorPacketsCount += 1
+						fmt.Printf("(send-loop) could not write ping devices frame on port %s. %s\n", port.Name, err.Error())
+						break
+					}
+				}
+			case *ReadDeviceFieldsRequest:
+				//fmt.Printf("(send-loop) reading device fields (deviceId: %v)\n", data.deviceId)
+				if _, err = port.Write(crsf.CreateParameterSettingsReadFrame(data.deviceId, data.fieldId, data.fieldChunk)); err != nil {
+					c.errorPacketsCount += 1
+					fmt.Printf("(send-loop) could not write \"parameters-settings-read\" frame on port %s. %s\n", port.Name, err.Error())
+					break
+				}
+			case *WriteDeviceFieldRequestUint8:
+				fmt.Printf("(send-loop) setting device field (deviceId: %v, fieldId: %v, value(uint8): %v)\n", data.deviceId, data.fieldId, data.fieldValue)
+				if _, err = port.Write(crsf.CreateParameterSettingWriteFrameUint8(data.deviceId, data.fieldId, data.fieldValue)); err != nil {
+					c.errorPacketsCount += 1
+					fmt.Printf("(send-loop) could not write \"parameters-settings-write-uint8\" frame on port %s. %s\n", port.Name, err.Error())
+					break
+				}
+			case *WriteDeviceFieldRequestUint16:
+				fmt.Printf("(send-loop) setting device field (deviceId: %v, fieldId: %v, value(uint16): %v)\n", data.deviceId, data.fieldId, data.fieldValue)
+				if _, err = port.Write(crsf.CreateParameterSettingWriteFrameUint16(data.deviceId, data.fieldId, data.fieldValue)); err != nil {
+					c.errorPacketsCount += 1
+					fmt.Printf("(send-loop) could not write \"parameters-settings-write-uint16\" frame on port %s. %s\n", port.Name, err.Error())
+					break
 				}
 
 			case *telem.TelemSyncType:
 				nextRefreshRate = crsf.AdjustSendRate((*data).Rate(), (*data).Offset())
 				ticker.Reset(nextRefreshRate)
 				//fmt.Printf("(send-loop) rate: %v, offset: %v, newRate: %v\n", time.Duration((*data).Rate()/10)*time.Microsecond, time.Duration((*data).Offset()/10)*time.Microsecond, nextRefreshRate)
+			default:
+				fmt.Printf("(send-loop) unknown channel request\n")
 			}
+
 		case <-ticker.C:
 			if channelsDataMap != c.configCtl.EvalDataMap && c.configCtl.EvalDataMap != nil {
 				channelsDataMap = c.configCtl.EvalDataMap

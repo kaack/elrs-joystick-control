@@ -1,0 +1,339 @@
+{
+  "fields": [
+    {
+      "text_select": {
+        "name": "Packet Rate",
+        "type": "TEXT_SELECT",
+        "id": 1,
+        "parent_id": 0,
+        "options": [
+          "50Hz(-115dBm)",
+          "100Hz Full(-112dBm)",
+          "150Hz(-112dBm)",
+          "250Hz(-108dBm)",
+          "333Hz Full(-105dBm)",
+          "500Hz(-105dBm)",
+          "D250(-104dBm)",
+          "D500(-104dBm)",
+          "F500(-104dBm)",
+          "F1000(-104dBm)"
+        ],
+        "value": 0,
+        "min": 0,
+        "max": 9,
+        "default": 0,
+        "units": ""
+      }
+    },
+    {
+      "text_select": {
+        "name": "Telem Ratio",
+        "type": "TEXT_SELECT",
+        "id": 2,
+        "parent_id": 0,
+        "options": [
+          "Std",
+          "Off",
+          "1:128",
+          "1:64",
+          "1:32",
+          "1:16",
+          "1:8",
+          "1:4",
+          "1:2",
+          "Race"
+        ],
+        "value": 0,
+        "min": 0,
+        "max": 9,
+        "default": 0,
+        "units": " (1:16)"
+      }
+    },
+    {
+      "text_select": {
+        "name": "Switch Mode",
+        "type": "TEXT_SELECT",
+        "id": 3,
+        "parent_id": 0,
+        "options": [
+          "Wide",
+          "Hybrid"
+        ],
+        "value": 1,
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "units": ""
+      }
+    },
+    {
+      "text_select": {
+        "name": "Model Match",
+        "type": "TEXT_SELECT",
+        "id": 4,
+        "parent_id": 0,
+        "options": [
+          "Off",
+          "On"
+        ],
+        "value": 0,
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "units": " (ID: 0)"
+      }
+    },
+    {
+      "folder": {
+        "name": "TX Power (25mW)",
+        "type": "FOLDER",
+        "id": 5,
+        "parent_id": 0
+      }
+    },
+    {
+      "text_select": {
+        "name": "Max Power",
+        "type": "TEXT_SELECT",
+        "id": 6,
+        "parent_id": 5,
+        "options": [
+          "25",
+          "50",
+          "100",
+          "250",
+          "500",
+          "1000"
+        ],
+        "value": 0,
+        "min": 0,
+        "max": 5,
+        "default": 0,
+        "units": "mW"
+      }
+    },
+    {
+      "text_select": {
+        "name": "Dynamic",
+        "type": "TEXT_SELECT",
+        "id": 7,
+        "parent_id": 5,
+        "options": [
+          "Off",
+          "Dyn",
+          "AUX9",
+          "AUX10",
+          "AUX11",
+          "AUX12"
+        ],
+        "value": 0,
+        "min": 0,
+        "max": 5,
+        "default": 0,
+        "units": ""
+      }
+    },
+    {
+      "text_select": {
+        "name": "Fan Thresh",
+        "type": "TEXT_SELECT",
+        "id": 8,
+        "parent_id": 5,
+        "options": [
+          "10mW",
+          "25mW",
+          "50mW",
+          "100mW",
+          "250mW",
+          "500mW",
+          "1000mW",
+          "2000mW",
+          "Never"
+        ],
+        "value": 1,
+        "min": 0,
+        "max": 8,
+        "default": 0,
+        "units": ""
+      }
+    },
+    {
+      "folder": {
+        "name": "VTX Administrator",
+        "type": "FOLDER",
+        "id": 9,
+        "parent_id": 0
+      }
+    },
+    {
+      "text_select": {
+        "name": "Band",
+        "type": "TEXT_SELECT",
+        "id": 10,
+        "parent_id": 9,
+        "options": [
+          "Off",
+          "A",
+          "B",
+          "E",
+          "F",
+          "R",
+          "L"
+        ],
+        "value": 0,
+        "min": 0,
+        "max": 6,
+        "default": 0,
+        "units": ""
+      }
+    },
+    {
+      "text_select": {
+        "name": "Channel",
+        "type": "TEXT_SELECT",
+        "id": 11,
+        "parent_id": 9,
+        "options": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8"
+        ],
+        "value": 0,
+        "min": 0,
+        "max": 7,
+        "default": 0,
+        "units": ""
+      }
+    },
+    {
+      "text_select": {
+        "name": "Pwr Lvl",
+        "type": "TEXT_SELECT",
+        "id": 12,
+        "parent_id": 9,
+        "options": [
+          "-",
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8"
+        ],
+        "value": 0,
+        "min": 0,
+        "max": 8,
+        "default": 0,
+        "units": ""
+      }
+    },
+    {
+      "text_select": {
+        "name": "Pitmode",
+        "type": "TEXT_SELECT",
+        "id": 13,
+        "parent_id": 9,
+        "options": [
+          "Off",
+          "On",
+          "AUX1⬆️",
+          "AUX1⬇️",
+          "AUX2⬆️",
+          "AUX2⬇️",
+          "AUX3⬆️",
+          "AUX3⬇️",
+          "AUX4⬆️",
+          "AUX4⬇️",
+          "AUX5⬆️",
+          "AUX5⬇️",
+          "AUX6⬆️",
+          "AUX6⬇️",
+          "AUX7⬆️",
+          "AUX7⬇️",
+          "AUX8⬆️",
+          "AUX8⬇️",
+          "AUX9⬆️",
+          "AUX9⬇️",
+          "AUX10⬆️",
+          "AUX10⬇️"
+        ],
+        "value": 4,
+        "min": 0,
+        "max": 21,
+        "default": 0,
+        "units": ""
+      }
+    },
+    {
+      "command": {
+        "name": "Send VTx",
+        "type": "COMMAND",
+        "id": 14,
+        "parent_id": 9,
+        "step": "IDLE",
+        "timeout": 200,
+        "message": ""
+      }
+    },
+    {
+      "folder": {
+        "name": "WiFi Connectivity",
+        "type": "FOLDER",
+        "id": 15,
+        "parent_id": 0
+      }
+    },
+    {
+      "command": {
+        "name": "Enable WiFi",
+        "type": "COMMAND",
+        "id": 16,
+        "parent_id": 15,
+        "step": "IDLE",
+        "timeout": 200,
+        "message": ""
+      }
+    },
+    {
+      "command": {
+        "name": "Enable Rx WiFi",
+        "type": "COMMAND",
+        "id": 17,
+        "parent_id": 15,
+        "step": "IDLE",
+        "timeout": 200,
+        "message": ""
+      }
+    },
+    {
+      "command": {
+        "name": "BLE Joystick",
+        "type": "COMMAND",
+        "id": 18,
+        "parent_id": 0,
+        "step": "IDLE",
+        "timeout": 200,
+        "message": ""
+      }
+    },
+    {
+      "command": {
+        "name": "Bind",
+        "type": "COMMAND",
+        "id": 19,
+        "parent_id": 0,
+        "step": "IDLE",
+        "timeout": 200,
+        "message": ""
+      }
+    }
+  ]
+}

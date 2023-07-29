@@ -23,21 +23,27 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	JoystickControl_GetGamepads_FullMethodName          = "/JoystickControl.JoystickControl/getGamepads"
-	JoystickControl_GetTransmitters_FullMethodName      = "/JoystickControl.JoystickControl/getTransmitters"
-	JoystickControl_GetConfig_FullMethodName            = "/JoystickControl.JoystickControl/getConfig"
-	JoystickControl_SetConfig_FullMethodName            = "/JoystickControl.JoystickControl/setConfig"
-	JoystickControl_ValidateConfig_FullMethodName       = "/JoystickControl.JoystickControl/validateConfig"
-	JoystickControl_StartLink_FullMethodName            = "/JoystickControl.JoystickControl/startLink"
-	JoystickControl_StopLink_FullMethodName             = "/JoystickControl.JoystickControl/stopLink"
-	JoystickControl_StartHTTP_FullMethodName            = "/JoystickControl.JoystickControl/startHTTP"
-	JoystickControl_StopHTTP_FullMethodName             = "/JoystickControl.JoystickControl/stopHTTP"
-	JoystickControl_GetLinkStream_FullMethodName        = "/JoystickControl.JoystickControl/getLinkStream"
-	JoystickControl_GetTelemetryStream_FullMethodName   = "/JoystickControl.JoystickControl/getTelemetryStream"
-	JoystickControl_GetEvalStream_FullMethodName        = "/JoystickControl.JoystickControl/getEvalStream"
-	JoystickControl_GetTransmitterStream_FullMethodName = "/JoystickControl.JoystickControl/getTransmitterStream"
-	JoystickControl_GetGamepadStream_FullMethodName     = "/JoystickControl.JoystickControl/getGamepadStream"
-	JoystickControl_GetAppInfo_FullMethodName           = "/JoystickControl.JoystickControl/getAppInfo"
+	JoystickControl_GetGamepads_FullMethodName                      = "/JoystickControl.JoystickControl/getGamepads"
+	JoystickControl_GetTransmitters_FullMethodName                  = "/JoystickControl.JoystickControl/getTransmitters"
+	JoystickControl_GetConfig_FullMethodName                        = "/JoystickControl.JoystickControl/getConfig"
+	JoystickControl_SetConfig_FullMethodName                        = "/JoystickControl.JoystickControl/setConfig"
+	JoystickControl_ValidateConfig_FullMethodName                   = "/JoystickControl.JoystickControl/validateConfig"
+	JoystickControl_StartLink_FullMethodName                        = "/JoystickControl.JoystickControl/startLink"
+	JoystickControl_StopLink_FullMethodName                         = "/JoystickControl.JoystickControl/stopLink"
+	JoystickControl_StartHTTP_FullMethodName                        = "/JoystickControl.JoystickControl/startHTTP"
+	JoystickControl_StopHTTP_FullMethodName                         = "/JoystickControl.JoystickControl/stopHTTP"
+	JoystickControl_GetLinkStream_FullMethodName                    = "/JoystickControl.JoystickControl/getLinkStream"
+	JoystickControl_GetTelemetryStream_FullMethodName               = "/JoystickControl.JoystickControl/getTelemetryStream"
+	JoystickControl_GetEvalStream_FullMethodName                    = "/JoystickControl.JoystickControl/getEvalStream"
+	JoystickControl_GetTransmitterStream_FullMethodName             = "/JoystickControl.JoystickControl/getTransmitterStream"
+	JoystickControl_GetGamepadStream_FullMethodName                 = "/JoystickControl.JoystickControl/getGamepadStream"
+	JoystickControl_GetCRSFDevices_FullMethodName                   = "/JoystickControl.JoystickControl/getCRSFDevices"
+	JoystickControl_GetCRSFDeviceFields_FullMethodName              = "/JoystickControl.JoystickControl/getCRSFDeviceFields"
+	JoystickControl_GetCRSFDeviceField_FullMethodName               = "/JoystickControl.JoystickControl/getCRSFDeviceField"
+	JoystickControl_SetCRSFDeviceField_FullMethodName               = "/JoystickControl.JoystickControl/setCRSFDeviceField"
+	JoystickControl_GetCRSFDeviceLinkStatus_FullMethodName          = "/JoystickControl.JoystickControl/getCRSFDeviceLinkStatus"
+	JoystickControl_ClearCRSFDeviceLinkCriticalFlags_FullMethodName = "/JoystickControl.JoystickControl/clearCRSFDeviceLinkCriticalFlags"
+	JoystickControl_GetAppInfo_FullMethodName                       = "/JoystickControl.JoystickControl/getAppInfo"
 )
 
 // JoystickControlClient is the client API for JoystickControl service.
@@ -58,6 +64,12 @@ type JoystickControlClient interface {
 	GetEvalStream(ctx context.Context, in *Empty, opts ...grpc.CallOption) (JoystickControl_GetEvalStreamClient, error)
 	GetTransmitterStream(ctx context.Context, in *GetTransmitterStreamReq, opts ...grpc.CallOption) (JoystickControl_GetTransmitterStreamClient, error)
 	GetGamepadStream(ctx context.Context, in *GetGamepadStreamReq, opts ...grpc.CallOption) (JoystickControl_GetGamepadStreamClient, error)
+	GetCRSFDevices(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetCRSFDevicesRes, error)
+	GetCRSFDeviceFields(ctx context.Context, in *GetCRSFDeviceFieldsReq, opts ...grpc.CallOption) (*GetCRSFDeviceFieldsRes, error)
+	GetCRSFDeviceField(ctx context.Context, in *GetCRSFDeviceFieldReq, opts ...grpc.CallOption) (*GetCRSFDeviceFieldRes, error)
+	SetCRSFDeviceField(ctx context.Context, in *SetCRSFDeviceFieldReq, opts ...grpc.CallOption) (*SetCRSFDeviceFieldRes, error)
+	GetCRSFDeviceLinkStatus(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetCRSFDeviceLinkStatusRes, error)
+	ClearCRSFDeviceLinkCriticalFlags(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error)
 	GetAppInfo(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetAppInfoRes, error)
 }
 
@@ -310,6 +322,60 @@ func (x *joystickControlGetGamepadStreamClient) Recv() (*GamepadInputsStates, er
 	return m, nil
 }
 
+func (c *joystickControlClient) GetCRSFDevices(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetCRSFDevicesRes, error) {
+	out := new(GetCRSFDevicesRes)
+	err := c.cc.Invoke(ctx, JoystickControl_GetCRSFDevices_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *joystickControlClient) GetCRSFDeviceFields(ctx context.Context, in *GetCRSFDeviceFieldsReq, opts ...grpc.CallOption) (*GetCRSFDeviceFieldsRes, error) {
+	out := new(GetCRSFDeviceFieldsRes)
+	err := c.cc.Invoke(ctx, JoystickControl_GetCRSFDeviceFields_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *joystickControlClient) GetCRSFDeviceField(ctx context.Context, in *GetCRSFDeviceFieldReq, opts ...grpc.CallOption) (*GetCRSFDeviceFieldRes, error) {
+	out := new(GetCRSFDeviceFieldRes)
+	err := c.cc.Invoke(ctx, JoystickControl_GetCRSFDeviceField_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *joystickControlClient) SetCRSFDeviceField(ctx context.Context, in *SetCRSFDeviceFieldReq, opts ...grpc.CallOption) (*SetCRSFDeviceFieldRes, error) {
+	out := new(SetCRSFDeviceFieldRes)
+	err := c.cc.Invoke(ctx, JoystickControl_SetCRSFDeviceField_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *joystickControlClient) GetCRSFDeviceLinkStatus(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetCRSFDeviceLinkStatusRes, error) {
+	out := new(GetCRSFDeviceLinkStatusRes)
+	err := c.cc.Invoke(ctx, JoystickControl_GetCRSFDeviceLinkStatus_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *joystickControlClient) ClearCRSFDeviceLinkCriticalFlags(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, JoystickControl_ClearCRSFDeviceLinkCriticalFlags_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *joystickControlClient) GetAppInfo(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetAppInfoRes, error) {
 	out := new(GetAppInfoRes)
 	err := c.cc.Invoke(ctx, JoystickControl_GetAppInfo_FullMethodName, in, out, opts...)
@@ -337,6 +403,12 @@ type JoystickControlServer interface {
 	GetEvalStream(*Empty, JoystickControl_GetEvalStreamServer) error
 	GetTransmitterStream(*GetTransmitterStreamReq, JoystickControl_GetTransmitterStreamServer) error
 	GetGamepadStream(*GetGamepadStreamReq, JoystickControl_GetGamepadStreamServer) error
+	GetCRSFDevices(context.Context, *Empty) (*GetCRSFDevicesRes, error)
+	GetCRSFDeviceFields(context.Context, *GetCRSFDeviceFieldsReq) (*GetCRSFDeviceFieldsRes, error)
+	GetCRSFDeviceField(context.Context, *GetCRSFDeviceFieldReq) (*GetCRSFDeviceFieldRes, error)
+	SetCRSFDeviceField(context.Context, *SetCRSFDeviceFieldReq) (*SetCRSFDeviceFieldRes, error)
+	GetCRSFDeviceLinkStatus(context.Context, *Empty) (*GetCRSFDeviceLinkStatusRes, error)
+	ClearCRSFDeviceLinkCriticalFlags(context.Context, *Empty) (*Empty, error)
 	GetAppInfo(context.Context, *Empty) (*GetAppInfoRes, error)
 	mustEmbedUnimplementedJoystickControlServer()
 }
@@ -386,6 +458,24 @@ func (UnimplementedJoystickControlServer) GetTransmitterStream(*GetTransmitterSt
 }
 func (UnimplementedJoystickControlServer) GetGamepadStream(*GetGamepadStreamReq, JoystickControl_GetGamepadStreamServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetGamepadStream not implemented")
+}
+func (UnimplementedJoystickControlServer) GetCRSFDevices(context.Context, *Empty) (*GetCRSFDevicesRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCRSFDevices not implemented")
+}
+func (UnimplementedJoystickControlServer) GetCRSFDeviceFields(context.Context, *GetCRSFDeviceFieldsReq) (*GetCRSFDeviceFieldsRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCRSFDeviceFields not implemented")
+}
+func (UnimplementedJoystickControlServer) GetCRSFDeviceField(context.Context, *GetCRSFDeviceFieldReq) (*GetCRSFDeviceFieldRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCRSFDeviceField not implemented")
+}
+func (UnimplementedJoystickControlServer) SetCRSFDeviceField(context.Context, *SetCRSFDeviceFieldReq) (*SetCRSFDeviceFieldRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetCRSFDeviceField not implemented")
+}
+func (UnimplementedJoystickControlServer) GetCRSFDeviceLinkStatus(context.Context, *Empty) (*GetCRSFDeviceLinkStatusRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCRSFDeviceLinkStatus not implemented")
+}
+func (UnimplementedJoystickControlServer) ClearCRSFDeviceLinkCriticalFlags(context.Context, *Empty) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ClearCRSFDeviceLinkCriticalFlags not implemented")
 }
 func (UnimplementedJoystickControlServer) GetAppInfo(context.Context, *Empty) (*GetAppInfoRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAppInfo not implemented")
@@ -670,6 +760,114 @@ func (x *joystickControlGetGamepadStreamServer) Send(m *GamepadInputsStates) err
 	return x.ServerStream.SendMsg(m)
 }
 
+func _JoystickControl_GetCRSFDevices_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JoystickControlServer).GetCRSFDevices(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: JoystickControl_GetCRSFDevices_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JoystickControlServer).GetCRSFDevices(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _JoystickControl_GetCRSFDeviceFields_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCRSFDeviceFieldsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JoystickControlServer).GetCRSFDeviceFields(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: JoystickControl_GetCRSFDeviceFields_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JoystickControlServer).GetCRSFDeviceFields(ctx, req.(*GetCRSFDeviceFieldsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _JoystickControl_GetCRSFDeviceField_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCRSFDeviceFieldReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JoystickControlServer).GetCRSFDeviceField(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: JoystickControl_GetCRSFDeviceField_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JoystickControlServer).GetCRSFDeviceField(ctx, req.(*GetCRSFDeviceFieldReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _JoystickControl_SetCRSFDeviceField_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetCRSFDeviceFieldReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JoystickControlServer).SetCRSFDeviceField(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: JoystickControl_SetCRSFDeviceField_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JoystickControlServer).SetCRSFDeviceField(ctx, req.(*SetCRSFDeviceFieldReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _JoystickControl_GetCRSFDeviceLinkStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JoystickControlServer).GetCRSFDeviceLinkStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: JoystickControl_GetCRSFDeviceLinkStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JoystickControlServer).GetCRSFDeviceLinkStatus(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _JoystickControl_ClearCRSFDeviceLinkCriticalFlags_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JoystickControlServer).ClearCRSFDeviceLinkCriticalFlags(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: JoystickControl_ClearCRSFDeviceLinkCriticalFlags_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JoystickControlServer).ClearCRSFDeviceLinkCriticalFlags(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _JoystickControl_GetAppInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Empty)
 	if err := dec(in); err != nil {
@@ -730,6 +928,30 @@ var JoystickControl_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "stopHTTP",
 			Handler:    _JoystickControl_StopHTTP_Handler,
+		},
+		{
+			MethodName: "getCRSFDevices",
+			Handler:    _JoystickControl_GetCRSFDevices_Handler,
+		},
+		{
+			MethodName: "getCRSFDeviceFields",
+			Handler:    _JoystickControl_GetCRSFDeviceFields_Handler,
+		},
+		{
+			MethodName: "getCRSFDeviceField",
+			Handler:    _JoystickControl_GetCRSFDeviceField_Handler,
+		},
+		{
+			MethodName: "setCRSFDeviceField",
+			Handler:    _JoystickControl_SetCRSFDeviceField_Handler,
+		},
+		{
+			MethodName: "getCRSFDeviceLinkStatus",
+			Handler:    _JoystickControl_GetCRSFDeviceLinkStatus_Handler,
+		},
+		{
+			MethodName: "clearCRSFDeviceLinkCriticalFlags",
+			Handler:    _JoystickControl_ClearCRSFDeviceLinkCriticalFlags_Handler,
 		},
 		{
 			MethodName: "getAppInfo",

@@ -11,7 +11,7 @@ import ButtonNode from "./inputs_config/nodes/ButtonNode";
 import {GamepadViewer} from "./gamepads/GamepadViewer";
 import i18n from "../misc/I18n";
 import GamepadNode from "./inputs_config/nodes/GamepadNode";
-import {showError} from "../misc/notifications";
+import {showError, showWarning} from "../misc/notifications";
 import {getGamepads} from "../misc/server";
 
 function GamepadRow([label, value, icon]) {
@@ -91,16 +91,25 @@ function GamepadCardSkeleton() {
 }
 
 let timeoutId;
+let successfulLoadAttempts = 0;
 let failedLoadAttempts = 0;
+
 export default function GamepadsPage({}) {
     const [gamepads, setGamepads] = useState([]);
 
     const loadGamepads = useCallback(async function () {
         try {
             //console.log("loading gamepads");
-            setGamepads(await getGamepads())
+            let gamepads = await getGamepads();
+            setGamepads(gamepads);
+
+            successfulLoadAttempts++;
             failedLoadAttempts = 0;
+            if (successfulLoadAttempts === 1 && gamepads.length === 0) {
+                showWarning(i18n("error-msg-gamepads-not-detected"));
+            }
         } catch (ex) {
+            successfulLoadAttempts = 0;
             failedLoadAttempts++;
             if (failedLoadAttempts === 1) {
                 showError(`${i18n("error-msg-gamepads-not-loaded")}`);
@@ -113,6 +122,7 @@ export default function GamepadsPage({}) {
 
     //check the gamepads list every few seconds, and update it
     useEffect(() => {
+        successfulLoadAttempts = 0;
         failedLoadAttempts = 0;
         timeoutId = setTimeout(loadGamepads, 0);
         return () => clearTimeout(timeoutId)

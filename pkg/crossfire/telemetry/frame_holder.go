@@ -22,7 +22,6 @@ type TelemType interface {
 type TelemExtType interface {
 	TelemType
 
-	ExtType() crossfire.FrameType
 	Dst() crossfire.Endpoint
 	Src() crossfire.Endpoint
 }

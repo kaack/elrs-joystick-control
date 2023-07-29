@@ -129,8 +129,30 @@ This is done using the DIP switch on the back of the module. The exact position 
 from module to module. See the ELRS documentation to determine the proper method for putting the module in "Firmware upgrade" mode.
 
 
+## How to power the ELRS transmitter module
+
+There are a few ways you can power the transmitter module without connecting it to the JR bay of an existing radio.
 
 
+  * **USB Power** - First, you can power the ELRS transmitter using the USB connector (if it has one). The RF output power will be
+limited when using USB power. It's very likely that you will not be able to go over 100 milli-watts of RF output power.
+That's still plenty of power for most flying. But beware, if you set the transmitter's RF output too high, it may 
+exceed the power supply from the USB connection. This can cause the module to brown-out, and reboot itself. 
+It will keep rebooting, and shutting down. If this happens to you, you will need to connect the module to a higher wattage power supply, and revert the settings.
+
+
+  * **XT30 DC input** - The second approach is to use the module's XT30 DC input (if it has one). But beware, some modules may not have protection
+to isolate the XT30 DC input from rest of the circuitry. Early versions of Radio-Master ELRS Ranger 
+transmitters had this issue. Some pilots damaged their radios when they connected the XT30 input at the same time they had the module 
+connected to the JR bay of the radio. So, don't do that.
+
+
+  * **JR Bay VCC / GND pins** - The third and final approach is to use the JR bay `VCC` / `GND` pins. Most ELRS transmitter modules accept between 5V and 12V across the
+`VCC` / `GND` pins. You can connect a 2S LiPo battery directly to the these pins. ELRS transmitter modules have an internal voltage
+regulator, so it should be safe.
+
+
+    
 
 ## How to use the application
 When the application starts, it exposes a Web-UI on port 3000, and a gRPC service on port 10000.
@@ -160,11 +182,26 @@ If you have not yet applied inputs/outputs configuration, all channel values wil
 
 You will need to go to the `Inputs Config` page to create and apply inputs/outputs configuration.
 
+
 #### Viewing telemetry data
 
 From the `Home` page, you can view the telemetry data live as it's being received by the ELRS RF transmitter.
 Telemetry data is only received when the link is active. You can add new telemetry widgets to the home screen, or delete
 existing ones. You can also modify various display properties of each telemetry widget by double-clicking on them.
+
+#### Modifying the telemetry display
+
+By default, the telemetry widgets on the `Home` page are locked. If you want to move them around, remove some or add new
+widgets, you will need to unlock the `Home` page. To do this, click on the `Plus` icon on the bottom left, and then click
+on the `Pad-lock` icon.
+
+### Web-UI ELRS Settings Page
+
+The `ELRS Settings Page` gives you the same functionality you would find when using the ELRS Lua script in a regular OpenTX/EdgeTX radio.
+From this page, you will see the ELRS devices are currently connected. You can click on the devices, and change their settings.
+For example, you can change the packet rate, telemetry ratio, or even turn on Wi-Fi mode.
+
+This page is very useful if your ELRS transmitter does not have an LCD screen.
 
 ### Web-UI RF Transmitters Page
 
