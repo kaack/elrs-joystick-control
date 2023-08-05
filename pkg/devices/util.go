@@ -7,12 +7,16 @@ package devices
 import (
 	"crypto/md5"
 	"encoding/hex"
+	"fmt"
 	"github.com/veandco/go-sdl2/sdl"
 )
 
 func GetJoyStickId(joystick *sdl.Joystick) string {
 	guid := sdl.JoystickGetGUIDString(joystick.GUID())
-	hash := md5.Sum([]byte(guid))
+	name := joystick.Name()
+	// on linux, the SDL GUID is not unique, use the name as well
+	combined := fmt.Sprintf("guid: %s, name: %s", guid, name)
+	hash := md5.Sum([]byte(combined))
 	return hex.EncodeToString(hash[:])[1:7]
 }
 
@@ -25,6 +29,11 @@ func EnumerateDevices() map[string]*InputGamepad {
 			continue
 		}
 		dev := NewDevice(stick)
+
+		if _, ok := devices[dev.Id]; ok {
+			//device is already on the map, re-assign the ID to include index
+			dev.Id = fmt.Sprintf("%s_%d", dev.Id, i)
+		}
 		devices[dev.Id] = &dev
 	}
 
