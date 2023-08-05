@@ -350,10 +350,10 @@ There are a lot of comments in the schema explaining each node in the config doe
 
 ## Supported Operating Systems
 
-I have only flown with this application in Windows so far, so that's what I can vouch for. In any case, below you can
-find instructions for building the application binary on both Windows and Linux.
+I have flown with this application from both `Windows/x86_64`, and `Linux/arm` (Raspberry Pi 4) machines.
+I have not tested it on a `Linux/x86_64` machine yet.
 
-## Compiling on Windows (x86_64)
+## Compiling on Windows / x86_64
 
 If you want to compile the application in your own Windows machine, you can do so using Docker with Windows Containers.
 There is a pre-built Windows docker image that has all the build tools, and pre-requisites installed. Follow these
@@ -403,7 +403,7 @@ steps to build the application:
   ```
   The binary executable should be on the root of the repo now.
 
-## Compiling on Linux (x86_64)
+## Compiling on Linux / x86_64
 
 
 * Install [Docker Engine](https://docs.docker.com/desktop/install/linux-install/) for Linux
@@ -446,3 +446,23 @@ steps to build the application:
   exit
   ```
   The binary executable should be on the root of the repo now.
+
+
+
+## Compiling Linux / armhf (Raspberry Pi 4)
+
+* Use [Raspberry Pi imager](https://www.raspberrypi.com/software/) to install Raspberry Pi OS (32bit) on a microSD card
+  
+* Boot up the Raspberry Pi 4 from the microSD card
+
+* From a new terminal, clone this repo 
+  ```
+  git clone https://github.com/kaack/elrs-joystick-control.git
+  ```
+  
+* Switch to the repo directory, and run build script
+  ```
+  cd elrs-joystick-control
+  ./build-raspbian32-linux-armhf.sh
+  ```
+  The executable binary will be at the root of the repo
