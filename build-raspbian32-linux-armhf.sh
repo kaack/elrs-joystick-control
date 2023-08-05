@@ -50,3 +50,6 @@ go generate pkg/server/version.go
 
 echo "*** Compile binary ***"
 go build -tags static -trimpath --ldflags '-s -w' -o elrs-joystick-control ./cmd/elrs-joystick-control/.
+
+echo "*** Create distribution zip file ***"
+go run scripts/cmd/build-release-zip/build-release-zip.go --location . --prefix elrs-joystick-control --files *-control,LICENSE*
