@@ -53,7 +53,12 @@ export const AutoCompleteFunctions = {
         let transmitters = new Map();
         try {
             for (let transmitter of await getTransmitters()) {
-                transmitters.set(transmitter.getPort(), transmitter.getName());
+                let port = transmitter.getPort();
+                let name = transmitter.getName() || port;
+                if (!port) {
+                    continue;
+                }
+                transmitters.set(port, name);
             }
         } catch (e) {
             showError(`${i18n("error-msg-transmitters-not-loaded")}`);
