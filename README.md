@@ -455,6 +455,11 @@ steps to build the application:
   
 * Boot up the Raspberry Pi 4 from the microSD card
 
+* Get the latest software package
+  ```
+  sudo apt-get update
+  ```
+
 * From a new terminal, clone this repo 
   ```
   git clone https://github.com/kaack/elrs-joystick-control.git
