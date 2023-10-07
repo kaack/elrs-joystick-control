@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2023 OneEyeFPV oneeyefpv@gmail.com
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: FS-0.9-or-later
+
 package client
 
 import (
@@ -12,14 +16,14 @@ import (
 	"time"
 )
 
-func Init(txServerPortName, configFilePath string, txServerPortBaudRate int) {
+func Init(txServerPortName, configFilePath string, txServerPortBaudRate, grpcPort int) {
 	if (len(txServerPortName) != 0 || len(configFilePath) != 0) && txServerPortBaudRate != 0 {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 
 		var err error
 		var conn *grpc.ClientConn
-		if conn, err = grpc.DialContext(ctx, "localhost:10000"); err != nil {
+		if conn, err = grpc.DialContext(ctx, fmt.Sprintf("localhost:%d", grpcPort)); err != nil {
 			panic(err)
 		}
 
