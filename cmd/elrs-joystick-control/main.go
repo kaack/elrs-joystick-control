@@ -62,7 +62,8 @@ func main() {
 	serverCtl := gc.NewCtl(*grpcPort, grpcServer, devicesCtl, serialCtl, configCtl, linkCtl, httpCtl)
 	defer serverCtl.Quit()
 
-	client.Init(*txServerPortName, *configFilePath, *txServerPortBaudRate)
+	// Automatically configure through gprc when conditions are met
+	client.Init(*txServerPortName, *configFilePath, *txServerPortBaudRate, *grpcPort)
 
 	go func() {
 		sigChan := make(chan os.Signal)
