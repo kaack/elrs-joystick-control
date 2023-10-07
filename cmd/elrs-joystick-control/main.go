@@ -5,20 +5,25 @@
 package main
 
 import (
+	"bytes"
+	"context"
 	"flag"
 	"fmt"
+	"github.com/golang/protobuf/jsonpb"
 	cc "github.com/kaack/elrs-joystick-control/pkg/config"
 	dc "github.com/kaack/elrs-joystick-control/pkg/devices"
 	hc "github.com/kaack/elrs-joystick-control/pkg/http"
 	lc "github.com/kaack/elrs-joystick-control/pkg/link"
+	"github.com/kaack/elrs-joystick-control/pkg/proto/generated/pb"
 	sc "github.com/kaack/elrs-joystick-control/pkg/serial"
 	gc "github.com/kaack/elrs-joystick-control/pkg/server"
+	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
+	"google.golang.org/protobuf/types/known/structpb"
 	_ "net/http/pprof"
 	"os"
 	"os/signal"
-
-	"google.golang.org/grpc"
+	"time"
 )
 
 func main() {
@@ -28,6 +33,15 @@ func main() {
 
 	grpcPort := new(int)
 	flag.IntVar(grpcPort, "grpc-port", 10000, "gRPC Server port number")
+
+	txServerPortName := new(string)
+	flag.StringVar(txServerPortName, "tx-serial-port-name", "", "tx Serial port name")
+
+	txServerPortBaudRate := new(int)
+	flag.IntVar(txServerPortBaudRate, "tx-serial-port-baud-rate", 921600, "tx Serial port baud rate")
+
+	configFilePath := new(string)
+	flag.StringVar(configFilePath, "config-file-path", "", "tx Serial port baud rate")
 
 	flag.Parse()
 
@@ -41,6 +55,7 @@ func main() {
 	defer devicesCtl.Quit()
 
 	configCtl := cc.NewCtl(devicesCtl)
+
 	defer configCtl.Quit()
 
 	serialCtl := sc.NewCtl()
@@ -51,6 +66,55 @@ func main() {
 
 	serverCtl := gc.NewCtl(*grpcPort, grpcServer, devicesCtl, serialCtl, configCtl, linkCtl, httpCtl)
 	defer serverCtl.Quit()
+
+	if (len(*txServerPortName) != 0 || len(*configFilePath) != 0) && *txServerPortBaudRate != 0 {
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+
+		var err error
+		var conn *grpc.ClientConn
+		if conn, err = grpc.DialContext(ctx, "localhost:10000"); err != nil {
+			panic(err)
+		}
+
+		client := pb.NewJoystickControlClient(conn)
+		var res *pb.Empty
+
+		if len(*txServerPortName) != 0 && *txServerPortBaudRate != 0 {
+			if res, err = client.StartLink(ctx, &pb.StartLinkReq{
+				Port:     *txServerPortName,
+				BaudRate: int32(*txServerPortBaudRate),
+			}); err != nil {
+				panic(err)
+			}
+
+			fmt.Printf("%v", res)
+		}
+
+		if len(*configFilePath) != 0 {
+
+			var configJson []byte
+			configJson, err = os.ReadFile(*configFilePath)
+			if err != nil {
+				panic(err)
+			}
+			fmt.Println(string(configJson))
+
+			var configPb structpb.Struct
+			m := jsonpb.Unmarshaler{}
+			if err = m.Unmarshal(bytes.NewReader(configJson), &configPb); err != nil {
+				panic(err)
+			}
+
+			if res, err = client.SetConfig(ctx, &pb.SetConfigReq{
+				Config: &configPb,
+			}); err != nil {
+				panic(err)
+			}
+
+			fmt.Printf("%v", res)
+		}
+	}
 
 	go func() {
 		sigChan := make(chan os.Signal)
