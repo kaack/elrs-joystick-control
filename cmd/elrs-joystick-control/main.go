@@ -41,7 +41,7 @@ func main() {
 	flag.IntVar(txServerPortBaudRate, "tx-serial-port-baud-rate", 921600, "tx Serial port baud rate")
 
 	configFilePath := new(string)
-	flag.StringVar(configFilePath, "config-file-path", "", "tx Serial port baud rate")
+	flag.StringVar(configFilePath, "config-file-path", "", "config json file path")
 
 	flag.Parse()
 
