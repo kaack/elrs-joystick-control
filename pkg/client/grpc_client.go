@@ -16,7 +16,7 @@ import (
 	"time"
 )
 
-func Init(txServerPortName, configFilePath string, txServerPortBaudRate, grpcPort int) {
+func Init(txServerPortName, configFilePath string, txServerPortBaudRate, grpcPort int, disableWebUI bool) {
 	if (len(txServerPortName) != 0 || len(configFilePath) != 0) && txServerPortBaudRate != 0 {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
@@ -59,6 +59,14 @@ func Init(txServerPortName, configFilePath string, txServerPortBaudRate, grpcPor
 			if res, err = client.SetConfig(ctx, &pb.SetConfigReq{
 				Config: &configPb,
 			}); err != nil {
+				panic(err)
+			}
+
+			fmt.Printf("%v", res)
+		}
+
+		if disableWebUI {
+			if res, err = client.StopHTTP(ctx, &pb.Empty{}); err != nil {
 				panic(err)
 			}
 

@@ -38,6 +38,9 @@ func main() {
 	configFilePath := new(string)
 	flag.StringVar(configFilePath, "config-file-path", "", "config json file path")
 
+	disableWebUI := new(bool)
+	flag.BoolVar(disableWebUI, "disable-web-ui", false, "disable the Web-UI HTTP server")
+
 	flag.Parse()
 
 	grpcServer := grpc.NewServer([]grpc.ServerOption{}...)
@@ -63,7 +66,7 @@ func main() {
 	defer serverCtl.Quit()
 
 	// Automatically configure through gprc when conditions are met
-	client.Init(*txServerPortName, *configFilePath, *txServerPortBaudRate, *grpcPort)
+	client.Init(*txServerPortName, *configFilePath, *txServerPortBaudRate, *grpcPort, *disableWebUI)
 
 	go func() {
 		sigChan := make(chan os.Signal)
