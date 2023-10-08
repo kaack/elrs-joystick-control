@@ -27,6 +27,7 @@ func Init(txServerPortName, configFilePath string, txServerPortBaudRate, grpcPor
 		if conn, err = grpc.DialContext(ctx, fmt.Sprintf("localhost:%d", grpcPort), grpc.WithTransportCredentials(insecure.NewCredentials())); err != nil {
 			panic(err)
 		}
+		defer conn.Close()
 
 		client := pb.NewJoystickControlClient(conn)
 		var res *pb.Empty
