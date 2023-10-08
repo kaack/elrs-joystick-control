@@ -18,7 +18,7 @@ import (
 )
 
 func Init(txServerPortName, configFilePath string, txServerPortBaudRate, grpcPort int, disableWebUI bool) {
-	if (len(txServerPortName) != 0 || len(configFilePath) != 0) && txServerPortBaudRate != 0 {
+	if (len(txServerPortName) != 0 && txServerPortBaudRate != 0 ) || len(configFilePath) != 0 || disableWebUI {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 
