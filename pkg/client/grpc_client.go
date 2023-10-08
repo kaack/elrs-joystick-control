@@ -11,6 +11,7 @@ import (
 	"github.com/golang/protobuf/jsonpb"
 	"github.com/kaack/elrs-joystick-control/pkg/proto/generated/pb"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/types/known/structpb"
 	"os"
 	"time"
@@ -23,7 +24,7 @@ func Init(txServerPortName, configFilePath string, txServerPortBaudRate, grpcPor
 
 		var err error
 		var conn *grpc.ClientConn
-		if conn, err = grpc.DialContext(ctx, fmt.Sprintf("localhost:%d", grpcPort)); err != nil {
+		if conn, err = grpc.DialContext(ctx, fmt.Sprintf("localhost:%d", grpcPort), grpc.WithTransportCredentials(insecure.NewCredentials())); err != nil {
 			panic(err)
 		}
 
