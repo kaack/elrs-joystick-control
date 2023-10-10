@@ -1,0 +1,29 @@
+name: ELRS Joystick Control (Raspios/arm32)
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+jobs:
+  build-binary:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Build binary
+        uses: pguyot/arm-runner-action@v2
+        id: arm_runner_install
+        with:
+          base_image: raspios_lite:latest
+          image_additional_mb: 4096
+          copy_artifact_path: './*'
+          commands: |
+              sudo apt-get update
+              ./build-raspbian32-linux-armhf.sh
+      - name: Upload binary
+        uses: actions/upload-artifact@v3
+        with:
+          name: release-raspios-arm32
+          path: '*.zip'
+          retention-days: 5
