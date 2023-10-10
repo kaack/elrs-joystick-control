@@ -39,6 +39,12 @@ func (c *Controller) StopSupervisor() error {
 	return nil
 }
 
+func (c *Controller) Wait() {
+	if err := c.supervisorTomb.Wait(); err != nil {
+		panic(err)
+	}
+}
+
 func action(action string, err error) {
 	if err != nil {
 		fmt.Printf("error while %s. %s", action, err.Error())
