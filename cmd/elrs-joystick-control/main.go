@@ -41,6 +41,9 @@ func main() {
 	disableWebUI := new(bool)
 	flag.BoolVar(disableWebUI, "disable-web-ui", false, "disable the Web-UI HTTP server")
 
+	disableGrpcServer := new(bool)
+	flag.BoolVar(disableGrpcServer, "disable-grpc-server", false, "disable the gRPC server")
+
 	flag.Parse()
 
 	grpcServer := grpc.NewServer([]grpc.ServerOption{}...)
@@ -81,5 +84,11 @@ func main() {
 		}
 	}()
 
-	serverCtl.Wait()
+	if *disableGrpcServer {
+		serverCtl.Stop()
+	} else {
+		serverCtl.Wait()
+	}
+
+	linkCtl.Wait()
 }
